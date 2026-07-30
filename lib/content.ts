@@ -210,8 +210,11 @@ function readFolder(file: string): Folder {
   };
 }
 
+/* Content is authored on Windows and lands as CRLF. `splitSections` matches
+   `##` headings without the `/m` flag, so a stray trailing `\r` on the
+   heading line blocks the match — normalize before anything parses it. */
 function read(file: string) {
-  return matter(fs.readFileSync(file, "utf8"));
+  return matter(fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n"));
 }
 
 /** Directories, sorted by their `nn-` prefix. */
