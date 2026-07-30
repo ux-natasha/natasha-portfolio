@@ -1,0 +1,32 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-radius",
+        "value": "8px",
+        "createdAt": "2026-07-28T08:50:49.619Z",
+        "reason": "Folder cover's compound corner radius (1px 8px 7px 7px), documented verbatim in DESIGN.md Shapes"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "7px",
+        "createdAt": "2026-07-28T08:50:49.826Z",
+        "reason": "Folder cover's compound corner radius (1px 8px 7px 7px), documented verbatim in DESIGN.md Shapes"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(40 34 16 / 0.35)",
+        "createdAt": "2026-07-28T08:50:49.966Z",
+        "reason": "The folder sheet's one Contact shadow tint, documented in DESIGN.md Elevation & Depth and the design.json sidecar shadows array"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "createdAt": "2026-07-28T08:50:50.146Z",
+        "reason": "Used only as a CSS mask alpha value in .folder__fold, never rendered as a visible color"
+      }
+    ]
+  }
+}

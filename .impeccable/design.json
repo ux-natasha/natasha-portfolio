@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-30T10:40:00Z",
+  "title": "Design System: Natasha M. — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "rose": {
+        "role": "primary",
+        "displayName": "Rose",
+        "canonical": "#d4537e",
+        "tonalRamp": [
+          "#3d0f1f",
+          "#721d39",
+          "#a32952",
+          "#c93d67",
+          "#d4537e",
+          "#e08aa6",
+          "#eebccf",
+          "#f8e0eb"
+        ]
+      },
+      "rose-ink": {
+        "role": "primary-text",
+        "displayName": "Rose Ink",
+        "canonical": "#a93a63"
+      },
+      "rose-deep": {
+        "role": "primary",
+        "displayName": "Rose Deep",
+        "canonical": "#9c2f5b"
+      },
+      "ink": {
+        "role": "neutral-text",
+        "displayName": "Ink",
+        "canonical": "#1c1b18",
+        "tonalRamp": [
+          "#1c1b18",
+          "#302e28",
+          "#454239",
+          "#5c584c",
+          "#787264",
+          "#9a927f",
+          "#c1baa9",
+          "#e7e5db"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral-text",
+        "displayName": "Ink 2",
+        "canonical": "#413e35"
+      },
+      "muted": {
+        "role": "neutral-text",
+        "displayName": "Muted",
+        "canonical": "#6a6555",
+        "tonalRamp": [
+          "#25231d",
+          "#413e35",
+          "#5b564a",
+          "#6a6555",
+          "#847e6a",
+          "#a49d86",
+          "#c4bda6",
+          "#e5e0d2"
+        ]
+      },
+      "muted-strong": {
+        "role": "neutral-text",
+        "displayName": "Muted Strong",
+        "canonical": "#4e4a3e"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#e7e5db",
+        "tonalRamp": [
+          "#1c1b18",
+          "#3a382f",
+          "#605c4d",
+          "#8a856d",
+          "#b3ae98",
+          "#d4d1c4",
+          "#e7e5db",
+          "#f6f5ef"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Paper 2",
+        "canonical": "#edebe2"
+      },
+      "paper-3": {
+        "role": "neutral",
+        "displayName": "Paper 3",
+        "canonical": "#f3f1ea"
+      },
+      "taupe": {
+        "role": "neutral",
+        "displayName": "Taupe",
+        "canonical": "#d4d1c4",
+        "tonalRamp": [
+          "#302e26",
+          "#524e40",
+          "#726d5a",
+          "#948e77",
+          "#b3ae98",
+          "#d4d1c4",
+          "#e6e3d8",
+          "#f4f2ea"
+        ]
+      },
+      "taupe-2": {
+        "role": "neutral",
+        "displayName": "Taupe 2",
+        "canonical": "#cac6b7"
+      },
+      "taupe-3": {
+        "role": "neutral",
+        "displayName": "Taupe 3",
+        "canonical": "#beb9a8"
+      },
+      "line": {
+        "role": "neutral-border",
+        "displayName": "Line",
+        "canonical": "#d6d3c6"
+      },
+      "shadow": {
+        "role": "neutral",
+        "displayName": "Shadow",
+        "canonical": "rgba(40, 37, 28, 0.16)"
+      },
+      "sheen": {
+        "role": "neutral",
+        "displayName": "Sheen",
+        "canonical": "rgba(255, 255, 255, 0.5)"
+      }
+    },
+    "typographyMeta": {
+      "base": { "displayName": "Base", "purpose": "The body element's own default (1rem). Almost never seen directly — every visible block overrides it with a role-specific size." },
+      "micro": { "displayName": "Micro", "purpose": "Smallest mono step (0.5625rem) — rail-up, rail key, panel corner tag, plate caption, closed compartment key. Tracking varies 0.14-0.18em per call site, not yet standardized." },
+      "display": { "displayName": "Display", "purpose": "The name, once, at the top of the frame. Nothing else uses this step." },
+      "headline": { "displayName": "Headline", "purpose": "A folder's own chapter title." },
+      "opening-line": { "displayName": "Opening Line", "purpose": "The hero's one line of approved copy." },
+      "chapter-lede": { "displayName": "Chapter Lede", "purpose": "A folder's ten-second opening line, level 1 of the depth model." },
+      "stub-voice": { "displayName": "Stub Voice", "purpose": "Italic register for copy that doesn't exist yet." },
+      "body": { "displayName": "Body", "purpose": "A chapter's running prose, rendered from markdown." },
+      "body-small": { "displayName": "Body Small", "purpose": "Meta-panel values, compartment names, non-stub descriptions." },
+      "kicker": { "displayName": "Kicker", "purpose": "Loudest standalone mono label — eyebrows, drawer heading, descend cue." },
+      "label": { "displayName": "Label", "purpose": "Field keys in the meta panel and at-a-glance card." },
+      "tag": { "displayName": "Tag", "purpose": "Closed folder tabs, rail-number buttons, the shelf key." },
+      "compartment-name": { "displayName": "Compartment Name", "purpose": "A compartment's own name as printed on its shelf face." }
+    },
+    "shadows": [
+      { "name": "lamination-pair", "value": "5px 6px 0 -1px var(--paper-2), 6px 7px 0 -1px var(--line)", "purpose": "Hard-edged, zero-blur stacked sheet-edge behind the folder page. Two pairs at desktop widths, one below 880px." },
+      { "name": "contact", "value": "0 18px 40px -26px rgba(40, 37, 28, 0.16)", "purpose": "The one soft shadow in the system — tight, heavily negative-spread, standing in for the sheet resting on its own stack." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(0.2, 0.8, 0.2, 1)", "purpose": "The one easing curve in the system. Restrained, no bounce or overshoot." },
+      { "name": "quick", "value": "0.2s", "purpose": "Hover/focus color and background transitions — the only duration actually in use." },
+      { "name": "settle", "value": "0.5s", "purpose": "Declared, currently unused. Reserved for a depth-reveal transition that has not been built yet." }
+    ],
+    "breakpoints": [
+      { "name": "narrow-facts", "value": "1024px" },
+      { "name": "stack", "value": "880px" },
+      { "name": "compact", "value": "520px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Folder tab (active)",
+      "kind": "custom",
+      "refersTo": "tab-active",
+      "description": "A cut tab on the folder's own edge; the currently open chapter.",
+      "html": "<button class=\"ds-tab ds-tab--active\" role=\"tab\" aria-selected=\"true\">\n  <span class=\"ds-tab__tick\" aria-hidden=\"true\"></span>\n  01<span class=\"ds-tab__name\">· Configuration</span>\n</button>",
+      "css": ".ds-tab { position: relative; display: flex; align-items: center; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.75rem; letter-spacing: 0.04em; color: #4e4a3e; background: #d4d1c4; border: 1px solid #cac6b7; border-bottom: 0; border-radius: 6px 6px 0 0; padding: 0.6875rem 0.875rem 0.75rem; min-height: 44px; white-space: nowrap; transition: background 0.2s cubic-bezier(0.2,0.8,0.2,1), color 0.2s cubic-bezier(0.2,0.8,0.2,1), transform 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-tab:hover { color: #1c1b18; background: #dad7ca; } .ds-tab--active { background: #edebe2; color: #1c1b18; border-color: #d6d3c6; padding-right: 1.25rem; transform: translateY(1px); } .ds-tab__tick { position: absolute; top: 5px; left: 0.875rem; width: 18px; height: 2px; background: #d4537e; opacity: 0; } .ds-tab--active .ds-tab__tick { opacity: 1; } .ds-tab__name { margin-left: 0.5rem; }"
+    },
+    {
+      "name": "Rail number (current step)",
+      "kind": "custom",
+      "refersTo": "control-button",
+      "description": "A folder-index button in the persistent progress rail.",
+      "html": "<button class=\"ds-rail-num\" aria-current=\"step\">02<span class=\"ds-sr-only\"> — Planning</span></button>",
+      "css": ".ds-rail-num { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.75rem; color: #6a6555; padding: 0.5rem 0.75rem; border-radius: 5px; min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; transition: color 0.2s cubic-bezier(0.2,0.8,0.2,1), background 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-rail-num:hover { color: #1c1b18; background: #edebe2; } .ds-rail-num[aria-current='step'] { color: #a93a63; } .ds-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }"
+    },
+    {
+      "name": "Panel (at-a-glance card)",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Bordered, square meta panel with a single corner placeholder tag. Never a ruled table.",
+      "html": "<aside class=\"ds-panel\">\n  <span class=\"ds-panel__tag\">placeholder</span>\n  <div class=\"ds-panel__row\"><span class=\"ds-panel__label\">Role</span><span class=\"ds-panel__val\">Junior → Senior, three years</span></div>\n  <div class=\"ds-panel__row\"><span class=\"ds-panel__label\">System</span><span class=\"ds-panel__val\">A decade-old CCPM system, rebuilt</span></div>\n</aside>",
+      "css": ".ds-panel { position: relative; background: #edebe2; border: 1px solid #d6d3c6; padding: 1.375rem 1.5rem 1.5rem; } .ds-panel__tag { position: absolute; top: -0.5625rem; right: 0.875rem; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.5625rem; letter-spacing: 0.16em; color: #a93a63; background: #e7e5db; padding: 0 0.375rem; } .ds-panel__row + .ds-panel__row { margin-top: 0.9375rem; } .ds-panel__label { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.625rem; letter-spacing: 0.16em; text-transform: uppercase; color: #6a6555; display: block; margin-bottom: 0.25rem; } .ds-panel__val { font-family: var(--font-inter, system-ui, sans-serif); font-size: 0.90625rem; line-height: 1.42; color: #1c1b18; display: block; }"
+    },
+    {
+      "name": "Pager button",
+      "kind": "button",
+      "refersTo": "control-button",
+      "description": "Steps the open folder forward or back by one.",
+      "html": "<button class=\"ds-pager-btn\">next<span class=\"ds-sr-only\"> folder</span> →</button>",
+      "css": ".ds-pager-btn { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.1em; color: #6a6555; border: 1px solid #beb9a8; border-radius: 5px; padding: 0.5625rem 0.875rem; min-height: 44px; background: #f3f1ea; transition: color 0.2s cubic-bezier(0.2,0.8,0.2,1), border-color 0.2s cubic-bezier(0.2,0.8,0.2,1), background 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-pager-btn:hover:not(:disabled) { color: #1c1b18; background: #edebe2; } .ds-pager-btn:disabled { opacity: 0.4; }"
+    },
+    {
+      "name": "Depth cue",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The signature '+N more levels' marker. Currently a static label — no expand behavior is wired up yet (see DESIGN.md Known Gaps).",
+      "html": "<p class=\"ds-depth-cue\"><span class=\"ds-depth-cue__dot\" aria-hidden=\"true\"></span>+ 3 more levels <span aria-hidden=\"true\">↓</span></p>",
+      "css": ".ds-depth-cue { display: flex; align-items: center; gap: 0.5625rem; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.06em; color: #6a6555; } .ds-depth-cue__dot { width: 5px; height: 5px; border-radius: 50%; background: #d4537e; flex: none; }"
+    },
+    {
+      "name": "Shelf (drawer)",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A compartment's entry in the drawer/tail. The current one carries a rose board-strip gradient.",
+      "html": "<button class=\"ds-shelf\" aria-current=\"true\">\n  <span class=\"ds-shelf__face\">\n    <span class=\"ds-shelf__key\">VPRO</span>\n    <span class=\"ds-shelf__name\">VPro redesign</span>\n    <span class=\"ds-shelf__sub\">Four chapters, three years.</span>\n    <span class=\"ds-shelf__cta\">open →</span>\n  </span>\n</button>",
+      "css": ".ds-shelf { position: relative; display: block; width: 100%; margin-bottom: 1.5rem; } .ds-shelf__face { display: flex; align-items: center; gap: 1.375rem; flex-wrap: wrap; background: #edebe2; border: 1px solid #d6d3c6; padding: 1.1875rem 1.625rem; position: relative; z-index: 2; transition: background 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-shelf:hover .ds-shelf__face { background: #f3f1ea; } .ds-shelf::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: -9px; height: 11px; background: linear-gradient(180deg, #d4d1c4 0%, #cac6b7 100%); border: 1px solid #cac6b7; border-top: 0; z-index: 1; } .ds-shelf[aria-current='true']::after { background: linear-gradient(180deg, #d4537e 0%, #9c2f5b 100%); border-color: #9c2f5b; } .ds-shelf__key { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.75rem; letter-spacing: 0.1em; color: #a93a63; min-width: 62px; } .ds-shelf__name { font-family: var(--font-fraunces, Georgia, serif); font-weight: 600; font-size: 1.4375rem; letter-spacing: -0.01em; } .ds-shelf__sub { font-family: var(--font-inter, system-ui, sans-serif); color: #6a6555; font-size: 0.84375rem; } .ds-shelf__cta { margin-left: auto; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: #a93a63; }"
+    },
+    {
+      "name": "Coming slot (inert)",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A future-work placeholder (Writing, Reading). Renders as a list item, not a button — deliberately not focusable, since it leads nowhere.",
+      "html": "<li class=\"ds-slot\">\n  <span class=\"ds-slot__key\">Writing</span>\n  <span class=\"ds-slot__state\">Coming</span>\n</li>",
+      "css": ".ds-slot { display: flex; align-items: center; gap: 1.25rem; border: 1px dashed #cac6b7; padding: 0.9375rem 1.625rem; margin-top: 0.75rem; min-height: 44px; } .ds-slot__key { font-family: var(--font-inter, system-ui, sans-serif); font-size: 0.875rem; color: #6a6555; min-width: 70px; } .ds-slot__state { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.625rem; letter-spacing: 0.2em; color: #6a6555; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Folder",
+    "overview": "The site is a drawer holding compartments, and each compartment holds folders. CCPM is one compartment, currently the only one with real folders inside it (four: 00 old system, 01 configuration, 02 planning, 03 tasks). The compartment's own name isn't settled — content currently calls it 'VPro redesign' — and naming in general is not locked. Each folder is built from the same ink-on-paper material as everything around it: no manila texture, no hinge, no illustrated cabinet. Physicality comes from construction — a folded corner with a real crease, a stacked-shadow edge that reads as lamination — not from a picture of a folder. Underneath the folder skin is a planning document, not a portfolio grid: compartments and folders load from content/ in build order, the rail is a position readout rather than a menu, and every record opens at a one-line lede with a quiet cue for more underneath. Density is asymmetric on purpose — the frame stays open and airy; a folder itself, once opened, is dense with real information. Pink is rationed to interaction: absent from every surface at rest, present only as hover color, an active-tab mark, or a current-step indicator.",
+    "keyCharacteristics": [
+      "A folder built from one element's stacked, hard-edged box-shadows — no extra DOM layers, no blur standing in for a missing surface.",
+      "Two zoom levels: a folder's own tab row within an open compartment, and a drawer of compartments above that.",
+      "Pink appears only on hover, focus, an active tab, or a current-step marker — never at rest.",
+      "A variable-optical-size serif for anything read as voice, an exact mono for anything read as data, and a plain sans for running prose.",
+      "Flat, square corners are the default; radius is reserved for tab-shaped and small round controls, never for a generic content panel."
+    ],
+    "rules": [
+      { "name": "The Last-2% Rule", "body": "Rose is absent at rest on every surface. It exists only as the reward for hovering, focusing, or opening something.", "section": "colors" },
+      { "name": "The Two-Jobs-One-Hue Rule", "body": "Rose (#d4537e, 3.1:1) marks things where the bar is 3:1. Rose Ink (#a93a63, 4.5:1+) sets type where the bar is 4.5:1. Conflating the two was a real, fixed contrast bug.", "section": "colors" },
+      { "name": "The Board-Text Exception", "body": "Any text sitting on taupe/taupe-2 uses muted-strong, never muted — the same gray measures differently on a darker ground.", "section": "colors" },
+      { "name": "The Optical-Size Rule", "body": "Fraunces loads with its opsz axis on and no fixed weight array. The name and a chapter lede are genuinely different cuts from one file, not one shape scaled.", "section": "typography" },
+      { "name": "The Unfinished Twelve Rule", "body": "Font size in the mono label scale collapses cleanly to four reused steps. Letter-spacing does not: the same 0.5625rem size alone spans three different tracking values across five call sites, with no shared tracking token. Observed, not enforced.", "section": "typography" },
+      { "name": "The One-Rule-Per-Gutter Rule", "body": "Every divider in a data grid is drawn once, centered in the grid's own gap, never repeated as a border on individual cells.", "section": "layout" },
+      { "name": "The No-Ghosts Rule", "body": "Nothing implies a surface that doesn't exist. There is no stacked ghost folder behind the open one.", "section": "elevation" },
+      { "name": "The Radius-Is-For-Tabs Rule", "body": "Panels stay square. Tabs and small round controls get a radius. The folder page is the one exception, square only where it joins the tab row.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do separate every section by whitespace scale alone, never a full-width rule.",
+      "Do render the meta panel and the at-a-glance card as bordered, square panels with tight label/value stacking, never a ruled table.",
+      "Do keep a stub/placeholder tag to one per block, in the corner, in Rose Ink — never repeated inline before every field.",
+      "Do keep the rail sticky and persistent at every viewport.",
+      "Do build any future depth from stacked, opaque, near-zero-blur box-shadows before reaching for extra DOM layers or a soft drop-shadow.",
+      "Do use rose for marks and rose-ink for type — never the reverse.",
+      "Do load Fraunces with its opsz axis active, no fixed weight list.",
+      "Do keep a folder tab's full name in the accessible name at all times, even when visually clipped to a number."
+    ],
+    "donts": [
+      "Don't use a full-width horizontal rule as a section or chapter divider.",
+      "Don't render a field list as a table with a hairline under every row.",
+      "Don't add fake stacked ghost folders behind the open one, or escalate drop-shadow blur to fake extra depth.",
+      "Don't render the folder in photoreal manila texture or add literal cabinet chrome.",
+      "Don't let rose appear anywhere at rest.",
+      "Don't dim a 'coming' label with text-opacity alone — a prior opacity-only attempt measured 2.06:1 and failed AA.",
+      "Don't assume the depth cue ('+N more levels') is wired to anything — confirm before treating it as an interactive spec."
+    ]
+  }
+}

@@ -1,0 +1,2886 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Natasha M. — the whole site, one page.
+
+   Palette and type are locked in CLAUDE.md §5. Three tokens were re-cut for
+   contrast and are documented where they are declared; nothing else moved.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Paper, in three tones. The value steps are what build thickness. ── */
+  --paper: #e7e5db;
+  --paper-2: #edebe2;
+  --paper-3: #f3f1ea;
+
+  /* ── Board. The unopened compartments and the tab cuts. ── */
+  --taupe: #d4d1c4;
+  --taupe-2: #cac6b7;
+  --taupe-3: #beb9a8;
+
+  --ink: #1c1b18;
+  --ink-2: #413e35;
+
+  /* Gray text on paper. Re-cut from #8B8576, which measured 2.9:1 and failed
+     AA at every size it was used at. This is 4.6:1 on --paper and higher on
+     the two lighter tones. */
+  --muted: #6a6555;
+
+  /* Gray text on BOARD — the compartment keys and the closed tab numbers.
+     --muted only reaches 3.8:1 there, so the darker step carries anything set
+     on taupe. 5.8:1. */
+  --muted-strong: #4e4a3e;
+
+  --line: #d6d3c6;
+
+  /* Pink is the interaction layer and appears nowhere at rest (§5). It is
+     split in two by JOB, not by hue: --rose marks (ticks, spines, dots, the
+     active-tab rule) where 3:1 is the bar, --rose-ink sets TYPE, where 4.5:1
+     is. #D4537E measures 3.1:1 and cannot legally carry 9px mono. */
+  --rose: #d4537e;
+  --rose-ink: #a93a63;
+  /* Third, darkest step in the same hue — only the far end of the shelf
+     board's hover gradient, so the board's depth logic matches the folder
+     page's own value-step laminations rather than sitting flat. */
+  --rose-deep: #9c2f5b;
+
+  --shadow: rgba(40, 37, 28, 0.16);
+  --sheen: rgba(255, 255, 255, 0.5);
+  --selection: rgba(190, 58, 110, 0.14);
+
+  color-scheme: light;
+
+  /* ── The mark, and the ground ───────────────────────────────────────
+     Every mark, tick, dot, spine, underline-wipe and focus ring in this
+     file draws in --mark / --mark-ink / --mark-deep rather than in rose
+     directly. On the index they ARE rose. Inside a record they are that
+     record's accent, and the substitution happens once, here, instead of
+     being repeated as an override on each of seventeen call sites.
+
+     The split is by JOB, not hue, and it is inherited from rose: --mark
+     for marks, where 3:1 is the bar, --mark-ink for TYPE, where 4.5:1 is.
+     Every accent is verified against both floors on all three paper tones
+     in both themes before it ships.
+
+     --ground is the page's own paper. It is --paper until a record tints
+     it (see [data-accent] below), and every usage carries --paper as its
+     fallback so a browser without color-mix() simply gets untinted paper. */
+  --mark: var(--rose);
+  --mark-ink: var(--rose-ink);
+  --mark-deep: var(--rose-deep);
+  --ground: var(--paper);
+
+  --display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --serif: var(--display);
+  --mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+
+  --maxw: 1160px;
+  --rail-w: 96px;
+  --gutter: clamp(1.25rem, 4.4vw, 4rem);
+
+  /* Motion. Restrained scrubs, no bounce, no overshoot (§6). */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --quick: 0.2s;
+  --settle: 0.5s;
+}
+
+/* ── Dark ─────────────────────────────────────────────────────────────
+   Same material, read at night: the palette isn't inverted pixel-for-pixel,
+   it's re-derived from the same two rules the light palette already runs
+   on — a closed/receded surface is duller than the page it sits on, an
+   open/current one is brighter — with "duller" and "brighter" now pointing
+   away from a dark canvas instead of a light one. Paper steps UP toward
+   paper-3 as a surface opens, the way it always did; taupe steps DOWN
+   below the canvas for anything closed, because there's no headroom left
+   to go darker than an already-dark paper. Rose is lifted and warmed a
+   touch so both its 3:1 (marks) and 4.5:1 (type) floors still clear
+   against the new, darker grounds — the ratios are the same contract, not
+   a relaxed one.
+
+   Applied three ways: the media query alone (system dark, no explicit
+   choice), the query plus an explicit dark override doing nothing new
+   (kept identical on purpose — one palette, not two), and an explicit
+   light override that has to win even when the system prefers dark. The
+   light override's higher selector specificity — an attribute selector
+   beats a bare :root — is what makes that last case work regardless of
+   source order.
+   ───────────────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #18191b;
+    --paper-2: #212325;
+    --paper-3: #2b2d30;
+
+    --taupe: #101112;
+    --taupe-2: #0c0d0e;
+    --taupe-3: #08090a;
+
+    --ink: #ececed;
+    --ink-2: #c7c8cb;
+
+    --muted: #9b9ca0;
+    --muted-strong: #bcbdc1;
+
+    --line: #35373a;
+
+    --rose: #e0648c;
+    --rose-ink: #f0a8c2;
+    --rose-deep: #a53e64;
+
+    --shadow: rgba(0, 0, 0, 0.55);
+    --sheen: rgba(235, 238, 240, 0.05);
+    --selection: rgba(224, 100, 140, 0.25);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #18191b;
+  --paper-2: #212325;
+  --paper-3: #2b2d30;
+
+  --taupe: #101112;
+  --taupe-2: #0c0d0e;
+  --taupe-3: #08090a;
+
+  --ink: #ececed;
+  --ink-2: #c7c8cb;
+
+  --muted: #9b9ca0;
+  --muted-strong: #bcbdc1;
+
+  --line: #35373a;
+
+  --rose: #e0648c;
+  --rose-ink: #f0a8c2;
+  --rose-deep: #a53e64;
+
+  --shadow: rgba(0, 0, 0, 0.55);
+  --sheen: rgba(235, 238, 240, 0.05);
+  --selection: rgba(224, 100, 140, 0.25);
+
+  color-scheme: dark;
+}
+
+/* Wins over the dark media query even when the system prefers dark: an
+   attribute selector on :root is more specific than a bare :root, so this
+   applies regardless of where it sits in the file. */
+:root[data-theme="light"] {
+  --paper: #e7e5db;
+  --paper-2: #edebe2;
+  --paper-3: #f3f1ea;
+
+  --taupe: #d4d1c4;
+  --taupe-2: #cac6b7;
+  --taupe-3: #beb9a8;
+
+  --ink: #1c1b18;
+  --ink-2: #413e35;
+
+  --muted: #6a6555;
+  --muted-strong: #4e4a3e;
+
+  --line: #d6d3c6;
+
+  --rose: #d4537e;
+  --rose-ink: #a93a63;
+  --rose-deep: #9c2f5b;
+
+  --shadow: rgba(40, 37, 28, 0.16);
+  --sheen: rgba(255, 255, 255, 0.5);
+  --selection: rgba(190, 58, 110, 0.14);
+
+  color-scheme: light;
+}
+
+/* ── Accent: a record's own identity ──────────────────────────────────
+   The neutral foundation never moves; the accent is how a reader knows at
+   a glance which record they are in. It shows AT REST, but only ever as
+   structure — the spine's edge, a chapter's margin numeral, one hairline,
+   the paper's own tint — and never as a type fill, a badge or a filled
+   border. Rose withdraws entirely on a record, and the accent inherits the
+   whole interaction layer in its place, so there is still exactly one
+   accent on screen and it is still the last ~2% of it (§5's pink rule,
+   amended rather than broken: the ration is the rule, the hue was the
+   default).
+
+   Two triples per name, because a muted olive that clears 4.5:1 on paper
+   is invisible on a dark ground and vice versa. Declared here without
+   reference to theme; the four resolution blocks below pick the pair the
+   same way the palette itself is picked. Adding a fourth record is one
+   block here and one line of frontmatter. ───────────────────────────── */
+
+[data-accent="olive"] {
+  --a: #6b7a3a;
+  --a-ink: #4c5626;
+  --a-deep: #3a4220;
+  --a-dark: #a8bc63;
+  --a-ink-dark: #c3d485;
+  --a-deep-dark: #8a9c4c;
+}
+
+[data-accent="navy"] {
+  --a: #3d6293;
+  --a-ink: #2b4668;
+  --a-deep: #1e3350;
+  --a-dark: #7ba3d4;
+  --a-ink-dark: #a8c6e8;
+  --a-deep-dark: #5c84b5;
+}
+
+[data-accent="burgundy"] {
+  --a: #8e3a45;
+  --a-ink: #6f2832;
+  --a-deep: #551d25;
+  --a-dark: #cf7d88;
+  --a-ink-dark: #e5a8b0;
+  --a-deep-dark: #bd7581;
+}
+
+/* Light, by default. The bare attribute selector matches wherever the
+   accent is set — on <html> once a record has mounted, and on `.shell` in
+   the server-rendered markup, so every mark is already the right colour in
+   the first paint rather than flashing rose and correcting. */
+[data-accent] {
+  --mark: var(--a);
+  --mark-ink: var(--a-ink);
+  --mark-deep: var(--a-deep);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-accent] {
+    --mark: var(--a-dark);
+    --mark-ink: var(--a-ink-dark);
+    --mark-deep: var(--a-deep-dark);
+  }
+}
+
+/* An explicit choice has to beat the system preference in both directions,
+   so both are written out at a specificity the media query above cannot
+   reach, with light last so it wins the tie against dark. Each covers the
+   accent sitting on <html> itself and on a descendant. */
+:root[data-theme="dark"][data-accent],
+:root[data-theme="dark"] [data-accent] {
+  --mark: var(--a-dark);
+  --mark-ink: var(--a-ink-dark);
+  --mark-deep: var(--a-deep-dark);
+}
+
+:root[data-theme="light"][data-accent],
+:root[data-theme="light"] [data-accent] {
+  --mark: var(--a);
+  --mark-ink: var(--a-ink);
+  --mark-deep: var(--a-deep);
+}
+
+/* The ground step: the record's paper stock, ~4.5% of the way toward its
+   own accent. Derived from the already-resolved --mark, so it needs no
+   per-theme value of its own and cannot drift out of step with one.
+
+   Scoped to :root deliberately — the tint belongs to the page behind
+   everything, including the area outside the shell's max width and the
+   overscroll gutter, and applying it to the shell as well would draw a
+   seam down both margins for the one frame before hydration. */
+:root[data-accent] {
+  --ground: color-mix(in oklab, var(--paper) 95.5%, var(--mark));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* The rail is sticky; anchor targets have to clear it. */
+  scroll-padding-top: 1.5rem;
+  /* Nothing may push the page sideways. The strips scroll inside themselves.
+     This has to live on html, not body: setting overflow-x on body alone
+     leaves overflow-y at its default, and the UA auto-computes that to
+     `auto` per the CSS Overflow spec's propagation rule — which silently
+     turns body into its own scroll container. position:sticky then
+     resolves its nearest scroll-container ancestor to that body box
+     instead of the viewport, and since body never actually scrolls
+     internally (the visible scrolling still happens on the viewport),
+     the whole rail simply detaches and scrolls away with the page. Setting
+     it on html avoids ever creating that second, inert scroll container. */
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--ground, var(--paper));
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--mark-ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Inside a horizontal scroller an offset outline is clipped by the scroll
+   box, so the tabs take their ring on the inside instead. */
+.comp:focus-visible,
+.tab:focus-visible {
+  outline-offset: -3px;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────────── */
+
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  transform: translateY(-120%);
+  background: var(--ink);
+  color: var(--paper-3);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.875rem 1.25rem;
+  transition: transform var(--quick) var(--ease);
+}
+.skip:focus-visible {
+  transform: translateY(0);
+  outline-offset: -5px;
+}
+
+/* ── Shell ───────────────────────────────────────────────────────────── */
+
+.shell {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.sheet {
+  min-width: 0;
+  padding: clamp(2rem, 4vw, 3.5rem) var(--gutter) 2.5rem;
+}
+
+/* ── The rail ────────────────────────────────────────────────────────── */
+
+.rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.125rem 0 1.875rem;
+  border-right: 1px solid var(--line);
+  background: var(--ground, var(--paper));
+  z-index: 20;
+  animation: assemble-rail var(--settle) var(--ease) both;
+}
+
+.rail-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.375rem;
+  font-variation-settings: "opsz" 40;
+  line-height: 1;
+}
+
+/* A text-only action: no border, so it gets §6's own idiom instead of the
+   pager's outlined-button one — a ~3px lift and a pink underline that wipes
+   in from the left, ~0.5s. */
+.rail-up {
+  position: relative;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+  padding: 0.5rem 0.25rem;
+  transition:
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.rail-up:hover,
+.rail-up:focus-visible {
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+.rail-up::after {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  right: 0.25rem;
+  bottom: 0;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.rail-up:hover::after,
+.rail-up:focus-visible::after {
+  transform: scaleX(1);
+}
+.rail-up .arw {
+  display: block;
+  color: var(--mark-ink);
+  font-size: 0.6875rem;
+}
+
+.rail-key {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  color: var(--mark-ink);
+  text-align: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  width: 52px;
+  margin: 0;
+}
+
+.rail-nums,
+.slot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rail-nums {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 2px;
+}
+
+.rail-num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color var(--quick) var(--ease),
+    background var(--quick) var(--ease);
+}
+.rail-num:hover {
+  color: var(--ink);
+  background: var(--paper-2);
+}
+.rail-num[aria-current="step"] {
+  color: var(--mark-ink);
+}
+
+/* Pinned to the bottom of the sticky column with the same auto-margin
+   trick a footer uses in a flex page — the rail is a flex column, so
+   nothing before this ever has to reserve space for it. */
+.theme-toggle {
+  margin-top: auto;
+}
+
+/* ── The load-in assembly (§1b) ───────────────────────────────────────── */
+/* "Displace-style composed assembly": the workspace booting, not a scroll
+   drift or a fade-up. The rail slides in on its own axis; the hero column
+   cascades top-to-bottom in reading order; the meta panel sets after the
+   words that introduce it; the pictorial — the outcome — settles last.
+   Reuses --settle/--ease rather than a new duration, so this reads as one
+   motion system with the chapter slide, not a second one bolted on. */
+@keyframes assemble {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes assemble-rail {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────── */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 296px;
+  gap: 2.125rem 3.5rem;
+  align-items: start;
+}
+
+.hero .eyebrow,
+.hero-name,
+.hero-role,
+.hero-line {
+  animation: assemble var(--settle) var(--ease) both;
+}
+.hero .eyebrow {
+  animation-delay: 0.08s;
+}
+.hero-name {
+  animation-delay: 0.15s;
+}
+.hero-role {
+  animation-delay: 0.24s;
+}
+.hero-line {
+  animation-delay: 0.3s;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.eyebrow.rose {
+  color: var(--mark-ink);
+}
+
+.hero-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.75rem, 10.5vw, 6.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin: 0.875rem 0 0;
+  font-variation-settings: "opsz" 120;
+}
+
+.hero-role {
+  font-family: var(--mono);
+  font-size: 0.78125rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+  margin: 1.125rem 0 1.625rem;
+}
+
+.hero-line {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.1875rem, 2.1vw, 1.3125rem);
+  line-height: 1.42;
+  color: var(--ink-2);
+  max-width: 34ch;
+  margin: 0;
+  font-variation-settings: "opsz" 40;
+}
+.hero-line em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* The meta block: a PANEL, never a ruled table (§1). Label over value, tight,
+   no rule between rows — the border belongs to the block, not the data. */
+.card {
+  animation: assemble var(--settle) var(--ease) both;
+  animation-delay: 0.4s;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  padding: 1.375rem 1.5rem 1.5rem;
+  position: relative;
+}
+
+/* Marked ONCE, quietly, per block — never inline before every field (§1). */
+.card-tag {
+  position: absolute;
+  top: -0.5625rem;
+  right: 0.875rem;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  color: var(--mark-ink);
+  background: var(--ground, var(--paper));
+  padding: 0 0.375rem;
+}
+
+.card-row + .card-row {
+  margin-top: 0.9375rem;
+}
+
+.card-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.card-val {
+  font-family: var(--sans);
+  font-size: 0.90625rem;
+  line-height: 1.42;
+  color: var(--ink);
+  display: block;
+}
+
+.card-row.is-stub .card-val {
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.9375rem;
+  font-variation-settings: "opsz" 20;
+}
+
+/* An original abstraction drawn in code. Never a screenshot (§8). */
+.plate {
+  animation: assemble var(--settle) var(--ease) both;
+  animation-delay: 0.52s;
+  margin: 0;
+  border: 1px dashed var(--taupe-2);
+  background: var(--paper-3);
+  padding: 1.125rem 1.125rem 0.875rem;
+}
+.plate svg {
+  width: 100%;
+  height: auto;
+}
+.plate figcaption {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+}
+
+/* ── The hand-off into the work ──────────────────────────────────────── */
+
+/* Not a divider — a heading with a short lead-in mark. Sections separate by
+   whitespace scale alone; a full-width rule is what made this read as a CV. */
+.open-line {
+  animation: assemble var(--settle) var(--ease) both;
+  animation-delay: 0.62s;
+  display: flex;
+  align-items: center;
+  gap: 1.125rem;
+  margin: clamp(2.5rem, 6vw, 4.125rem) 0 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.open-line .dash {
+  flex: none;
+  width: 34px;
+  height: 1px;
+  background: var(--taupe-3);
+}
+
+/* ── Compartments: the layer above the folder ────────────────────────── */
+
+.comp-strip {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  position: relative;
+  z-index: 5;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.comp {
+  position: relative;
+  flex: 0 0 auto;
+  background: var(--taupe);
+  border: 1px solid var(--taupe-3);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  padding: 0.8125rem 1.25rem 0.9375rem;
+  min-height: 44px;
+  transition:
+    background var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.comp-key {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-strong);
+  margin-bottom: 3px;
+}
+.comp-name {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.comp:hover {
+  background: #dad7ca;
+}
+.comp[aria-selected="true"] {
+  background: var(--paper-3);
+  border-color: var(--line);
+  transform: translateY(1px);
+}
+.comp[aria-selected="true"] .comp-key {
+  color: var(--mark-ink);
+}
+.comp[aria-selected="true"] .comp-name {
+  color: var(--ink);
+  font-weight: 500;
+}
+/* The spine: the open compartment is joined to the well below it. */
+.comp[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: var(--mark);
+}
+
+/* ── The well: one compartment open, holding its folder ──────────────── */
+
+.well {
+  background: var(--paper-3);
+  border: 1px solid var(--line);
+  border-radius: 0 3px 0 0;
+  padding: 1.375rem clamp(0.875rem, 2.2vw, 1.625rem) clamp(1.25rem, 2.4vw, 1.75rem);
+  position: relative;
+  z-index: 1;
+  margin-top: -1px;
+  box-shadow: inset 0 1px 0 var(--sheen);
+}
+
+.well-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+}
+
+.well-desc {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.96875rem;
+  color: var(--muted);
+  font-variation-settings: "opsz" 20;
+}
+
+.well-count {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Folder tabs: the cut tabs on file dividers ──────────────────────── */
+
+.tablist {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  position: relative;
+  z-index: 3;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.tab {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--muted-strong);
+  background: var(--taupe);
+  border: 1px solid var(--taupe-2);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  padding: 0.6875rem 0.875rem 0.75rem;
+  min-height: 44px;
+  white-space: nowrap;
+  transition:
+    background var(--quick) var(--ease),
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.tab:hover {
+  color: var(--ink);
+  background: #dad7ca;
+}
+.tab[aria-selected="true"] {
+  background: var(--paper-2);
+  color: var(--ink);
+  border-color: var(--line);
+  padding-right: 1.25rem;
+  transform: translateY(1px);
+  z-index: 2;
+}
+
+/* The chapter name is always in the accessible name; it is only the SIGHTED
+   read that collapses to a number on a closed tab. `display:none` here would
+   have taken the title away from a screen reader too. */
+.tab-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.tab[aria-selected="true"] .tab-name {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+  margin-left: 0.5rem;
+}
+
+/* The marker on the active cut. Pink is the reward for interacting. */
+.tab .tick {
+  position: absolute;
+  top: 5px;
+  left: 0.875rem;
+  width: 18px;
+  height: 2px;
+  background: var(--mark);
+  opacity: 0;
+  transition: opacity var(--quick) var(--ease);
+}
+.tab[aria-selected="true"] .tick {
+  opacity: 1;
+}
+
+/* ── The chapter hand-off (slide) ────────────────────────────────────── */
+/* §1a: only the HAND-OFF between chapters slides — the current record pushes
+   off to the side as the next slides in. Both sheets share one grid cell
+   (grid-area stacking) so the row sizes to whichever is taller and the two
+   never fight for space mid-transition. No overflow:hidden on the wrapper —
+   the folder's own contact shadow and fold reach slightly past its box, and
+   clipping the wrapper would cut them off during the move. */
+.page-slide {
+  display: grid;
+}
+.page-slide-slot {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.page-slide-exit-left,
+.page-slide-exit-right {
+  animation: page-slide-out-left var(--settle) var(--ease) both;
+  pointer-events: none;
+}
+.page-slide-exit-right {
+  animation-name: page-slide-out-right;
+}
+.page-slide-enter-left,
+.page-slide-enter-right {
+  animation: page-slide-in-left var(--settle) var(--ease) both;
+}
+.page-slide-enter-right {
+  animation-name: page-slide-in-right;
+}
+@keyframes page-slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+}
+@keyframes page-slide-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+@keyframes page-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes page-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── The folder page ─────────────────────────────────────────────────── */
+
+/* Thickness is built from value-stepped laminations and crisp edges — never
+   from blur (§1d). The stacked hard shadows ARE the back cover and the two
+   edge layers; the single soft one at the end is the contact shadow. */
+.page-frame {
+  position: relative;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 0 3px 3px 3px;
+  margin-top: -1px;
+  padding: clamp(1.5rem, 3.2vw, 2.625rem) clamp(1.375rem, 3.4vw, 3.125rem)
+    clamp(1.75rem, 3.2vw, 2.5rem);
+  box-shadow:
+    5px 6px 0 -1px var(--paper-2),
+    6px 7px 0 -1px var(--line),
+    11px 13px 0 -2px var(--paper-2),
+    12px 14px 0 -2px var(--line),
+    0 18px 40px -26px var(--shadow);
+  overflow: hidden;
+}
+
+/* One honest fold. The corner is cut away to the board behind it… */
+.page-frame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--fold, 32px);
+  height: var(--fold, 32px);
+  background: var(--taupe);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+/* …and the flap lies back over the sheet, lighter, with a visible crease.
+   The crease sits at 50% of the gradient, not 100%: a 45° gradient measures
+   corner to corner, and the flap's hypotenuse is the midpoint of that run.
+   At 100% the line lands outside the clip and never draws. */
+.page-frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--fold, 32px);
+  height: var(--fold, 32px);
+  background: linear-gradient(
+    45deg,
+    var(--paper-3) 0 calc(50% - 0.75px),
+    var(--taupe-3) calc(50% - 0.75px) calc(50% + 0.75px),
+    transparent calc(50% + 0.75px)
+  );
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.page-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.875rem;
+  padding-right: 2.25rem;
+}
+
+.page-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2rem, 5.2vw, 3.625rem);
+  line-height: 0.99;
+  letter-spacing: -0.015em;
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 90;
+  overflow-wrap: break-word;
+}
+
+/* Level 1. Reads in ten seconds. */
+.page-lede {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.1875rem, 2.2vw, 1.375rem);
+  line-height: 1.42;
+  color: var(--ink);
+  max-width: 38ch;
+  margin: 0 0 1.125rem;
+  font-variation-settings: "opsz" 40;
+}
+.page-lede.is-stub {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Level 2 — lives inside .page-reveal now; gated behind the depth reveal
+   rather than always open (§1's "depth defaults closed" applied to the one
+   level of real content that exists). */
+.page-body {
+  font-family: var(--sans);
+  font-size: 0.90625rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+.page-body > :first-child {
+  margin-top: 0;
+}
+.page-body > :last-child {
+  margin-bottom: 0;
+}
+
+/* Dividers live in GUTTERS, never flush against text (§1d). The columns keep
+   a shared rhythm because the rule is drawn in the gap, not on the cell.
+   Meta stays part of level 1 — short facts, scannable in the same ten
+   seconds as the lede — so it sits before the reveal, not inside it. */
+.meta-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.375rem;
+  margin-top: 1.875rem;
+  padding-top: 1.125rem;
+  position: relative;
+}
+.meta-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: var(--line);
+}
+.meta-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 0.3125rem;
+}
+.meta-val {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+  display: block;
+}
+
+/* Depth defaults CLOSED (§1) — a real toggle now, not a static label. The
+   quiet affordance is a small dot that turns solid pink once open, per the
+   Depth Reveal component spec. */
+.page-more {
+  display: flex;
+  align-items: center;
+  gap: 0.5625rem;
+  margin-top: 1.625rem;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  transition: color var(--quick) var(--ease);
+}
+.page-more:hover,
+.page-more:focus-visible {
+  color: var(--ink);
+}
+.page-more .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line);
+  flex: none;
+  transition: background var(--quick) var(--ease);
+}
+.page-more[aria-expanded="true"] .dot {
+  background: var(--mark);
+}
+
+/* The reveal itself: a grid-template-rows tween (0fr → 1fr), not max-height —
+   it tolerates content of unknown height instead of guessing at one. The
+   inner element's overflow:hidden is what actually clips a 0fr track; the
+   content underneath is never removed from the DOM, only collapsed. */
+.page-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--settle) var(--ease);
+}
+.page-reveal[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.page-reveal-inner {
+  overflow: hidden;
+}
+.page-reveal .page-body {
+  padding-top: 1.125rem;
+}
+
+/* The honest gap between what's written and what §4 commits to eventually
+   writing — same stub register as the opening card's placeholder rows. */
+.page-stub-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 0.875rem;
+  font-variation-settings: "opsz" 20;
+}
+
+.pager {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.375rem;
+}
+.pager button {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  border: 1px solid var(--taupe-3);
+  border-radius: 5px;
+  padding: 0.5625rem 0.875rem;
+  min-height: 44px;
+  background: var(--paper-3);
+  transition:
+    color var(--quick) var(--ease),
+    border-color var(--quick) var(--ease),
+    background var(--quick) var(--ease);
+}
+.pager button:hover:not(:disabled) {
+  color: var(--ink);
+  background: var(--paper-2);
+}
+.pager button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── The drawer: the view pulls back out ─────────────────────────────── */
+
+.drawer {
+  margin-top: clamp(3rem, 7vw, 4.625rem);
+}
+
+.drawer-heading {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.125rem;
+}
+
+.shelf {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+.shelf-face {
+  display: flex;
+  align-items: center;
+  gap: 1.375rem;
+  flex-wrap: wrap;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  padding: 1.1875rem 1.625rem;
+  position: relative;
+  z-index: 2;
+  transition: background var(--quick) var(--ease);
+}
+.shelf:hover .shelf-face {
+  background: var(--paper-3);
+}
+/* The board the folder stands on. Neutral at rest for every shelf, current
+   or not — "current" is already carried by the key's rose-ink text, the same
+   way the rail marks a step without a permanently-lit graphic. Pink here is
+   the reward for hovering, matching the tab tick and the folder-page dot. */
+.shelf::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: -9px;
+  height: 11px;
+  background: linear-gradient(180deg, var(--taupe) 0%, var(--taupe-2) 100%);
+  border: 1px solid var(--taupe-2);
+  border-top: 0;
+  z-index: 1;
+  transition:
+    background var(--quick) var(--ease),
+    border-color var(--quick) var(--ease);
+}
+.shelf:hover::after,
+.shelf:focus-visible::after {
+  background: linear-gradient(180deg, var(--mark) 0%, var(--mark-deep) 100%);
+  border-color: var(--mark-deep);
+}
+.shelf-key {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--mark-ink);
+  min-width: 62px;
+}
+.shelf-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.4375rem;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 40;
+}
+.shelf-sub {
+  font-family: var(--sans);
+  color: var(--muted);
+  font-size: 0.84375rem;
+}
+.shelf-sub b {
+  color: var(--ink-2);
+  font-weight: 400;
+}
+.shelf-cta {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mark-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.25s var(--ease);
+}
+.shelf:hover .shelf-cta,
+.shelf:focus-visible .shelf-cta {
+  gap: 0.875rem;
+}
+
+/* Labelled, dimmed, clearly coming. Quiet to near-invisible until filled —
+   never let the empty slots dominate (§1c). Inert by construction: not a
+   button, no handler, nothing to click. */
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  border: 1px dashed var(--taupe-2);
+  padding: 0.9375rem 1.625rem;
+  margin-top: 0.75rem;
+  min-height: 44px;
+}
+.slot-key {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--muted);
+  min-width: 70px;
+}
+.slot-state {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+.drawer-note {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 60ch;
+  margin: 1.375rem 0 0;
+}
+
+/* ── The foot ────────────────────────────────────────────────────────── */
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 4rem;
+  padding-top: 1.375rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.foot p {
+  margin: 0;
+}
+/* Both foot links are text-only actions: §6's lift + underline-wipe idiom,
+   same as .rail-up — no border to invert, so no reason to borrow the
+   pager's button treatment. */
+.foot a {
+  position: relative;
+  transition:
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+/* The address is the only link in its line, so it is a target in its own
+   right rather than an inline one, and has to carry a real hit area. */
+.foot p a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.foot a:hover,
+.foot a:focus-visible {
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+.foot a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.foot a:hover::after,
+.foot a:focus-visible::after {
+  transform: scaleX(1);
+}
+.foot .rose {
+  color: var(--mark-ink);
+}
+.to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem;
+  min-height: 44px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Responsive. Checked at 1440 / 1280 / 1024 / 768 / 430 / 390 / 360.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* The card column stops being a column before it stops being readable. */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 1.75rem 2.5rem;
+  }
+}
+
+@media (max-width: 880px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The rail stays PERSISTENT — it lies down and sticks to the top rather
+     than scrolling away. §1 requires a real, always-on-screen element. */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: auto;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6px;
+    padding: 0.75rem var(--gutter);
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .rail-mark,
+  .rail-up,
+  .rail-key {
+    flex: 0 0 auto;
+  }
+  .rail-up {
+    padding: 0.25rem 0.5rem;
+  }
+  .rail-up .arw {
+    display: inline;
+    margin-right: 0.25rem;
+  }
+  .rail-key {
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    padding: 0 0 0 0.875rem;
+    width: auto;
+  }
+  .rail-nums {
+    flex-direction: row;
+    margin: 0;
+  }
+  .theme-toggle {
+    flex: 0 0 auto;
+    margin-top: 0;
+    margin-left: auto;
+    padding-left: 0.75rem;
+  }
+
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  .sheet {
+    padding: 2.125rem var(--gutter) 2.125rem;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+  .hero-side {
+    max-width: 420px;
+  }
+
+  .meta-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.125rem;
+  }
+
+  .well {
+    padding: 1.125rem 0.875rem 1.25rem;
+  }
+
+  /* Fewer laminations at small sizes: the edges stay crisp, the stack just
+     stops eating the gutter. */
+  .page-frame {
+    box-shadow:
+      4px 5px 0 -1px var(--paper-2),
+      5px 6px 0 -1px var(--line),
+      0 16px 36px -26px var(--shadow);
+  }
+}
+
+@media (max-width: 520px) {
+  .page-frame {
+    --fold: 24px;
+  }
+  .page-top {
+    padding-right: 1.75rem;
+  }
+  .meta-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .tab {
+    padding: 0.625rem 0.6875rem;
+    font-size: 0.6875rem;
+  }
+  .shelf-face {
+    padding: 1rem 1.125rem;
+    gap: 0.5rem 1rem;
+  }
+  .shelf-cta {
+    margin-left: 0;
+  }
+  .slot {
+    padding: 0.875rem 1.125rem;
+  }
+  .foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.625rem;
+  }
+  .pager {
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────── */
+/* MOTION sits at 5, so this is mandatory, not optional (§5). All content
+   stays; only the movement goes. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .comp[aria-selected="true"],
+  .tab[aria-selected="true"] {
+    transform: none;
+  }
+}
+
+/* ── Forced colours ──────────────────────────────────────────────────── */
+/* The whole site distinguishes state with value and hue. In a forced palette
+   both are gone, so state has to be redrawn with borders. */
+@media (forced-colors: active) {
+  .comp,
+  .tab,
+  .pager button,
+  .shelf-face,
+  .card,
+  .page-frame,
+  .well {
+    border: 1px solid CanvasText;
+  }
+  .comp[aria-selected="true"],
+  .tab[aria-selected="true"] {
+    border-width: 2px;
+  }
+  .page-frame {
+    box-shadow: none;
+  }
+  .tick,
+  .dot {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RECORDS — a case study on its own route.
+
+   Nothing below invents a second visual language. It reuses this file's own
+   idioms (the lift-plus-underline-wipe, the panel, the gutter-drawn rule,
+   the assemble stagger, --settle/--ease) on a new information architecture:
+   the index chooses a record, a record IS one continuous document.
+
+   The folder object does not appear here. It did its work on the index and
+   it is spent — which is also the one thing the brief asked not to repeat.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Type in a record's accent. Always --mark-ink, never --mark: this class
+   only ever colours words, and 3:1 is not enough for words. */
+.accent-ink {
+  color: var(--mark-ink);
+}
+
+/* ── The route hand-off ──────────────────────────────────────────────── */
+/* The exit half of the gesture whose other half is the arriving page's own
+   assemble stagger (§1b) — same easing, same direction of travel, so a
+   reader sees one move rather than two. Shorter than --settle on purpose:
+   it is a departure, and it is delaying a real navigation. Only the sheet
+   moves; the rail and the spine hold still, so a record reads as sliding
+   out from behind a structural column that was never part of the move. */
+.shell[data-leaving] .sheet {
+  animation: leave-in 0.24s var(--ease) both;
+}
+.shell[data-leaving="out"] .sheet {
+  animation-name: leave-out;
+}
+@keyframes leave-in {
+  to {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
+}
+@keyframes leave-out {
+  to {
+    opacity: 0;
+    transform: translateX(22px);
+  }
+}
+
+/* ── The reading spine ───────────────────────────────────────────────── */
+/* The rail's successor, not a second thing: same 96px structural column in
+   the same shell grid, same typographic discipline, same job. What it drops
+   is the folder-tab model — inside a record you are in one document, not
+   choosing between records. */
+.spine {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9375rem;
+  padding: 2.125rem 0 1.875rem;
+  border-right: 1px solid var(--line);
+  background: var(--ground, var(--paper));
+  z-index: 20;
+  animation: assemble-rail var(--settle) var(--ease) both;
+}
+
+/* The mark is the way home — typographic, never an icon, and a real link
+   rather than a decorative monogram. */
+.spine-mark {
+  position: relative;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.375rem;
+  font-variation-settings: "opsz" 40;
+  line-height: 1;
+  padding: 0.375rem 0.5rem;
+  transition:
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.spine-mark::after {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.spine-mark:hover,
+.spine-mark:focus-visible {
+  transform: translateY(-3px);
+}
+.spine-mark:hover::after,
+.spine-mark:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.spine-key {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  color: var(--mark-ink);
+  text-align: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  width: 60px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The chapter list and the read measure, as one object. */
+.spine-track {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.25rem 0;
+}
+.spine-track::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  width: 1px;
+  background: var(--taupe-3);
+}
+/* Drawn at full length and scaled down, rather than given a computed height:
+   a scroll handler updates --read every frame, and scaleY stays on the
+   compositor where height would relayout and repaint on each one. The bar is
+   1px WIDE and scaled on the other axis, so nothing it draws softens. */
+.spine-fill {
+  position: absolute;
+  left: 17px;
+  top: 0.75rem;
+  width: 1px;
+  height: calc(100% - 1.5rem);
+  background: var(--mark);
+  transform: scaleY(var(--read, 0));
+  transform-origin: top;
+}
+
+.spine-nums {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.spine-num {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem 0.625rem;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  transition:
+    color var(--quick) var(--ease),
+    background var(--quick) var(--ease);
+}
+.spine-num:hover {
+  color: var(--ink);
+  background: var(--paper-2);
+}
+/* The travelling marker: a short dash on the measure, at the chapter being
+   read. The one moving part, and it moves because the reader scrolled. */
+.spine-num::before {
+  content: "";
+  position: absolute;
+  left: -0.4375rem;
+  width: 9px;
+  height: 2px;
+  background: var(--mark);
+  opacity: 0;
+  transition: opacity var(--quick) var(--ease);
+}
+.spine-num[aria-current="location"] {
+  color: var(--mark-ink);
+}
+.spine-num[aria-current="location"]::before {
+  opacity: 1;
+}
+
+.spine-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+/* On a record these four ARE the navigation — catalogue, drawer, contact,
+   theme — so they carry the 44px minimum the rail's numbers and the foot's
+   links already do, rather than the index rail's single 25px text link. */
+.spine-mark,
+.spine-foot .rail-up {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+.spine-foot .rail-up {
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+}
+.spine-jump {
+  width: 100%;
+}
+
+/* ── The catalogue ───────────────────────────────────────────────────── */
+/* Jump anywhere, from anywhere. A native <dialog>, so the focus containment,
+   the Escape key, the inert background and the backdrop are the platform's
+   rather than reimplemented — a hand-rolled focus trap passes every test
+   except a real screen reader. It slides from the left edge: the drawer's
+   index cards pulled out to be looked through. */
+.cat {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-width: min(30rem, 100%);
+  width: 100%;
+  max-height: 100dvh;
+  height: 100dvh;
+  background: var(--paper-3);
+  border-right: 1px solid var(--line);
+  color: var(--ink);
+  box-shadow: 0 0 60px -20px var(--shadow);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cat[open] {
+  animation: cat-in var(--settle) var(--ease) both;
+}
+@keyframes cat-in {
+  from {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+}
+.cat::backdrop {
+  background: rgba(28, 27, 24, 0.42);
+}
+.cat-inner {
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.25rem) 2.5rem;
+}
+.cat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.cat-heading {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.4375rem;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 40;
+  margin: 0;
+}
+.cat-close {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.5rem 0.25rem;
+  min-height: 44px;
+  transition: color var(--quick) var(--ease);
+}
+.cat-close:hover,
+.cat-close:focus-visible {
+  color: var(--ink);
+}
+.cat-key {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.5rem 0 0.625rem;
+}
+.cat-key:first-of-type {
+  margin-top: 0;
+}
+.cat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* A grid, not a card: no border, no fill. The one accent at rest is the
+   short rule in the leading gutter — a record's colour arriving before its
+   page does. */
+.cat-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.125rem 0.75rem;
+  padding: 0.8125rem 0 0.8125rem 1.375rem;
+  min-height: 44px;
+  align-content: center;
+  transition: transform var(--quick) var(--ease);
+}
+.cat-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.25rem;
+  width: 11px;
+  height: 2px;
+  background: var(--mark);
+}
+.cat-item.is-shelf::before {
+  background: var(--taupe-3);
+}
+.cat-item:hover,
+.cat-item:focus-visible {
+  transform: translateX(3px);
+}
+.cat-item-key {
+  grid-column: 1;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mark-ink);
+}
+.cat-item.is-shelf .cat-item-key {
+  color: var(--muted);
+}
+.cat-item-name {
+  grid-column: 1;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.1875rem;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 30;
+  color: var(--ink);
+}
+.cat-item-sub {
+  grid-column: 1;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.cat-item-state {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cat-item[aria-current="page"] .cat-item-state {
+  color: var(--mark-ink);
+}
+.cat-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2.25rem;
+  padding-top: 1.125rem;
+  border-top: 1px solid var(--line);
+}
+.cat-home {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  transition:
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.cat-home:hover,
+.cat-home:focus-visible {
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+
+/* ── The masthead ────────────────────────────────────────────────────── */
+/* The first viewport of a record, built for someone deciding whether to
+   read it. Everything here is at rest: depth defaults closed (§1), but
+   depth means the levels BELOW a chapter's opening line, never the facts
+   that decide whether to start. */
+.mast {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 296px;
+  gap: 2.125rem 3.5rem;
+  align-items: start;
+}
+.mast-lead {
+  min-width: 0;
+}
+.mast-side {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* The same staggered assembly the index opens with (§1b), on the same
+   tokens and in reading order — so arriving at a record is recognisably the
+   same workspace booting, not a second animation vocabulary. */
+.mast-eyebrow,
+.mast-title,
+.mast-problem,
+.mast-desc,
+.mast-facts,
+.mast .plate,
+.contents {
+  animation: assemble var(--settle) var(--ease) both;
+}
+.mast-eyebrow {
+  animation-delay: 0.08s;
+}
+.mast-title {
+  animation-delay: 0.15s;
+}
+.mast-problem {
+  animation-delay: 0.24s;
+}
+.mast-desc {
+  animation-delay: 0.3s;
+}
+.mast-facts {
+  animation-delay: 0.4s;
+}
+.mast .plate {
+  animation-delay: 0.52s;
+}
+.contents {
+  animation-delay: 0.62s;
+}
+
+.mast-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  margin: 0.875rem 0 0;
+  font-variation-settings: "opsz" 100;
+  overflow-wrap: break-word;
+}
+
+/* The problem, in one line — the ten-second read, in the record's voice. */
+.mast-problem {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.1875rem, 2.2vw, 1.4375rem);
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 34ch;
+  margin: 1.375rem 0 0;
+  font-variation-settings: "opsz" 40;
+}
+.mast-problem.is-stub {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.mast-desc {
+  font-family: var(--sans);
+  font-size: 0.90625rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 52ch;
+  margin: 1.125rem 0 0;
+}
+
+/* ── The contents ────────────────────────────────────────────────────── */
+/* Real anchors, so the scan and the navigation are one object rather than a
+   list beside a list. No rule under any row — a ruled field list is the CV
+   pattern this whole design exists to avoid (§1). */
+.contents {
+  grid-column: 1 / -1;
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+.contents-key {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+.contents-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.contents-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.875rem;
+  padding: 0.9375rem 0.25rem;
+  min-height: 44px;
+  transition: transform var(--quick) var(--ease);
+}
+.contents-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.contents-item:hover::after,
+.contents-item:focus-visible::after {
+  transform: scaleX(1);
+}
+.contents-item:hover,
+.contents-item:focus-visible {
+  transform: translateX(3px);
+}
+.contents-num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--mark-ink);
+}
+.contents-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.1875rem;
+  letter-spacing: -0.005em;
+  font-variation-settings: "opsz" 30;
+  color: var(--ink);
+}
+.contents-credit {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* ── A chapter ───────────────────────────────────────────────────────── */
+/* A spread in a catalogue, not a card. What carries the structure is the
+   numeral in the margin — and the numerals are load-bearing rather than
+   decorative: chapter order IS build order (§1.1), so the sequence is
+   information. Chapters separate by whitespace scale alone. */
+.chapters {
+  margin-top: clamp(3rem, 8vw, 5.5rem);
+}
+.ch {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0 clamp(1rem, 2.6vw, 2.25rem);
+  align-items: start;
+}
+.ch + .ch {
+  margin-top: clamp(3.5rem, 9vw, 6.5rem);
+}
+.ch-main {
+  min-width: 0;
+}
+
+/* The one place a record's accent sits at rest and large. */
+.ch-num {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  font-variation-settings: "opsz" 90;
+  color: var(--mark);
+  text-align: right;
+  margin: 0;
+  /* Optically aligned to the eyebrow's cap height rather than its box. */
+  padding-top: 0.0625em;
+}
+
+.ch-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.625rem;
+}
+.ch-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  margin: 0 0 1rem;
+  font-variation-settings: "opsz" 70;
+  overflow-wrap: break-word;
+}
+.ch-lede {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.1875rem, 2.2vw, 1.375rem);
+  line-height: 1.44;
+  color: var(--ink);
+  max-width: 38ch;
+  margin: 0;
+  font-variation-settings: "opsz" 40;
+}
+.ch-lede.is-stub {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ── The end of a record ─────────────────────────────────────────────── */
+/* Three ways on without touching Back. Not cards: an accent rule, a label,
+   a name, a line — the same editorial furniture as everything above it. */
+.onward {
+  margin-top: clamp(4rem, 10vw, 7rem);
+}
+.onward-key {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.25rem;
+}
+.onward-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2.5rem;
+}
+.onward-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+  position: relative;
+  transition: transform var(--quick) var(--ease);
+}
+/* The accent, at rest, as a short rule on the top edge — the next record's
+   colour arriving before its page does. A rule in the gutter above the
+   block, never a border down its side. */
+.onward-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  width: 34px;
+  height: 2px;
+  background: var(--mark);
+}
+.onward-card.is-next {
+  text-align: right;
+  align-items: flex-end;
+}
+.onward-card.is-next::before {
+  right: 0;
+}
+.onward-card:hover,
+.onward-card:focus-visible {
+  transform: translateY(-3px);
+}
+.onward-dir {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mark-ink);
+}
+.onward-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.4375rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-variation-settings: "opsz" 40;
+  color: var(--ink);
+}
+.onward-sub {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.onward-up {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2.25rem;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  transition:
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.onward-up::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.onward-up:hover,
+.onward-up:focus-visible {
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+.onward-up:hover::after,
+.onward-up:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ── The cover: a record on the index, closed ────────────────────────── */
+/* The approved folder construction (§1d) is untouched — .page-frame keeps
+   its value-stepped laminations, its crisp edges, its one honest fold and
+   its one tight contact shadow. What changed is that it holds the COVER of
+   a record rather than a chapter of one. */
+.cover-wrap {
+  min-width: 0;
+}
+.cover-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  position: relative;
+  z-index: 3;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+/* The cut tabs NAVIGATE — each is a real link into that chapter of the
+   record. That is what keeps them structure rather than costume (§1a): a
+   tool-metaphor element that neither navigates nor reveals is decoration. */
+.cover-tab {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--muted-strong);
+  background: var(--taupe);
+  border: 1px solid var(--taupe-2);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  padding: 0.6875rem 0.9375rem 0.75rem;
+  min-height: 44px;
+  white-space: nowrap;
+  transition:
+    background var(--quick) var(--ease),
+    color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+.cover-tab:hover,
+.cover-tab:focus-visible {
+  color: var(--ink);
+  background: var(--paper-2);
+  transform: translateY(-2px);
+}
+.cover-tab .tick {
+  position: absolute;
+  top: 5px;
+  left: 0.9375rem;
+  width: 16px;
+  height: 2px;
+  background: var(--mark);
+  opacity: 0;
+  transition: opacity var(--quick) var(--ease);
+}
+.cover-tab:hover .tick,
+.cover-tab:focus-visible .tick {
+  opacity: 1;
+}
+.cover-tab:focus-visible {
+  outline-offset: -3px;
+}
+
+.cover-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.875rem;
+  padding-right: 2.25rem;
+}
+.cover-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2rem, 5.2vw, 3.625rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.75rem;
+  font-variation-settings: "opsz" 80;
+  overflow-wrap: break-word;
+}
+.cover-desc {
+  font-family: var(--serif);
+  font-size: clamp(1.1875rem, 2.1vw, 1.3125rem);
+  line-height: 1.44;
+  color: var(--ink-2);
+  max-width: 40ch;
+  margin: 0;
+  font-variation-settings: "opsz" 40;
+}
+
+/* Density 8 inside a folder (§5), earned with real structure: what is in
+   it, who made it, in build order. No rule per row. */
+.cover-contents {
+  list-style: none;
+  margin: 1.625rem 0 0;
+  padding: 1.125rem 0 0;
+  position: relative;
+}
+.cover-contents::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: var(--line);
+}
+.cover-row {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.3125rem 0;
+}
+.cover-row-num {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+.cover-row-name {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+.cover-row-credit {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* The way in. A text action, so it takes §6's own idiom — the lift and the
+   underline wipe — rather than borrowing the pager's outlined button. */
+.cover-open {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1.75rem;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  color: var(--mark-ink);
+  transition:
+    gap 0.25s var(--ease),
+    transform var(--quick) var(--ease);
+}
+.cover-open::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9px;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.cover-open:hover,
+.cover-open:focus-visible {
+  gap: 1rem;
+  transform: translateY(-3px);
+}
+.cover-open:hover::after,
+.cover-open:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ── A shelf page, and the empty slot ────────────────────────────────── */
+.shelfpage {
+  max-width: 46ch;
+  animation: assemble var(--settle) var(--ease) both;
+  animation-delay: 0.08s;
+}
+.shelfpage-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  margin: 0.875rem 0 1.25rem;
+  font-variation-settings: "opsz" 100;
+}
+.shelfpage-lede {
+  font-family: var(--serif);
+  font-size: clamp(1.1875rem, 2.2vw, 1.4375rem);
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0;
+  font-variation-settings: "opsz" 40;
+}
+.shelfpage-body {
+  font-family: var(--sans);
+  font-size: 0.90625rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 58ch;
+}
+.shelfpage-body > :last-child {
+  margin-bottom: 0;
+}
+
+/* An empty page's one job: not to be a full stop. */
+.shelfpage-onward {
+  margin-top: clamp(3rem, 8vw, 5rem);
+  animation: assemble var(--settle) var(--ease) both;
+  animation-delay: 0.3s;
+}
+.shelfpage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.shelfpage-rec {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  padding: 1.125rem 0.25rem;
+  min-height: 44px;
+  transition: transform var(--quick) var(--ease);
+}
+.shelfpage-rec::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--mark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--settle) var(--ease);
+}
+.shelfpage-rec:hover::after,
+.shelfpage-rec:focus-visible::after {
+  transform: scaleX(1);
+}
+.shelfpage-rec:hover,
+.shelfpage-rec:focus-visible {
+  transform: translateX(3px);
+}
+.shelfpage-rec-key {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mark-ink);
+}
+.shelfpage-rec-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.1875rem;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 40;
+}
+.shelfpage-rec-sub {
+  grid-column: 2;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.shelfpage-rec-cta {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--mark-ink);
+}
+
+/* ── The drawer's slots, now that they open ──────────────────────────── */
+/* Still quiet, still clearly coming, still dimmed through FORM rather than
+   text-opacity (a prior opacity-only attempt measured 2.06:1 and failed
+   AA). What is new is that they are links: a labelled slot that leads
+   nowhere is the dead end the routing rule forbids. */
+.slot-list li + li {
+  margin-top: 0;
+}
+a.slot {
+  transition:
+    border-color var(--quick) var(--ease),
+    transform var(--quick) var(--ease);
+}
+a.slot:hover,
+a.slot:focus-visible {
+  border-color: var(--mark);
+  transform: translateX(3px);
+}
+a.slot:hover .slot-key,
+a.slot:focus-visible .slot-key {
+  color: var(--ink);
+}
+.slot-cta {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--muted);
+  transition: color var(--quick) var(--ease);
+}
+a.slot:hover .slot-cta,
+a.slot:focus-visible .slot-cta {
+  color: var(--mark-ink);
+}
+
+/* ── The reserved diagram slot ───────────────────────────────────────── */
+/* §8 commits to reconstructed diagrams drawn in code. None are drawn yet,
+   and drawing a plausible-looking one to fill the hole would be inventing
+   evidence — so the slot says it is a slot. Ruled and measured, never a
+   soft-shadowed rounded rectangle standing in for content. */
+.plate-stub {
+  color: var(--mark);
+  border-color: var(--mark);
+  border-style: dashed;
+}
+.plate-stub figcaption {
+  color: var(--muted);
+}
+.plate-mark {
+  color: var(--mark-ink);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RECORDS — responsive. Each breakpoint is composed, not stacked: the
+   spine changes axis and the progress measure changes with it, the
+   masthead's facts move from a column to a band, and the chapter numeral
+   moves from the margin into the text block.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .mast {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 1.75rem 2.5rem;
+  }
+  .ch {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 880px) {
+  /* The spine lies down and sticks to the top — persistent at every
+     viewport, changing axis rather than disappearing (§1). */
+  .spine {
+    position: sticky;
+    top: 0;
+    height: auto;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6px;
+    /* The numerals' own 44px tap targets set the bar's height; the padding
+       only has to keep them off the edges, so it is tighter than the column's
+       and the bar lands near 60px rather than 73px on a phone. */
+    padding: 0.25rem var(--gutter);
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  /* Read progress moves to the bar's own bottom edge — the one place a
+     horizontal measure belongs, and it reads at a glance on a phone. */
+  .spine::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 100%;
+    background: var(--mark);
+    transform: scaleX(var(--read, 0));
+    transform-origin: left;
+  }
+  .spine-mark,
+  .spine-key,
+  .spine-track {
+    flex: 0 0 auto;
+  }
+  /* Lying down, the mark is a control in a row rather than the top of a
+     column — it does not need display scale to read as the way home, and
+     at 22px it made the bar 73px tall on a phone. */
+  .spine-mark {
+    font-size: 1.1875rem;
+    padding: 0.25rem 0.4375rem;
+  }
+  .spine-key {
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    padding: 0 0 0 0.75rem;
+    width: auto;
+    text-align: left;
+  }
+  /* The vertical hairline and the travelling dash are a column's grammar;
+     in a row the active numeral carries the state on its own. */
+  .spine-track::before,
+  .spine-fill,
+  .spine-num::before {
+    display: none;
+  }
+  .spine-nums {
+    flex-direction: row;
+    padding: 0;
+  }
+  .spine-num[aria-current="location"] {
+    background: var(--paper-2);
+  }
+  .spine-foot {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    margin-top: 0;
+    margin-left: auto;
+    padding-left: 0.5rem;
+    gap: 4px;
+  }
+  .spine-jump {
+    width: auto;
+  }
+
+  .mast {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+  .mast-side {
+    grid-column: 1;
+    max-width: 420px;
+  }
+
+  /* The numeral leaves the margin and joins the text block, where it reads
+     as a chapter mark rather than a hanging figure in dead space. */
+  .ch {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .ch-num {
+    text-align: left;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    margin-bottom: 0.375rem;
+    padding-top: 0;
+  }
+
+  .onward-pair {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+  .onward-card.is-next {
+    text-align: left;
+    align-items: flex-start;
+  }
+  .onward-card.is-next::before {
+    right: auto;
+    left: 0;
+  }
+
+  /* Full-height sheet from the left is a desktop gesture; on a phone the
+     catalogue comes up from the bottom, where a thumb already is. */
+  .cat {
+    max-width: 100%;
+    height: auto;
+    max-height: 86dvh;
+    margin: auto 0 0;
+    border-right: 0;
+    border-top: 1px solid var(--line);
+  }
+  .cat[open] {
+    animation-name: cat-up;
+  }
+  @keyframes cat-up {
+    from {
+      transform: translateY(24px);
+      opacity: 0;
+    }
+  }
+}
+
+@media (max-width: 520px) {
+  .contents-item,
+  .shelfpage-rec {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.25rem 0.75rem;
+  }
+  .contents-credit {
+    grid-column: 2;
+    text-align: left;
+  }
+  .shelfpage-rec-key {
+    grid-column: 1 / -1;
+  }
+  .shelfpage-rec-cta {
+    display: none;
+  }
+  .cover-row {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.125rem 0.625rem;
+  }
+  .cover-row-credit {
+    grid-column: 2;
+    text-align: left;
+  }
+  .cover-top {
+    padding-right: 1.75rem;
+  }
+}
+
+/* Forced palettes: state is carried by value and hue everywhere here, and
+   in a forced palette both are gone — so the marks opt out and the one
+   bordered surface redraws its edge. */
+@media (forced-colors: active) {
+  .cover-tab,
+  .cat {
+    border: 1px solid CanvasText;
+  }
+  .spine-fill,
+  .spine-num::before,
+  .cat-item::before,
+  .onward-card::before,
+  .cover-tab .tick {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+}

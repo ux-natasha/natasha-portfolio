@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+.env*.local
+.vercel
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# locally installed Claude Code skill packages, not project source
+.agents/
+.claude/skills/
+
+# archived by the rebuild — delete when you no longer want it
+.removed-*/

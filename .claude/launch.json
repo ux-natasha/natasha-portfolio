@@ -1,0 +1,38 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "portfolio-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "iterations",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8899",
+        "--directory",
+        "/private/tmp/claude-501/-Users-natasha-Downloads-Portfolio-Folders/ad141902-f877-42a5-9df5-208a4ba48a84/scratchpad/iterations"
+      ],
+      "port": 8899
+    },
+    {
+      "name": "portfolio-verify",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3101"
+      ],
+      "port": 3101
+    }
+  ]
+}
