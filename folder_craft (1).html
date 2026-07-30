@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folder — craft rebuild</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1EFE8;--ink:#16150F;--gray:#8A897E;--gray-d:#6F6E66;--pink:#D4537E;
+    /* value ladder — each layer a deliberate step, this is what makes it read as thickness */
+    --sheet:#F3F1EA;
+    --edge1:#E4E0D3;   /* first lamination under sheet */
+    --edge2:#D8D4C5;   /* second */
+    --cover:#CFCBBB;   /* back cover — a real value step down, not a shadow */
+    --cover-line:#BDB9A8;
+    --hair:#DAD7CA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;overflow:hidden}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.055;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .note{position:fixed;top:0;left:0;right:0;z-index:60;background:#fff;border-bottom:1px solid #ddd9cc;padding:9px 22px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-d)}
+  .note b{color:var(--pink)}
+
+  .app{display:flex;height:100vh;padding-top:37px}
+
+  /* rail — quiet, the folder is the strong thing */
+  .rail{width:66px;flex:0 0 66px;background:#ECE9DF;border-right:1px solid var(--hair);
+    display:flex;flex-direction:column;align-items:stretch;padding:22px 0}
+  .rail .mark{font-family:'Fraunces',serif;font-weight:600;font-size:17px;text-align:center;margin-bottom:20px}
+  .rail .up{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--gray);text-align:center;padding:7px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin-bottom:12px;line-height:1.4}
+  .rtab{margin-left:9px;padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray);text-align:center;border:1px solid transparent;border-right:none;border-radius:4px 0 0 4px;position:relative}
+  .rtab.active{background:var(--paper);color:var(--ink);font-weight:500;border-color:var(--hair)}
+  .rtab.active::after{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:14px;background:var(--pink);border-radius:2px}
+  .rail .fill{flex:1}
+  .rail .pos{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--gray);writing-mode:vertical-rl;text-align:center;letter-spacing:.1em;margin:0 auto}
+
+  .stage{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:40px 56px}
+
+  /* ============ THE FOLDER — craft, no fakery ============ */
+  .folder{position:relative;width:660px}
+
+  /* tab row: the real set 00-03, sitting ON the cover edge */
+  .tabs{display:flex;gap:3px;position:relative;z-index:4;padding-left:6px}
+  .tab{background:var(--cover);border:1px solid var(--cover-line);border-bottom:none;
+    border-radius:6px 6px 0 0;padding:9px 15px 11px;font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--gray-d);cursor:pointer;position:relative;top:2px}
+  .tab.on{background:var(--sheet);color:var(--ink);font-weight:500;top:0;z-index:5;
+    border-color:var(--edge2);border-bottom:1px solid var(--sheet)}
+  .tab.on::before{content:"";position:absolute;left:15px;top:8px;width:16px;height:3px;background:var(--pink);border-radius:2px}
+
+  /* the body: value-stepped laminations = honest thickness, NO blur */
+  .body{position:relative}
+  /* back cover, a real step darker, offset just at bottom+right — reads as the folder card */
+  .cover{position:absolute;left:-1px;right:-7px;top:-1px;bottom:-8px;background:var(--cover);
+    border:1px solid var(--cover-line);border-radius:1px 8px 7px 7px;z-index:1}
+  /* two thin laminations for paper thickness, crisp edges only */
+  .lam{position:absolute;left:0;right:0;border-radius:1px 6px 4px 4px;z-index:2}
+  .lam1{top:3px;bottom:-3px;background:var(--edge2)}
+  .lam2{top:1.5px;bottom:-1px;background:var(--edge1)}
+  /* the working sheet */
+  .sheet{position:relative;z-index:3;background:var(--sheet);border:1px solid var(--edge1);
+    border-radius:1px 6px 3px 3px;padding:34px 40px 36px;
+    /* one tight contact shadow only, no big float */
+    box-shadow:0 6px 14px -10px rgba(40,34,16,.35)}
+  .fold{position:absolute;top:0;right:0;width:34px;height:34px;
+    background:linear-gradient(135deg,transparent 50%,var(--edge1) 50% 100%);
+    border-top-right-radius:6px}
+  .fold::after{content:"";position:absolute;top:0;right:0;width:34px;height:34px;
+    border-top:1px solid var(--edge2);border-right:1px solid var(--edge2);
+    border-top-right-radius:6px;-webkit-mask:linear-gradient(135deg,transparent 50%,#000 50%);mask:linear-gradient(135deg,transparent 50%,#000 50%)}
+
+  /* ============ DENSE INTERIOR (density 8, all real) ============ */
+  .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--pink);letter-spacing:.08em}
+  .status{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--gray);letter-spacing:.1em}
+  .title{font-family:'Fraunces',serif;font-weight:600;font-size:40px;letter-spacing:-.015em;line-height:1;margin-bottom:14px}
+  .lede{font-family:'Fraunces',serif;font-weight:400;font-size:18px;line-height:1.4;color:#2a2920;max-width:40ch;margin-bottom:22px}
+
+  /* meta strip — inline, dense, mono */
+  /* grid + gutter dividers: every column's text starts at the same offset,
+     no border on the trailing cell, nothing flush against a rule */
+  .meta{display:grid;grid-template-columns:repeat(3,1fr);column-gap:28px;
+    border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    margin-bottom:22px;padding:11px 0}
+  .meta .cell{position:relative}
+  /* divider sits centred in the gutter, not on the text edge */
+  .meta .cell + .cell::before{content:"";position:absolute;left:-14px;top:-11px;bottom:-11px;
+    width:1px;background:var(--hair)}
+  .meta .k{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+  .meta .v{font-family:'Inter',sans-serif;font-size:12px;color:var(--ink);line-height:1.35}
+
+  /* the breakdown — real structure, the thing that makes it dense-with-substance */
+  .bd{margin-bottom:8px}
+  .bd .lvl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--gray);margin-bottom:8px}
+  .rows{display:flex;flex-direction:column}
+  .r{display:grid;grid-template-columns:150px 1fr 74px;gap:14px;align-items:baseline;padding:7px 0;border-top:1px solid var(--hair)}
+  .r:last-child{border-bottom:1px solid var(--hair)}
+  .r .rn{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);font-weight:500}
+  .r .rd{font-family:'Inter',sans-serif;font-size:12px;color:var(--gray-d);line-height:1.4}
+  .r .rt{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;color:var(--gray);text-align:right}
+  .r .rt.solo{color:var(--pink)}
+  .more{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--pink);letter-spacing:.04em;margin-top:12px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="note"><b>Craft rebuild</b> — no ghost folders, no float-shadow. Thickness = value-stepped edges. Interior packed to density 8 with real structure.</div>
+
+<div class="app">
+  <div class="rail">
+    <div class="mark">N</div>
+    <div class="up">↑<br>DRAWER</div>
+    <div class="rtab">00</div>
+    <div class="rtab active">01</div>
+    <div class="rtab">02</div>
+    <div class="rtab">03</div>
+    <div class="fill"></div>
+    <div class="pos">01 / 03</div>
+  </div>
+
+  <div class="stage">
+    <div class="folder">
+      <div class="tabs">
+        <div class="tab">00</div>
+        <div class="tab on">01&nbsp;·&nbsp;CONFIGURATION</div>
+        <div class="tab">02</div>
+        <div class="tab">03</div>
+      </div>
+      <div class="body">
+        <div class="cover"></div>
+        <div class="lam lam1"></div>
+        <div class="lam lam2"></div>
+        <div class="sheet">
+          <div class="fold"></div>
+          <div class="top">
+            <span class="num">01 · CONFIGURATION</span>
+            <span class="status">SOLO · ENTIRELY MADE BY ME</span>
+          </div>
+          <div class="title">Configuration</div>
+          <div class="lede">A config change took two days of someone else's time. A hidden column took another. I designed the part where you do it yourself.</div>
+
+          <div class="meta">
+            <div class="cell"><div class="k">Role</div><div class="v">Sole designer</div></div>
+            <div class="cell"><div class="k">Surface</div><div class="v">Admin · Process Data</div></div>
+            <div class="cell"><div class="k">Replaced</div><div class="v">Gatekept config</div></div>
+          </div>
+
+          <div class="bd">
+            <div class="lvl">WHAT LIVES HERE — THE SYSTEM BEFORE ANY PROJECT</div>
+            <div class="rows">
+              <div class="r"><span class="rn">Custom Attributes</span><span class="rd">User-defined fields the whole system reads from</span><span class="rt solo">SOLO</span></div>
+              <div class="r"><span class="rn">Workflows</span><span class="rd">Phase / criticality definitions attached to tasks</span><span class="rt">PARKED</span></div>
+              <div class="r"><span class="rn">Reason Master</span><span class="rd">Predefined reasons for raising & sorting issues</span><span class="rt solo">SOLO</span></div>
+              <div class="r"><span class="rn">Holiday Master</span><span class="rd">Calendar the buffer maths runs against</span><span class="rt solo">SOLO</span></div>
+            </div>
+            <span class="more">open the breakdown — 2 more levels ↓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

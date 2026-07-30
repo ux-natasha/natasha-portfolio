@@ -18,8 +18,9 @@ Structure is a FRAME, three movements:
 - **TOP — Natasha, lightest touch.** Name + a line (the gray-line opening copy IS
   the introduction — it shows how she thinks). Not an "about me," not a hero. Then
   straight down into the work.
-- **CENTRE — the CCPM folder.** The four chapters (00–03), the deep dive. This is
-  the monograph proper and the bulk of the site.
+- **CENTRE — the CCPM compartment.** The four chapters (00–03), the deep dive. This
+  is the monograph proper and the bulk of the site. CCPM is the first compartment,
+  not the only shape a compartment can take — see "Compartments scale" below.
 - **TAIL — the drawer.** After 03 closes, the view pulls back out to reveal the
   drawer: the CCPM folder just read, PLUS dimmed/labelled "coming" tabs for future
   work (**Writing**, **Reading** — plain labels, Natasha's register; not "Musings"
@@ -31,6 +32,16 @@ folder tabs (00–03) navigate WITHIN the CCPM folder; a level above (the drawer
 the CCPM folder as one item among future ones. The rail therefore has an "up to
 drawer" position above the chapter tabs. Step back = see the cabinet; step in = read
 the folder.
+
+**Compartments scale (settled, 2026-07-30) — a real review flagged that the
+original model only worked for CCPM.** A compartment declares a `unit`:
+`"chapter"` (a build-order sequence, like CCPM/VPro) or `"piece"` (a set of
+independent, unordered work — e.g. a future Motion Studies compartment). The
+noun and the "in the order they were built" claim both key off this one field;
+everything else — the tab row, the folder shape, the pager, the route a folder
+opens onto — is identical either way. A future compartment that is one project,
+several projects, or a loose set of pieces all use the same nav; nothing about
+it assumes CCPM's shape. See §1e for what a folder actually opens onto.
 
 Audience: hiring managers and design leads at product companies.
 Job of the site: prove depth and judgment a card grid can't hold — AND show Natasha
@@ -228,6 +239,45 @@ Density is earned with substance, never with ornament. A sparse interior reads a
 with column gaps and draw rules centred in the gap (not `border-right` on cells) —
 otherwise columns lose their shared left rhythm and the block starts reading as a
 table.
+
+---
+
+### 1e. The folder is a teaser, not the chapter (settled, 2026-07-30)
+
+**The folder cover, as it renders on the index, says "here's an interesting part
+of this project" — it is NOT the chapter itself.** Selecting a tab (00–03) swaps
+which folder's level-1 lede and four-field meta panel show inside the open
+compartment's cover, in place, on the index. That's a preview a reader flips
+through before committing, the same way you'd riffle a set of dividers without
+pulling any one page out. Nothing on the index IS the chapter.
+
+**"Read more →" is the one link that actually navigates.** It lands on the
+previewed folder's own anchor inside a dedicated **Record route** (`/<slug>`,
+e.g. `/vpro`) — a continuous, whitespace-separated document holding every
+chapter/piece in the compartment, opening on a masthead (role/timeline/team/
+outcome, always first). This is the real content; the index cover is the
+trailer for it, never a substitute.
+
+**Long-form reading, on the Record route, is a separate problem from the index
+and gets its own answer** — this is what a case study needs once it can grow to
+several pages, many sections, images, video: the folder-cover/tab-row model
+was never meant to solve it, and doesn't try to.
+- **The Spine** — the rail's record-route successor. Same persistent
+  typographic column, but tracks the chapter actually in view (not the last one
+  clicked) and shows a continuous read-progress fill, so "where am I" and "how
+  much is left" are both answered at any scroll depth, not just at a chapter
+  boundary.
+- **The Catalogue** — a jump-anywhere panel, opened from the Spine, listing
+  every compartment and future-work slot in one place. Answers "how do I jump
+  to another compartment" without backing out to the drawer first.
+- **The next-record pager** — at the end of a Record, steps to the previous/
+  next compartment (wraps; never ends on a dead slot). Answers "how do I return
+  to another folder."
+
+**TO BE CLOSED LATER:** how much of a folder previews on the index cover before
+a reader has to commit to "Read more" — today it's exactly level-1 (the lede)
+plus the meta panel, nothing deeper. Whether a teaser should ever surface a
+peek of level-2 is an open call, not a settled one; don't add it without asking.
 
 ---
 
@@ -509,3 +559,6 @@ Design is SETTLED — the remaining opens are all CONTENT, not design:
 - **VERIFY BY EYE at full size:** Fraunces-display-over-JetBrains-Mono-labels. See
   section 5 caution + fallbacks. (The folder mockups suggest it's working, but it
   hasn't been judged at full page scale.)
+- **Teaser depth (to be closed later, §1e)** — the index cover previews exactly
+  level-1 + meta today. Whether a deeper peek (a hint of level-2) should ever
+  surface before "Read more" is unresolved; ask before changing it either way.

@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Natasha M. — Designer, Vector Digital Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E7E5DB;
+    --paper-2:#EDEBE2;
+    --paper-3:#F3F1EA;
+    --taupe:#D4D1C4;
+    --taupe-2:#CAC6B7;
+    --taupe-3:#BEB9A8;
+    --ink:#1C1B18;
+    --ink-2:#413E35;
+    --muted:#8B8576;
+    --muted-2:#A7A192;
+    --line:#D6D3C6;
+    --rose:#D4537E;
+    --shadow:rgba(40,37,28,.16);
+
+    /* agreed system: Fraunces display · JetBrains Mono labels/data · Inter body */
+    --serif:'Fraunces',Georgia,serif;
+    --display:'Fraunces',Georgia,serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'Inter',system-ui,sans-serif;
+    --maxw:1160px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  ::selection{background:rgba(190,58,110,.14)}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;margin:0;text-align:left}
+  :focus-visible{outline:2.5px solid var(--rose);outline-offset:3px;border-radius:2px}
+
+  .shell{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:96px minmax(0,1fr);min-height:100vh}
+
+  /* ---------- rail ---------- */
+  .rail{
+    position:sticky;top:0;align-self:start;height:100vh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:34px 0 30px;gap:16px;border-right:1px solid var(--line);
+  }
+  .rail-mono{font-family:var(--display);font-weight:600;font-size:22px}
+  .rail-drawer{
+    font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+    color:var(--muted);text-align:center;line-height:1.5;padding:6px 4px;
+  }
+  .rail-drawer .arw{display:block;color:var(--rose);font-size:11px}
+  .rail-key{
+    font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--rose);
+    text-align:center;padding-top:12px;border-top:1px solid var(--line);width:52px;
+  }
+  .rail-nums{display:flex;flex-direction:column;gap:1px;margin-top:2px}
+  .rail-num{
+    font-family:var(--mono);font-size:12px;color:var(--muted-2);
+    padding:8px 12px;border-radius:5px;min-height:40px;
+    display:flex;align-items:center;justify-content:center;
+    transition:color .2s ease,background .2s ease;
+  }
+  .rail-num:hover{color:var(--ink);background:var(--paper-2)}
+  .rail-num[aria-current="true"]{color:var(--rose)}
+
+  .sheet{padding:56px clamp(20px,4.4vw,64px) 40px}
+
+  /* ---------- hero ---------- */
+  .hero{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:34px 56px;align-items:start}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .eyebrow.rose{color:var(--rose)}
+  .hero-name{
+    font-family:var(--display);font-weight:600;font-size:clamp(52px,9vw,104px);
+    line-height:.92;letter-spacing:-.02em;margin:14px 0 0;font-variation-settings:"opsz" 120;
+  }
+  .hero-title{font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;color:var(--ink-2);margin:18px 0 26px}
+  .hero-intro{font-family:var(--serif);font-weight:400;font-size:21px;line-height:1.42;color:var(--ink-2);max-width:34ch;margin:0}
+  .hero-intro em{font-style:italic;color:var(--ink)}
+  .hero-side{display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--paper-2);border:1px solid var(--line);padding:22px 24px 24px;position:relative}
+  .card::before{
+    content:"placeholder";position:absolute;top:-9px;right:14px;
+    font-family:var(--mono);font-size:9px;letter-spacing:.16em;
+    color:var(--rose);background:var(--paper);padding:0 6px;
+  }
+  .card-row{margin-bottom:15px}
+  .card-row:last-child{margin-bottom:0}
+  .card-label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+  .card-val{font-family:var(--sans);font-size:14.5px;line-height:1.42;color:var(--ink)}
+  .card-row.outcome .card-val{color:var(--muted-2);font-family:var(--serif);font-style:italic;font-size:15px}
+  .plate{margin:0;border:1px dashed var(--taupe-2);background:var(--paper-3);padding:18px 18px 14px}
+  .plate svg{display:block;width:100%;height:78px}
+  .plate figcaption{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-top:12px}
+
+  .open-line{
+    display:flex;align-items:center;gap:18px;margin:66px 0 20px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  }
+  .open-line .dash{width:34px;height:1px;background:var(--muted-2)}
+
+  /* ---------- compartments : the layer above the folder ---------- */
+  .comp-strip{display:flex;align-items:flex-end;gap:7px;position:relative;z-index:5;padding-left:0}
+  .comp{
+    position:relative;background:var(--taupe);
+    border:1px solid var(--taupe-3);border-bottom:0;
+    border-radius:3px 3px 0 0;padding:13px 20px 15px;min-height:44px;
+    transition:background .2s ease,transform .2s ease;
+  }
+  .comp .comp-key{
+    display:block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:3px;
+  }
+  .comp .comp-name{
+    display:block;font-family:var(--sans);font-size:14px;letter-spacing:.01em;color:var(--ink-2);
+    white-space:nowrap;
+  }
+  .comp:hover{background:#DAD7CA}
+  .comp[aria-selected="true"]{
+    background:var(--paper-3);border-color:var(--line);transform:translateY(1px);
+  }
+  .comp[aria-selected="true"] .comp-key{color:var(--rose)}
+  .comp[aria-selected="true"] .comp-name{color:var(--ink);font-weight:500}
+  /* divider spine */
+  .comp::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent;
+  }
+  .comp[aria-selected="true"]::after{background:var(--rose)}
+
+  /* the compartment well : holds the folder */
+  .well{
+    background:var(--paper-3);border:1px solid var(--line);
+    border-radius:0 3px 0 0;
+    padding:22px clamp(16px,2.2vw,26px) clamp(20px,2.4vw,28px);
+    position:relative;z-index:1;margin-top:-1px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .well-head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding-bottom:16px;margin-bottom:2px;
+  }
+  .well-desc{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--muted)}
+  .well-count{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+  /* ---------- folder tabs ---------- */
+  .tablist{display:flex;align-items:flex-end;gap:4px;position:relative;z-index:3;flex-wrap:wrap;row-gap:4px}
+  .tab{
+    position:relative;font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+    color:var(--muted);background:var(--taupe);
+    border:1px solid var(--taupe-2);border-bottom:0;border-radius:6px 6px 0 0;
+    padding:11px 14px 12px;min-height:44px;white-space:nowrap;
+    transition:background .2s ease,color .2s ease,transform .2s ease;
+  }
+  .tab:hover{color:var(--ink-2)}
+  .tab .tab-name{display:none}
+  .tab[aria-selected="true"]{
+    background:var(--paper-2);color:var(--ink);border-color:var(--line);
+    padding-right:20px;transform:translateY(1px);z-index:2;
+  }
+  .tab[aria-selected="true"] .tab-name{display:inline;margin-left:8px}
+  .tab .tick{position:absolute;top:5px;left:14px;width:18px;height:2px;background:var(--rose);opacity:0;transition:opacity .2s ease}
+  .tab[aria-selected="true"] .tick{opacity:1}
+
+  /* ---------- folder page ---------- */
+  .page-frame{
+    position:relative;background:var(--paper-2);border:1px solid var(--line);
+    border-radius:0 3px 3px 3px;margin-top:-1px;
+    padding:clamp(24px,3.2vw,42px) clamp(22px,3.4vw,50px) clamp(28px,3.2vw,40px);
+    box-shadow:
+      5px 6px 0 -1px var(--paper-2), 6px 7px 0 -1px var(--line),
+      11px 13px 0 -2px var(--paper-2), 12px 14px 0 -2px var(--line),
+      0 18px 40px -26px var(--shadow);
+    overflow:hidden;
+  }
+  .page-frame::after{
+    content:"";position:absolute;top:0;right:0;
+    border-width:0 30px 30px 0;border-style:solid;
+    border-color:var(--paper-3) var(--paper-3) var(--paper-3) var(--paper-3);
+    box-shadow:-3px 3px 5px -2px var(--shadow);
+  }
+  .page-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  .page-title{
+    font-family:var(--display);font-weight:600;font-size:clamp(36px,5.6vw,58px);
+    line-height:.99;letter-spacing:-.015em;margin:0 0 20px;font-variation-settings:"opsz" 90;
+  }
+  .page-lede{font-family:var(--serif);font-weight:400;font-size:clamp(19px,2.2vw,22px);line-height:1.42;color:var(--ink);max-width:38ch;margin:0 0 18px}
+  .page-deep{font-family:var(--sans);font-size:14.5px;line-height:1.7;color:var(--ink-2);max-width:60ch;margin:0}
+  .meta-row{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
+  .meta-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+  .meta-val{font-family:var(--sans);font-size:14px;line-height:1.4;color:var(--ink-2)}
+  .page-more{display:flex;align-items:center;gap:9px;margin-top:26px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted)}
+  .page-more .dot{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:.7}
+
+  .pager{display:flex;gap:8px;margin-top:22px}
+  .pager button{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);
+    border:1px solid var(--line);border-radius:5px;padding:9px 14px;min-height:40px;
+    background:var(--paper-3);transition:color .2s ease,border-color .2s ease;
+  }
+  .pager button:hover:not(:disabled){color:var(--ink);border-color:var(--taupe-3)}
+  .pager button:disabled{opacity:.35;cursor:default}
+
+  /* ---------- drawer ---------- */
+  .drawer{margin-top:74px}
+  .drawer-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .shelf{position:relative;margin-bottom:24px;width:100%}
+  .shelf-face{
+    display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    background:var(--paper-2);border:1px solid var(--line);
+    padding:19px 26px;position:relative;z-index:2;
+    transition:background .2s ease;
+  }
+  .shelf:hover .shelf-face{background:var(--paper-3)}
+  .shelf::after{
+    content:"";position:absolute;left:6px;right:6px;bottom:-9px;height:11px;
+    background:linear-gradient(180deg,var(--taupe) 0%,var(--taupe-2) 100%);
+    border:1px solid var(--taupe-2);border-top:0;z-index:1;
+  }
+  .shelf[data-open="true"]::after{background:linear-gradient(180deg,var(--rose) 0%,#9c2f5b 100%);border-color:#9c2f5b}
+  .shelf-key{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--rose);min-width:62px}
+  .shelf-name{font-family:var(--display);font-weight:600;font-size:23px;letter-spacing:-.01em}
+  .shelf-sub{font-family:var(--sans);color:var(--muted);font-size:13.5px}
+  .shelf-sub b{color:var(--ink-2);font-weight:400}
+  .shelf-cta{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);display:inline-flex;align-items:center;gap:8px;transition:gap .25s ease}
+  .shelf:hover .shelf-cta{gap:14px}
+  .slot{display:flex;align-items:center;gap:20px;border:1px dashed var(--taupe-2);padding:15px 26px;margin-top:12px;color:var(--muted-2)}
+  .slot-key{font-family:var(--sans);font-size:14px;color:var(--muted);min-width:70px}
+  .slot-state{font-family:var(--mono);font-size:10px;letter-spacing:.2em}
+  .drawer-foot{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted-2);
+    line-height:1.7;max-width:60ch;margin:22px 0 0}
+
+  .foot{
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);
+  }
+  .foot a:hover{color:var(--ink)}
+  .foot .rose{color:var(--rose)}
+  .to-top{display:inline-flex;align-items:center;gap:8px;padding:8px 4px;min-height:40px}
+
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr}
+    .rail{position:static;height:auto;flex-direction:row;width:100%;justify-content:flex-start;gap:6px;
+      padding:14px clamp(20px,4vw,40px);border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+    .rail-key{border-top:0;border-left:1px solid var(--line);padding:0 0 0 14px;width:auto}
+    .rail-drawer .arw{display:inline;margin-right:4px}
+    .rail-nums{flex-direction:row;margin:0}
+    .sheet{padding:34px clamp(20px,4vw,40px) 34px}
+    .hero{grid-template-columns:1fr;gap:28px}
+    .hero-side{max-width:420px}
+    .meta-row{grid-template-columns:repeat(2,1fr);gap:18px}
+    .comp-strip{overflow-x:auto;padding-bottom:0;flex-wrap:nowrap}
+    .comp{flex:0 0 auto}
+    .well{padding:18px 14px 20px}
+    .page-frame{box-shadow:4px 5px 0 -1px var(--line),9px 10px 0 -2px var(--line),0 16px 36px -26px var(--shadow)}
+  }
+  @media (max-width:520px){
+    body{font-size:16px}
+    .tab{padding:10px 11px;font-size:11px}
+    .shelf-cta{margin-left:0}
+    .foot{flex-direction:column;align-items:flex-start;gap:10px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="rail" aria-label="Sections">
+    <span class="rail-mono">N</span>
+    <a class="rail-drawer" href="#drawer"><span class="arw">↑</span>drawer</a>
+    <span class="rail-key" id="railKey">VPRO</span>
+    <div class="rail-nums" id="railNums" role="group" aria-label="Chapters in this compartment"></div>
+  </nav>
+
+  <main class="sheet" id="top">
+
+    <header class="hero">
+      <div class="hero-main">
+        <span class="eyebrow">Vector Digital Labs</span>
+        <h1 class="hero-name">Natasha&nbsp;M.</h1>
+        <p class="hero-title">Designer, Vector Digital Labs.</p>
+        <p class="hero-intro">Three years, five modules, and one long <em>argument</em> about the brightness of gray. On projectors.</p>
+      </div>
+      <div class="hero-side">
+        <aside class="card" aria-label="At a glance">
+          <div class="card-row"><span class="card-label">Role</span><span class="card-val">Junior → Senior, three years</span></div>
+          <div class="card-row"><span class="card-label">System</span><span class="card-val">A decade-old CCPM system, rebuilt</span></div>
+          <div class="card-row"><span class="card-label">Owned</span><span class="card-val">Configuration · Planning · Modify Subtasks</span></div>
+          <div class="card-row outcome"><span class="card-label">Outcome</span><span class="card-val">one line — not written yet</span></div>
+        </aside>
+        <figure class="plate">
+          <svg viewBox="0 0 240 78" role="img" aria-label="Three overlapping gray planes, lightest on top">
+            <rect x="8" y="14" width="150" height="46" fill="#B9B4A5" opacity="0.9"/>
+            <rect x="34" y="22" width="150" height="46" fill="#CFCABB" opacity="0.9"/>
+            <rect x="60" y="30" width="150" height="46" fill="#E6E3D8" opacity="0.95" stroke="#CFCABB"/>
+          </svg>
+          <figcaption>the brightness of gray, settled</figcaption>
+        </figure>
+      </div>
+    </header>
+
+    <div class="open-line"><span class="dash"></span>The work, in the order it was built ↓</div>
+
+    <section aria-label="Work" id="cabinet">
+      <!-- compartment dividers -->
+      <div class="comp-strip" id="compStrip" role="tablist" aria-label="Compartments"></div>
+
+      <!-- the well : one compartment open, holding its folder -->
+      <div class="well">
+        <div class="well-head">
+          <span class="well-desc" id="wellDesc"></span>
+          <span class="well-count" id="wellCount"></span>
+        </div>
+        <div class="tablist" id="tabList" role="tablist" aria-label="Folders in this compartment"></div>
+        <article class="page-frame" id="pageFrame" role="tabpanel" tabindex="0"></article>
+        <div class="pager">
+          <button id="prevBtn">← previous</button>
+          <button id="nextBtn">next →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="drawer" id="drawer" aria-label="The drawer">
+      <div class="drawer-eyebrow">The drawer</div>
+      <div id="shelves"></div>
+      <div class="slot"><span class="slot-key">Writing</span><span class="slot-state">Coming</span></div>
+      <div class="slot"><span class="slot-key">Reading</span><span class="slot-state">Coming</span></div>
+      <p class="drawer-foot">Two compartments above are real work awaiting write-up. Nothing in them is written until there is something true to write.</p>
+    </section>
+
+    <footer class="foot">
+      <span>natasha <span class="rose">[at]</span> example.com · placeholder</span>
+      <a class="to-top" href="#top">↑ back to top</a>
+    </footer>
+  </main>
+</div>
+
+<script>
+var DATA = [
+  {
+    key:"VPRO", name:"VPro redesign",
+    desc:"A decade-old CCPM system, rebuilt from the inside.",
+    spine:"Four chapters, three years.",
+    folders:[
+      { n:"00", name:"The old system", right:"Team \u00b7 Prologue",
+        title:"The old system",
+        lede:"A decade of history. Four people understood the code. A diagram that showed what connected to what, but never when, or by how much you were late.",
+        deep:"It showed the network of dependencies but not the thing consultants asked for: when a task should have started, and how far it had slipped. A config change took two days of someone else's time. A hidden column took another. That, plus scheduling runs measured in hours, is what got the rebuild approved. I patched it for a year first \u2014 a progress bar, the critical path visualisation, document upload \u2014 which is how I learned a theory older than I am.",
+        meta:[["Role","Maintainer, then designer"],["Surface","VectorPro (legacy)"],["Understood by","Four people"],["Shipped","Progress bar \u00b7 critical path \u00b7 documents"]] },
+      { n:"01", name:"Configuration", right:"Solo \u00b7 Entirely made by me",
+        title:"Configuration",
+        lede:"A config change took two days of someone else's time. A hidden column took another. I designed the part where you do it yourself.",
+        deep:"Configuration is the part of the system that exists before any project does: attributes, workflows, reasons, holidays. The definitions everything else runs on. Nobody demos it and every other module depends on it. Admin was built first, so it carried a second job \u2014 it is where the table got its structure and the component library got settled, and those decisions held up every screen after it.",
+        meta:[["Role","Sole designer"],["Surface","Admin \u00b7 Process Data"],["Replaced","Gatekept config"],["Built","First"]] },
+      { n:"02", name:"Planning", right:"Survivor \u00b7 Team iterated, one lived",
+        title:"Planning",
+        lede:"Seven or eight working prototypes before one survived. The screen that breaks the software if it's wrong.",
+        deep:"Users did not want a network of connections. They wanted to see how a delay moved a date. This is where the team had the most iterations, including changes of scope and concept, and the one that lived is the planning screen. For a project manager a project is a document, and on a web app with no autosave, losing one means someone gets yelled at. So: save-as-draft big and prominent, tasks addable several ways, and the little space left spent pointing at what matters. The toolbar is one line. Colour is reserved for two questions \u2014 is this critical, does it have a workflow.",
+        meta:[["Role","Designed the surviving screen"],["Surface","Projects \u00b7 Planning"],["Constraint","No autosave"],["Depth","Five levels, fixed by dev"]] },
+      { n:"03", name:"Tasks", right:"Shared \u00b7 The honest one",
+        title:"Tasks",
+        lede:"[level-1 line not yet written \u2014 to be drawn from the Tasks material, not forced]",
+        deep:"Tasks was hard in a way the gantt was not. The gantt was new and nobody had expectations. Tasks was known, well used, and most people did not want it changed \u2014 while the team believed it could be better. I tried converting the old design across, adding colour, splitting pages, cutting columns. None of it clicked. It clicked when a then-senior colleague designed the landing: a taller row height, plus the divider we had already built in admin. What survived from the discussions was about people, not pixels \u2014 what you see depends on who you are. Someone updating a task gets Task Updates. A project manager gets Task Reviews, because they are not making progress, they are judging it. Modify Subtasks, with its own screens and journeys, was mine.",
+        meta:[["Role","Owned Modify Subtasks"],["Surface","Tasks \u00b7 Updates & Reviews"],["Broke open by","A senior colleague"],["Users","Split by who clicks"]] }
+    ]
+  },
+  {
+    key:"STACKS", name:"The stacks",
+    desc:"Material coming \u2014 not yet written up.",
+    spine:"Placeholder, awaiting source.",
+    folders:[
+      { n:"00", name:"Awaiting material", right:"Placeholder",
+        title:"Material coming",
+        lede:"[This compartment is real work, not yet documented. Copy to be written from source material.]",
+        deep:"Left deliberately empty. The pattern is here so the shape can be judged; nothing is written until there is something true to write.",
+        meta:[["Role","\u2014"],["Surface","\u2014"],["Status","Awaiting material"],["Copy","Not written"]] }
+    ]
+  },
+  {
+    key:"MOTION", name:"Motion studies",
+    desc:"Material coming \u2014 not yet written up.",
+    spine:"Placeholder, awaiting source.",
+    folders:[
+      { n:"00", name:"Awaiting material", right:"Placeholder",
+        title:"Material coming",
+        lede:"[This compartment is real work, not yet documented. Copy to be written from source material.]",
+        deep:"Left deliberately empty. The pattern is here so the shape can be judged; nothing is written until there is something true to write.",
+        meta:[["Role","\u2014"],["Surface","\u2014"],["Status","Awaiting material"],["Copy","Not written"]] }
+    ]
+  }
+];
+
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ci = 0, fi = 0;
+  var compStrip=document.getElementById('compStrip'), tabList=document.getElementById('tabList'),
+      frame=document.getElementById('pageFrame'), railNums=document.getElementById('railNums'),
+      railKey=document.getElementById('railKey'), wellDesc=document.getElementById('wellDesc'),
+      wellCount=document.getElementById('wellCount'), shelves=document.getElementById('shelves'),
+      prevBtn=document.getElementById('prevBtn'), nextBtn=document.getElementById('nextBtn');
+
+  // compartments
+  DATA.forEach(function(c,i){
+    var b=document.createElement('button');
+    b.className='comp'; b.setAttribute('role','tab'); b.setAttribute('aria-selected', i===0);
+    b.tabIndex = i===0?0:-1;
+    b.innerHTML='<span class="comp-key">Compartment '+(i+1)+'</span><span class="comp-name">'+c.name+'</span>';
+    b.addEventListener('click', function(){ ci=i; fi=0; render(); });
+    compStrip.appendChild(b);
+  });
+
+  // drawer shelves
+  DATA.forEach(function(c,i){
+    var s=document.createElement('button');
+    s.className='shelf'; s.dataset.i=i;
+    s.innerHTML='<span class="shelf-face"><span class="shelf-key">'+c.key+'</span>'+
+      '<span class="shelf-name">'+c.name+'</span>'+
+      '<span class="shelf-sub"><b>'+c.spine.split(',')[0]+',</b>'+c.spine.split(',').slice(1).join(',')+'</span>'+
+      '<span class="shelf-cta">open →</span></span>';
+    s.addEventListener('click', function(){
+      ci=i; fi=0; render();
+      document.getElementById('cabinet').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    });
+    shelves.appendChild(s);
+  });
+
+  function render(){
+    var c=DATA[ci], f=c.folders[fi];
+
+    Array.prototype.forEach.call(compStrip.children,function(b,i){
+      b.setAttribute('aria-selected', i===ci); b.tabIndex = i===ci?0:-1;
+    });
+    Array.prototype.forEach.call(shelves.children,function(s,i){
+      s.dataset.open = (i===ci);
+    });
+
+    wellDesc.textContent=c.desc;
+    wellCount.textContent=c.folders.length+' folders';
+    railKey.textContent=c.key;
+
+    // folder tabs
+    tabList.innerHTML='';
+    c.folders.forEach(function(fo,i){
+      var t=document.createElement('button');
+      t.className='tab'; t.setAttribute('role','tab'); t.setAttribute('aria-selected', i===fi);
+      t.tabIndex=i===fi?0:-1;
+      t.innerHTML='<span class="tick"></span>'+fo.n+'<span class="tab-name">· '+fo.name+'</span>';
+      t.addEventListener('click', function(){ fi=i; render(); });
+      tabList.appendChild(t);
+    });
+
+    // rail numbers
+    railNums.innerHTML='';
+    c.folders.forEach(function(fo,i){
+      var r=document.createElement('button');
+      r.className='rail-num'; r.textContent=fo.n; r.setAttribute('aria-current', i===fi);
+      r.addEventListener('click', function(){
+        fi=i; render();
+        document.getElementById('cabinet').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+      });
+      railNums.appendChild(r);
+    });
+
+    // page
+    frame.innerHTML=
+      '<div class="page-top"><span class="eyebrow rose">'+f.n+' · '+f.name+'</span>'+
+      '<span class="eyebrow">'+f.right+'</span></div>'+
+      '<h2 class="page-title">'+f.title+'</h2>'+
+      '<p class="page-lede">'+f.lede+'</p>'+
+      '<p class="page-deep">'+f.deep+'</p>'+
+      '<div class="meta-row">'+f.meta.map(function(m){
+        return '<div><span class="meta-label">'+m[0]+'</span><span class="meta-val">'+m[1]+'</span></div>';
+      }).join('')+'</div>'+
+      '<div class="page-more"><span class="dot"></span>+ 3 more levels \u2193</div>';
+    frame.setAttribute('aria-label', c.name+', folder '+f.n+' '+f.name);
+
+    prevBtn.disabled = fi===0;
+    nextBtn.disabled = fi===c.folders.length-1;
+  }
+
+  prevBtn.addEventListener('click',function(){ if(fi>0){fi--;render();} });
+  nextBtn.addEventListener('click',function(){ if(fi<DATA[ci].folders.length-1){fi++;render();} });
+
+  function roving(el, get, set){
+    el.addEventListener('keydown',function(e){
+      var n=el.children.length, cur=get(), next=null;
+      if(e.key==='ArrowRight'||e.key==='ArrowDown') next=(cur+1)%n;
+      if(e.key==='ArrowLeft'||e.key==='ArrowUp') next=(cur-1+n)%n;
+      if(e.key==='Home') next=0;
+      if(e.key==='End') next=n-1;
+      if(next!==null){ e.preventDefault(); set(next); render(); el.children[next].focus(); }
+    });
+  }
+  roving(compStrip, function(){return ci;}, function(v){ci=v;fi=0;});
+  roving(tabList,   function(){return fi;}, function(v){fi=v;});
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var el=document.querySelector(a.getAttribute('href'));
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); }
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
