@@ -1,16 +1,20 @@
 ---
 # ── RECORD 03 · MOTION STUDIES ────────────────────────────────────────
-# Directory `03-motion-studies` → /motion-studies. Nothing about this one
-# is written yet — not the description, not the problem, not one fact. It
-# is listed and reachable anyway: a slug that resolves must never be
-# hidden from the pager, and the page says plainly that it is empty.
+# Directory `03-motion-studies` → /motion-studies. A compartment shaped
+# differently from VPro on purpose: standalone pieces, not build-order
+# chapters (`unit: piece` — see lib/schema.ts). The pieces below are named
+# and given one-line premises so the piece/unit architecture has real
+# content to validate against; nothing past that line is written yet, and
+# each piece says so plainly.
 
 key: MOTION
 name: Motion studies
-desc: Material coming — not yet written up.
-spine: Placeholder, awaiting source.
+desc: Standalone motion studies — separate pieces, not one project.
+spine: Three pieces, none written up yet.
 
 accent: burgundy
+
+unit: piece
 
 problem: Not yet written.
 problemPlaceholder: true

@@ -1,5 +1,5 @@
 import { PlateStub } from "@/components/Plate";
-import type { Compartment } from "@/lib/schema";
+import { unitNoun, type Compartment } from "@/lib/schema";
 
 /**
  * The first viewport of a record, built for someone deciding whether to read it.
@@ -58,11 +58,13 @@ export function Masthead({ record }: { record: Compartment }) {
 
       {/* The contents. Real anchors, so the ten-second scan and the navigation
           are the same object rather than a list beside a list. */}
-      <nav className="contents" aria-label={`Chapters in ${record.name}`}>
+      <nav
+        className="contents"
+        aria-label={`${unitNoun(record.unit, 2)} in ${record.name}`}
+      >
         <p className="contents-key">
-          {record.folders.length}{" "}
-          {record.folders.length === 1 ? "chapter" : "chapters"}, in the order
-          they were built
+          {record.folders.length} {unitNoun(record.unit, record.folders.length)}
+          {record.unit === "piece" ? "" : ", in the order they were built"}
         </p>
         <ol className="contents-list">
           {record.folders.map((folder) => (

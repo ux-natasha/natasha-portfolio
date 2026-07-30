@@ -2365,63 +2365,12 @@ svg {
 .cover-wrap {
   min-width: 0;
 }
-.cover-tabs {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  position: relative;
-  z-index: 3;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-}
-/* The cut tabs NAVIGATE — each is a real link into that chapter of the
-   record. That is what keeps them structure rather than costume (§1a): a
-   tool-metaphor element that neither navigates nor reveals is decoration. */
-.cover-tab {
-  position: relative;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  color: var(--muted-strong);
-  background: var(--taupe);
-  border: 1px solid var(--taupe-2);
-  border-bottom: 0;
-  border-radius: 6px 6px 0 0;
-  padding: 0.6875rem 0.9375rem 0.75rem;
-  min-height: 44px;
-  white-space: nowrap;
-  transition:
-    background var(--quick) var(--ease),
-    color var(--quick) var(--ease),
-    transform var(--quick) var(--ease);
-}
-.cover-tab:hover,
-.cover-tab:focus-visible {
-  color: var(--ink);
-  background: var(--paper-2);
-  transform: translateY(-2px);
-}
-.cover-tab .tick {
-  position: absolute;
-  top: 5px;
-  left: 0.9375rem;
-  width: 16px;
-  height: 2px;
-  background: var(--mark);
-  opacity: 0;
-  transition: opacity var(--quick) var(--ease);
-}
-.cover-tab:hover .tick,
-.cover-tab:focus-visible .tick {
-  opacity: 1;
-}
-.cover-tab:focus-visible {
-  outline-offset: -3px;
-}
+
+/* The cover's folder tab row reuses the shared .tablist/.tab styling
+   (defined above, under "Folder tabs: the cut tabs on file dividers") —
+   the same clip-to-number/reveal-on-select tab that was originally built
+   for exactly this job. Selecting a tab PREVIEWS a folder inline; it does
+   not navigate — that's what makes the preview possible at all. */
 
 .cover-top {
   display: flex;
@@ -2452,45 +2401,29 @@ svg {
   font-variation-settings: "opsz" 40;
 }
 
-/* Density 8 inside a folder (§5), earned with real structure: what is in
-   it, who made it, in build order. No rule per row. */
-.cover-contents {
-  list-style: none;
-  margin: 1.625rem 0 0;
-  padding: 1.125rem 0 0;
-  position: relative;
+/* The previewed folder — a one-line-below-Headline step, the same
+   "compartment name" token used for a shelf name and a catalogue heading:
+   an entry a reader is looking AT, not yet the subject of its own page. */
+.cover-folder-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.4375rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.625rem;
+  font-variation-settings: "opsz" 40;
 }
-.cover-contents::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 1px;
-  background: var(--line);
-}
-.cover-row {
-  display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.3125rem 0;
-}
-.cover-row-num {
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  color: var(--muted);
-}
-.cover-row-name {
-  font-family: var(--sans);
-  font-size: 0.875rem;
-  color: var(--ink-2);
-}
-.cover-row-credit {
-  font-family: var(--mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: right;
+
+/* Density 8 inside a folder (§5): the pager steps between folders, "read
+   more" is the one link that actually leaves the index. Both sit in one
+   row so the two ways to move — one at a time, or straight to the full
+   record — read as one decision, not two unrelated controls. */
+.cover-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.375rem;
 }
 
 /* The way in. A text action, so it takes §6's own idiom — the lift and the
@@ -2500,7 +2433,6 @@ svg {
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
-  margin-top: 1.75rem;
   min-height: 44px;
   font-family: var(--mono);
   font-size: 0.875rem;
@@ -2854,14 +2786,6 @@ a.slot:focus-visible .slot-cta {
   .shelfpage-rec-cta {
     display: none;
   }
-  .cover-row {
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0.125rem 0.625rem;
-  }
-  .cover-row-credit {
-    grid-column: 2;
-    text-align: left;
-  }
   .cover-top {
     padding-right: 1.75rem;
   }
@@ -2871,15 +2795,13 @@ a.slot:focus-visible .slot-cta {
    in a forced palette both are gone — so the marks opt out and the one
    bordered surface redraws its edge. */
 @media (forced-colors: active) {
-  .cover-tab,
   .cat {
     border: 1px solid CanvasText;
   }
   .spine-fill,
   .spine-num::before,
   .cat-item::before,
-  .onward-card::before,
-  .cover-tab .tick {
+  .onward-card::before {
     forced-color-adjust: none;
     background: Highlight;
   }

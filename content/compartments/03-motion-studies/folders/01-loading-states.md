@@ -1,8 +1,12 @@
 ---
-number: "00"
-name: Awaiting material
+# Placeholder piece — see compartment.md's header comment. Named and given
+# a one-line premise so the piece/unit architecture has real content to be
+# judged against; nothing past the premise is written yet.
+
+number: "01"
+name: Loading states
 credit: Placeholder
-title: Material coming
+title: Loading states
 
 meta:
   - key: Role
@@ -20,8 +24,7 @@ ledePlaceholder: true
 
 ## Lede
 
-This compartment is real work, not yet documented. Copy to be written from
-source material.
+What a screen shows while it has nothing to show yet.
 
 ## Body
 

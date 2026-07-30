@@ -83,6 +83,15 @@ export type Compartment = {
   desc: string;
   spine: string;
   accent: AccentName;
+  /**
+   * What a folder IS in this compartment — a build-order chapter (VPro) or
+   * one of a set of independent pieces (Motion Studies). Absent means
+   * "chapter": every compartment written before this field existed is one.
+   * Changes the noun used everywhere a folder count is printed, and drops
+   * the "in the order they were built" claim for a compartment that has no
+   * build order to claim.
+   */
+  unit?: "chapter" | "piece";
   /** The problem, in one line. The masthead's second step. */
   problem: string;
   problemPlaceholder?: boolean;
@@ -151,6 +160,16 @@ export function splitSpine(spine: string): { lead: string; rest: string } {
   const at = spine.indexOf(",");
   if (at === -1) return { lead: spine, rest: "" };
   return { lead: spine.slice(0, at + 1), rest: spine.slice(at + 1) };
+}
+
+/**
+ * The noun for a compartment's folders, singular or plural — "chapter(s)"
+ * for a build-order sequence, "piece(s)" for an unordered set. One function
+ * so a fourth compartment shape never means hunting down three call sites.
+ */
+export function unitNoun(unit: Compartment["unit"], count: number): string {
+  const noun = unit === "piece" ? "piece" : "chapter";
+  return count === 1 ? noun : `${noun}s`;
 }
 
 /**

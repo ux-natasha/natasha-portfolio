@@ -563,6 +563,29 @@ below. A folder tab's name is present in the accessible name at all times
 number until selected — `clip-path`, never `display:none`, so a screen
 reader always has the full label.
 
+The folder tab row's own job is to **select, not navigate**: clicking
+`00`–`03` swaps which folder's lede and four-field meta panel show inside
+the open compartment's cover (`Cover.tsx`), in place, on the index. A
+`.pager` (`← previous` / `next →`) steps the same selection by one for a
+reader thumbing straight through rather than picking a tab. Neither
+control leaves the page — the folder object stays a closed cover being
+read from the outside. "Read more →" (`.cover-open`) is the one link that
+actually navigates, landing on the previewed folder's own anchor
+(`/<slug>#ch-<nn>`) in its full record. This is the restored
+Compartment → Folder → "Read more" hierarchy: a reader previews before
+committing to leave, and the dedicated record route (see **Records**,
+below) is always the destination, never the index itself.
+
+Not every compartment is a build-order sequence. A compartment's `unit`
+(`"chapter"` or `"piece"`, default `"chapter"` when absent) swaps the
+noun everywhere a folder count prints — the well count, the cover's
+folder-count line, a record's contents line — and drops the "in the
+order they were built" claim for `unit: "piece"`, since an unordered set
+of independent pieces has no build order to claim. VPro is chapters;
+Motion Studies is pieces. The same `Folder` shape and the same tab row
+serve both — nothing about the tab row, the pager, or the record route
+assumes one shape over the other.
+
 ### The Panel (`.card`, at-a-glance)
 A bordered rectangle (Paper-2, 1px Line border, no radius) with a single
 corner tag (`.card-tag`, Rose Ink, positioned outside the top edge) marking
@@ -605,9 +628,59 @@ handler). A shelf is a flat Paper-2 face over a Taupe "board" strip
 — never at rest, even for the currently-open compartment (the Last-2%
 Rule applies to the drawer too).
 
+A shelf carries no `data-accent` — a compartment's own hue is not read
+anywhere on the index, so there's nothing local for `--mark`/`--mark-ink`
+to override, and every shelf's key and hover board fall through to the
+`:root` default (flat Rose) regardless of which compartment it is. This
+is deliberate, not an oversight fixed by adding the attribute back: a
+compartment's accent becomes part of the experience only once a reader is
+actually on its record route (`Record.tsx`'s `useAccentGround` sets
+`data-accent` there, and only there). An earlier build set `data-accent`
+on the shelf link and on the cover wrapper, which bled each compartment's
+olive/navy/burgundy into the drawer at rest — a regression against this
+same rule, fixed by removing the attribute rather than by adding hover
+gating, since the index should never carry it in the first place.
+
 ### Foot
 A single hairline-topped row: the contact link (with a `placeholder` tag in
 Rose Ink when unset) and a "↑ back to top" anchor. Both hit 44px min-height.
+
+### Records (`/<slug>`)
+A record is its own route, not a deeper state of the index — a case study
+opens on `Masthead` (role/timeline/team/outcome first, always, before any
+chapter), then a continuous, whitespace-separated stack of `Chapter`s
+(each its own closed-by-default depth reveal, per §1), then `NextRecord`,
+then `Foot`. This is where a compartment's accent finally applies:
+`useAccentGround` sets `data-accent` on `<html>` for the route's lifetime,
+tinting `--ground` and coloring each chapter's margin numeral — the one
+place Rose's per-compartment hue sits at rest and large (see Typography →
+Chapter numeral).
+
+Three components answer "how do I move through 7 pages, 10 sections, and
+not lose my place" — the long-form-reading question a folder-sized cover
+never had to solve:
+
+- **Spine** (`.spine`) — the rail's record-route counterpart. Sticky,
+  same column/strip behaviour as the Rail. Tracks the active chapter via
+  `IntersectionObserver` (`rootMargin: "-45% 0px -50% 0px"`) and marks it
+  `aria-current="location"` among the chapter numerals; a `--read` custom
+  property (`scrollY / (scrollHeight - innerHeight)`) drives a progress
+  fill (`.spine-fill`) so position and how much remains are both visible
+  at every scroll depth, not just at the chapter boundary.
+- **Catalogue** (`.cat`) — a native `<dialog>` jump-anywhere panel, opened
+  from the Spine's foot. Lists every record and shelf in one place (each
+  record entry carries its own accent on its edge — legitimate here,
+  since a reader who opens this is already inside a record and has
+  already learned that color), marks the one being read `aria-current`,
+  and always offers a way back to the drawer. Built on `<dialog>` rather
+  than a hand-rolled panel so focus containment, Escape, the inert
+  background and the backdrop are the platform's.
+- **NextRecord** (`.onward`) — the end-of-record pager. Shows the
+  previous and next record (never a shelf — landing a reader on an empty
+  slot is a worse ending than not offering one), each already carrying
+  its own accent so the color a reader is about to meet is visible before
+  they click. Wraps: the last record leads to the first, never to a
+  disabled button.
 
 ## Do's and Don'ts
 

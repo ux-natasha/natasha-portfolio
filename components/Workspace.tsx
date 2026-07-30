@@ -6,7 +6,8 @@ import { Foot } from "@/components/Foot";
 import { Opening } from "@/components/Opening";
 import { GoLink, PageTransition } from "@/components/PageTransition";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { splitSpine, type Site } from "@/lib/schema";
+import { roving } from "@/lib/a11y";
+import { splitSpine, unitNoun, type Site } from "@/lib/schema";
 
 /**
  * The index, and only the index.
@@ -143,8 +144,7 @@ export function Workspace({ site }: { site: Site }) {
             <div className="well-head">
               <p className="well-desc">{record.spine}</p>
               <p className="well-count">
-                {record.folders.length}{" "}
-                {record.folders.length === 1 ? "chapter" : "chapters"}
+                {record.folders.length} {unitNoun(record.unit, record.folders.length)}
               </p>
             </div>
 
@@ -167,7 +167,7 @@ export function Workspace({ site }: { site: Site }) {
           {compartments.map((c) => {
             const { lead, rest } = splitSpine(c.spine);
             return (
-              <GoLink key={c.slug} href={`/${c.slug}`} className="shelf" data-accent={c.accent}>
+              <GoLink key={c.slug} href={`/${c.slug}`} className="shelf">
                 <span className="shelf-face">
                   <span className="shelf-key">{c.key}</span>
                   <span className="shelf-name">{c.name}</span>
@@ -295,34 +295,6 @@ function useReturnedFrom(slugs: string[], select: (i: number) => void) {
     const at = slugs.indexOf(from);
     if (at > 0) select(at);
   }, [slugs, select]);
-}
-
-/**
- * The APG tablist keyboard contract: arrows move and select, Home and End go to
- * the ends, and focus follows the selection. Only these keys are consumed — Tab,
- * Escape and everything else pass through untouched.
- */
-function roving(
-  event: React.KeyboardEvent,
-  list: HTMLElement | null,
-  current: number,
-  count: number,
-  select: (next: number) => void,
-) {
-  const next = {
-    ArrowRight: (current + 1) % count,
-    ArrowDown: (current + 1) % count,
-    ArrowLeft: (current - 1 + count) % count,
-    ArrowUp: (current - 1 + count) % count,
-    Home: 0,
-    End: count - 1,
-  }[event.key];
-
-  if (next === undefined) return;
-
-  event.preventDefault();
-  select(next);
-  (list?.children[next] as HTMLElement | undefined)?.focus();
 }
 
 function prefersReducedMotion(): boolean {
