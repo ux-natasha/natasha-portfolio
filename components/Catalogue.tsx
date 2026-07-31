@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { GoLink } from "@/components/PageTransition";
+import { useEffect, useRef, useState } from "react";
+import { GoLink, prefersReducedMotion } from "@/components/PageTransition";
 import type { CatalogueEntry } from "@/lib/schema";
+
+/** Matches the `cat-out` keyframe's duration in globals.css. */
+const CLOSE_MS = 220;
 
 /**
  * The card catalogue: everywhere a reader can go, from anywhere.
@@ -31,12 +34,40 @@ export function Catalogue({
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  /* The panel gets its own quick exit (§ review: an entrance that settles
+     over --settle with an instant close read as broken, not restrained).
+     `closing` drives the CSS animation; the actual `close()` is held off
+     until it's played, the same delayed-unmount pattern SlidingCover in
+     Workspace.tsx uses for its own exit. */
+  const [closing, setClosing] = useState(false);
 
   useEffect(() => {
     const dialog = ref.current;
     if (dialog === null) return;
-    if (open && !dialog.open) dialog.showModal();
-    if (!open && dialog.open) dialog.close();
+
+    if (open && !dialog.open) {
+      setClosing(false);
+      dialog.showModal();
+      return;
+    }
+
+    if (!open && dialog.open) {
+      if (prefersReducedMotion()) {
+        dialog.close();
+        return;
+      }
+      setClosing(true);
+      // Reset synchronously here rather than waiting on the dialog's own
+      // `close` event: that event is only queued by the spec, not
+      // guaranteed prompt, and Escape/backdrop dismissal never sets
+      // `closing` true in the first place, so this only ever matters for
+      // the path this timer itself owns.
+      const timer = window.setTimeout(() => {
+        dialog.close();
+        setClosing(false);
+      }, CLOSE_MS);
+      return () => window.clearTimeout(timer);
+    }
   }, [open]);
 
   const records = entries.filter((e) => e.kind === "record");
@@ -46,10 +77,14 @@ export function Catalogue({
     <dialog
       ref={ref}
       className="cat"
+      data-closing={closing ? "true" : undefined}
       aria-labelledby="cat-heading"
       /* `close` fires for Escape and for the close button alike, so the state
          upstream stays in step however the panel was dismissed. */
-      onClose={onClose}
+      onClose={() => {
+        setClosing(false);
+        onClose();
+      }}
       /* A click that lands on the dialog element itself landed on the backdrop:
          every child covers its own area. */
       onClick={(event) => {

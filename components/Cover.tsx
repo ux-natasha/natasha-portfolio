@@ -26,7 +26,15 @@ import { unitNoun, type Compartment } from "@/lib/schema";
  *     on the previewed folder's own anchor in the full record.
  */
 export function Cover({ record }: { record: Compartment }) {
-  const [fi, setFi] = useState(0);
+  /* §1e: the cover previews one folder before a reader commits to "read more".
+     Defaulting that preview to build order's first chapter means the teaser
+     opens on whichever folder happens to be built first, not the one that
+     best argues for the record — `lead` lets a compartment name that folder
+     explicitly. Falls back to 0, same as before `lead` existed. */
+  const leadIndex = record.lead
+    ? record.folders.findIndex((f) => f.number === record.lead)
+    : -1;
+  const [fi, setFi] = useState(leadIndex >= 0 ? leadIndex : 0);
   const folder = record.folders[fi];
   const tabs = useRef<HTMLDivElement>(null);
   const panelId = `cov-panel-${record.slug}`;
@@ -66,38 +74,43 @@ export function Cover({ record }: { record: Compartment }) {
         role="tabpanel"
         aria-labelledby={tabId(fi)}
       >
-        <div className="cover-top">
-          <p className="eyebrow">
-            Record {record.record} · {record.key}
-          </p>
-          <p className="eyebrow">
-            {record.folders.length} {unitNoun(record.unit, record.folders.length)}
-          </p>
-        </div>
+        {/* Just "Record N · KEY" here — the folder count already sits one line
+            above, in the well head (`{record.spine}` / `{N} {unit}`), so a
+            second eyebrow repeating it inside the cover was the same fact
+            said three times running (well head, this eyebrow, folder count
+            below). unitNoun stays imported for the tablist's aria-label. */}
+        <p className="eyebrow cover-top">
+          Record {record.record} · {record.key}
+        </p>
 
         <h3 className="cover-title">{record.name}</h3>
         <p className="cover-desc">{record.desc}</p>
 
         {/* The previewed folder — level 1 only, the ten-second read. Its own
-            deeper levels stay behind "read more", not expanded here. */}
-        <div className="ch-top">
-          <p className="eyebrow">
-            {folder.number} · {folder.name}
+            deeper levels stay behind "read more", not expanded here.
+            Keyed on the folder number so switching tabs remounts this block
+            and replays the fade — a quiet cross-fade, not the compartment-
+            level slide, so the two motions stay legible as different things. */}
+        <div className="cover-folder" key={folder.number}>
+          <div className="ch-top">
+            <p className="eyebrow">
+              {folder.number} · {folder.name}
+            </p>
+            <p className="eyebrow">{folder.credit}</p>
+          </div>
+          <h4 className="cover-folder-title">{folder.title}</h4>
+          <p className={`ch-lede${folder.ledePlaceholder ? " is-stub" : ""}`}>
+            {folder.ledePlaceholder ? `[${folder.lede}]` : folder.lede}
           </p>
-          <p className="eyebrow">{folder.credit}</p>
-        </div>
-        <h4 className="cover-folder-title">{folder.title}</h4>
-        <p className={`ch-lede${folder.ledePlaceholder ? " is-stub" : ""}`}>
-          {folder.ledePlaceholder ? `[${folder.lede}]` : folder.lede}
-        </p>
 
-        <div className="meta-row">
-          {folder.meta.map((field) => (
-            <div key={field.key}>
-              <span className="meta-label">{field.key}</span>
-              <span className="meta-val">{field.value}</span>
-            </div>
-          ))}
+          <div className="meta-row">
+            {folder.meta.map((field) => (
+              <div key={field.key}>
+                <span className="meta-label">{field.key}</span>
+                <span className="meta-val">{field.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="cover-foot">
@@ -118,8 +131,11 @@ export function Cover({ record }: { record: Compartment }) {
             </button>
           </div>
 
-          <GoLink href={`/${record.slug}#${folder.anchor}`} className="cover-open">
-            read more <span aria-hidden="true">→</span>
+          {/* Straight to the previewed folder's own route — it's already been
+              chosen here on the index, so there's no reason to detour through
+              the record overview first. */}
+          <GoLink href={`/${record.slug}/${folder.number}`} className="cover-open">
+            read more <span className="cover-open-arrow" aria-hidden="true">→</span>
           </GoLink>
         </div>
       </article>

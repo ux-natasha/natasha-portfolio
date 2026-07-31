@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 /**
  * Original abstractions drawn in code. Never a product screenshot: the software
  * is proprietary B2B and nothing of its layout may appear here (§8).
@@ -7,21 +11,42 @@
  * The argument about the brightness of gray, settled — three planes, each a
  * real value step lighter than the one behind it. The opening's plate, and only
  * the opening's: it illustrates one specific approved line.
+ *
+ * The theme toggle changes the actual brightness of gray on every surface in
+ * the site, which makes it the one action a reader can take that reopens this
+ * exact joke rather than just reading it. So it does: switching theme fires a
+ * `theme-toggled` event, and the plate answers by remounting its three planes
+ * and replaying the settle — same motion as the load-in, snappier stagger,
+ * because this one is a direct reply to a click rather than the page booting.
  */
 export function Plate({ alt, caption }: { alt: string; caption: string }) {
+  const [replay, setReplay] = useState(0);
+
+  useEffect(() => {
+    const onToggle = () => setReplay((n) => n + 1);
+    window.addEventListener("theme-toggled", onToggle);
+    return () => window.removeEventListener("theme-toggled", onToggle);
+  }, []);
+
   return (
     <figure className="plate">
       <svg viewBox="0 0 240 78" role="img" aria-label={alt}>
-        <rect x="8" y="14" width="150" height="46" fill="#B9B4A5" />
-        <rect x="34" y="22" width="150" height="46" fill="#CFCABB" />
-        <rect
-          x="60"
-          y="30"
-          width="150"
-          height="46"
-          fill="#E6E3D8"
-          stroke="#CFCABB"
-        />
+        {/* Each plane settles into its stacked position in sequence, back to
+            front — the argument being settled, not just illustrated. Keyed on
+            `replay` so a theme switch remounts this group and reopens it. */}
+        <g key={replay} className={replay > 0 ? "plate-replay" : undefined}>
+          <rect className="plate-step plate-step-1" x="8" y="14" width="150" height="46" fill="#B9B4A5" />
+          <rect className="plate-step plate-step-2" x="34" y="22" width="150" height="46" fill="#CFCABB" />
+          <rect
+            className="plate-step plate-step-3"
+            x="60"
+            y="30"
+            width="150"
+            height="46"
+            fill="#E6E3D8"
+            stroke="#CFCABB"
+          />
+        </g>
       </svg>
       <figcaption>{caption}</figcaption>
     </figure>

@@ -27,7 +27,7 @@ card:
     - key: Owned
       value: Configuration · Planning · Modify Subtasks
     - key: Outcome
-      value: one line — not written yet
+      value: The planning screen that survived shipped, and was adopted client-wide.
       placeholder: true
 
 # ── The pictorial ─────────────────────────────────────────────────────

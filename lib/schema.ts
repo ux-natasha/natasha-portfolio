@@ -63,9 +63,46 @@ export type Folder = {
   ledePlaceholder?: boolean;
   /** Level 2, already rendered from markdown. */
   bodyHtml: string;
+  /** Level 2's closing aside. Optional — not every chapter earns one. */
+  pullQuote?: string;
   meta: MetaField[];
-  /** How many levels sit below this one, for the "+N more" cue. */
+  /** How many levels sit below this one, for the "+N more" cue. Counts down
+      to 0 as real levels 3–5 get written; a folder with `breakdown` set has
+      already claimed levels 3+ itself and this stops applying. */
   depth: number;
+
+  /** Level 3's toggle label — chapter-specific ("what i built", "what's
+      mine"). Only present on folders that go past level 2. */
+  breakdownLabel?: string;
+  /** Level 3: the named pieces inside this chapter, each credited. Mirrors
+      §4's credit register at row granularity — only rows with a real,
+      sourced credit are ever included, never invented to fill a count. */
+  breakdown?: BreakdownRow[];
+
+  /** Level 4: named decisions, each with its own prose. Only decisions with
+      real source material are included — an unsourced one is left out
+      rather than drafted thin. */
+  decisions?: Decision[];
+
+  /** Level 5's diagram half: a one-line hint at what the reconstructed
+      diagram will show once drawn (§8 — original abstraction, no client
+      data). Its presence is what triggers rendering levels 3–5 at all. */
+  diagramNote?: string;
+};
+
+/** One row of a chapter's level-3 breakdown. */
+export type BreakdownRow = {
+  name: string;
+  desc: string;
+  /** Free text, not an enum — "SOLO", "TEAM", "TBC", "COLLEAGUE", whatever
+      the credit register actually is for that piece. */
+  credit: string;
+};
+
+/** One named decision inside a chapter's level 4, prose already rendered. */
+export type Decision = {
+  heading: string;
+  bodyHtml: string;
 };
 
 /**
@@ -84,14 +121,12 @@ export type Compartment = {
   spine: string;
   accent: AccentName;
   /**
-   * What a folder IS in this compartment — a build-order chapter (VPro) or
-   * one of a set of independent pieces (Motion Studies). Absent means
-   * "chapter": every compartment written before this field existed is one.
-   * Changes the noun used everywhere a folder count is printed, and drops
-   * the "in the order they were built" claim for a compartment that has no
-   * build order to claim.
+   * Which folder's number the index COVER (§1e's teaser) previews by default.
+   * Undefined falls back to the first folder, same as before this existed —
+   * build order still governs the record route and the tab row's own start;
+   * this only decides what a reader sees before ever clicking a tab.
    */
-  unit?: "chapter" | "piece";
+  lead?: string;
   /** The problem, in one line. The masthead's second step. */
   problem: string;
   problemPlaceholder?: boolean;

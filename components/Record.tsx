@@ -1,25 +1,26 @@
 "use client";
 
-import { useEffect } from "react";
-import { Chapter } from "@/components/Chapter";
 import { Foot } from "@/components/Foot";
 import { Masthead } from "@/components/Masthead";
 import { NextRecord } from "@/components/NextRecord";
 import { PageTransition } from "@/components/PageTransition";
 import { Spine } from "@/components/Spine";
+import { useAccentGround } from "@/lib/useAccentGround";
 import type { CatalogueEntry, Compartment, Drawer } from "@/lib/schema";
 
 /**
- * A record: one case study, one route, one scroll.
+ * A record's overview: one route, the whole case study named and placed.
  *
- * The chapters are a continuous document rather than tabs or sub-routes — a
- * reviewer gets the whole arc in one gesture, and the spine keeps their place
- * without their having to hold it themselves. Order is build order (§1.1), so
- * scrolling forward through the page is scrolling forward through the project.
+ * Chapters used to stack here as one continuous scroll — a reviewer got the
+ * whole arc in one gesture, but paid for all four chapters even to read one.
+ * They're separate routes now (`/<slug>/<NN>`), reached from the masthead's
+ * own contents list; this page is what's left once that stack is gone: the
+ * masthead (role/timeline/team/outcome, the four-second read), the way into
+ * each chapter, and the way to the next record.
  *
  * The frame's own rules survive the move off the index unchanged: whitespace is
- * the only separator, the meta block is a panel, depth defaults closed, and the
- * structural column is real and persistent rather than a floating control.
+ * the only separator, the meta block is a panel, and the structural column is
+ * real and persistent rather than a floating control.
  */
 export function Record({
   record,
@@ -39,7 +40,6 @@ export function Record({
         chapters={record.folders.map((folder) => ({
           number: folder.number,
           name: folder.name,
-          anchor: folder.anchor,
         }))}
         catalogue={catalogue}
         current={record.slug}
@@ -47,14 +47,6 @@ export function Record({
 
       <main className="sheet" id="content" tabIndex={-1}>
         <Masthead record={record} />
-
-        {/* Chapters separate by whitespace scale alone — no rule between them,
-            no card around them (§1). */}
-        <div className="chapters">
-          {record.folders.map((folder) => (
-            <Chapter key={folder.number} folder={folder} />
-          ))}
-        </div>
 
         <NextRecord catalogue={catalogue} current={record.slug} />
 
@@ -69,22 +61,4 @@ export function Record({
       </main>
     </PageTransition>
   );
-}
-
-/**
- * The paper's own tint, for the whole viewport rather than the shell alone.
- *
- * The accent tokens are set on `.shell[data-accent]` too, so every mark is the
- * right colour in the server-rendered HTML with no JS at all. This adds the one
- * thing an element inside the page cannot: the ground behind the page, out past
- * the shell's max width and into the overscroll gutter. It is a ~4% tint, so
- * arriving a frame after hydration is imperceptible — and the same mechanism the
- * theme toggle already uses, rather than a second one.
- */
-function useAccentGround(accent: string) {
-  useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute("data-accent", accent);
-    return () => root.removeAttribute("data-accent");
-  }, [accent]);
 }

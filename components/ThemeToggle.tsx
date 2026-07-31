@@ -43,6 +43,9 @@ export function ThemeToggle() {
         document.documentElement.setAttribute("data-theme", next);
         window.localStorage.setItem("theme", next);
         setTheme(next);
+        // Changing the site's own gray is new evidence in the opening's joke
+        // about the brightness of gray — see Plate.tsx.
+        window.dispatchEvent(new Event("theme-toggled"));
       }}
     >
       <span className="arw" aria-hidden="true">

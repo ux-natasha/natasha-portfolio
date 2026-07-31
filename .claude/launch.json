@@ -33,6 +33,18 @@
         "3101"
       ],
       "port": 3101
+    },
+    {
+      "name": "critique-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3212"
+      ],
+      "port": 3212
     }
   ]
 }

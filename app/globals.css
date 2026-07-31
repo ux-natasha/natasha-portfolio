@@ -232,9 +232,13 @@
   --a: #8e3a45;
   --a-ink: #6f2832;
   --a-deep: #551d25;
-  --a-dark: #cf7d88;
-  --a-ink-dark: #e5a8b0;
-  --a-deep-dark: #bd7581;
+  /* Rotated a step redder (hue ~355 vs rose's ~333) and desaturated from the
+     original #cf7d88 triple, which sat close enough to --rose in both hue and
+     lightness that this record's own numerals read as the interaction accent
+     sitting at rest in dark mode — the one thing the Last-2% Rule forbids. */
+  --a-dark: #b5525c;
+  --a-ink-dark: #d98d94;
+  --a-deep-dark: #8f3f47;
 }
 
 /* Light, by default. The bare attribute selector matches wherever the
@@ -407,6 +411,18 @@ svg {
   padding: clamp(2rem, 4vw, 3.5rem) var(--gutter) 2.5rem;
 }
 
+/* A shelf page (/writing, /reading) is short enough that `.shell`'s 100dvh
+   floor otherwise leaves the foot stranded mid-viewport with dead ground
+   below it. Scoped to shelf pages only — every other route's content is
+   long enough that this never engages. */
+.sheet:has(> .shelfpage) {
+  display: flex;
+  flex-direction: column;
+}
+.sheet:has(> .shelfpage) > .foot {
+  margin-top: auto;
+}
+
 /* ── The rail ────────────────────────────────────────────────────────── */
 
 .rail {
@@ -496,19 +512,36 @@ svg {
   padding: 0;
 }
 
+/* Stretched to the rail's own width — not centered — so the active tab's
+   right edge can reach the rail's border-right and cut into it (below).
+   Centering would leave a strip of rail background between the tab and the
+   divider, and the whole point of the cut is that there is no strip. */
 .rail-nums {
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   gap: 1px;
   margin-top: 2px;
 }
 
+/* Unlike a plain div, a <button> does not fill its containing block when
+   width is left auto — it sizes to content regardless of display:flex. So
+   the width has to be given explicitly, and it has to actually subtract the
+   margin-left below: `width:100%` plus `margin-left:14px` was rendering at
+   95px + 14px offset, overshooting the rail's own right edge by a full 14px
+   instead of landing on it. calc(100% - 14px) is what "stretch minus the
+   left gutter" actually means for a button. */
 .rail-num {
+  position: relative;
+  width: calc(100% - 14px);
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--muted);
   padding: 0.5rem 0.75rem;
-  border-radius: 5px;
+  margin-left: 14px;
+  border: 1px solid transparent;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
   min-height: 44px;
   min-width: 44px;
   display: flex;
@@ -522,8 +555,62 @@ svg {
   color: var(--ink);
   background: var(--paper-2);
 }
+.rail-num:active {
+  transform: scale(0.97);
+}
+/* The active step's fill matches the SHEET's tone rather than the rail's own
+   ground, and is 1px WIDER than the resting state — not offset by a negative
+   margin, which (with an explicit width already set) only changes spacing
+   after the element, never its own edge. The extra pixel of width is what
+   actually pushes the box past the rail's own boundary, so the divider
+   disappears under it instead of just touching it. */
 .rail-num[aria-current="step"] {
-  color: var(--mark-ink);
+  width: calc(100% - 13px);
+  color: var(--ink);
+  font-weight: 500;
+  background: var(--paper-2);
+  border-color: var(--line);
+  border-right: none;
+}
+/* Pinned to the rail's own outer edge — the true left edge of the screen —
+   rather than the tab's inner edge: `left:-14px` cancels the tab's own
+   margin-left exactly, so the bar's left face lands flush with x:0 instead
+   of floating 14px in from it. Full row height (top/bottom:0, not a
+   centered tick) so it reads as an edge marker in its own right, not a
+   tick attached to the text. `--mark-deep` on purpose, not `--mark`: `--mark`
+   is the rest-of-site accent (rail-key, hover underlines, the drawer arrow),
+   so the active-step marker needs its own darker step to read as a distinct
+   signal rather than one more instance of the same pink. */
+.rail-num[aria-current="step"]::after {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0;
+  background: var(--mark-deep);
+}
+
+/* The position counter — "01 / 03" — sits at the base of the rail, above the
+   theme toggle, mirroring the folder mockup's read on "where, and how much
+   remains" (§1's rail rule) at the outer, between-records zoom level. */
+.rail-pos {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  text-align: center;
+  margin: 0;
+}
+
+.rail-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 /* Pinned to the bottom of the sticky column with the same auto-margin
@@ -716,6 +803,45 @@ svg {
   margin-top: 0.75rem;
 }
 
+/* The three planes settle into their stacked position one after another, back
+   to front, instead of arriving as one flat block (settled, 2026-07-31) — see
+   Plate.tsx. Runs alongside .plate's own assemble, not instead of it. */
+@keyframes plate-settle {
+  from {
+    opacity: 0;
+    transform: translate(7px, 5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+.plate-step {
+  animation: plate-settle var(--quick) var(--ease) both;
+}
+.plate-step-1 {
+  animation-delay: 0.52s;
+}
+.plate-step-2 {
+  animation-delay: 0.62s;
+}
+.plate-step-3 {
+  animation-delay: 0.72s;
+}
+
+/* The theme toggle reopens the same argument (Plate.tsx) — same stagger
+   spacing as the load-in, but starting at once rather than 0.52s in, since
+   this replay is a direct reply to a click, not part of the page booting. */
+.plate-replay .plate-step-1 {
+  animation-delay: 0s;
+}
+.plate-replay .plate-step-2 {
+  animation-delay: 0.09s;
+}
+.plate-replay .plate-step-3 {
+  animation-delay: 0.18s;
+}
+
 /* ── The hand-off into the work ──────────────────────────────────────── */
 
 /* Not a divider — a heading with a short lead-in mark. Sections separate by
@@ -786,6 +912,9 @@ svg {
 }
 .comp:hover {
   background: #dad7ca;
+}
+.comp:active {
+  transform: scale(0.97);
 }
 .comp[aria-selected="true"] {
   background: var(--paper-3);
@@ -884,6 +1013,9 @@ svg {
   color: var(--ink);
   background: #dad7ca;
 }
+.tab:active {
+  transform: scale(0.97);
+}
 .tab[aria-selected="true"] {
   background: var(--paper-2);
   color: var(--ink);
@@ -934,7 +1066,13 @@ svg {
    (grid-area stacking) so the row sizes to whichever is taller and the two
    never fight for space mid-transition. No overflow:hidden on the wrapper —
    the folder's own contact shadow and fold reach slightly past its box, and
-   clipping the wrapper would cut them off during the move. */
+   clipping the wrapper would cut them off during the move.
+
+   A scale step rides along with the translate (settled, 2026-07-31), so the
+   outgoing folder reads as receding into the drawer rather than just sliding
+   past, and the incoming one arrives as though pulled forward out of it. The
+   box-shadow lamination is untouched — depth here is transform-only, never
+   blur, so §1d's "no blur-based depth" rule still holds. */
 .page-slide {
   display: grid;
 }
@@ -960,41 +1098,41 @@ svg {
 @keyframes page-slide-out-left {
   from {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   to {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(-28px) scale(0.96);
   }
 }
 @keyframes page-slide-out-right {
   from {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   to {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(28px) scale(0.96);
   }
 }
 @keyframes page-slide-in-left {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(-28px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 @keyframes page-slide-in-right {
   from {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(28px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -1160,6 +1298,9 @@ svg {
 .page-more:focus-visible {
   color: var(--ink);
 }
+.page-more:active {
+  transform: scale(0.97);
+}
 .page-more .dot {
   width: 5px;
   height: 5px;
@@ -1170,6 +1311,18 @@ svg {
 }
 .page-more[aria-expanded="true"] .dot {
   background: var(--mark);
+}
+
+/* The one level-2 entry point per chapter reads a step darker than the
+   nested level-3+ toggles it contains once open — still mono, still quiet
+   at rest, just not the same weight as a control buried three reveals deep. */
+.page-more.is-entry {
+  color: var(--ink-2);
+  font-size: 0.75rem;
+}
+.page-more.is-entry:hover,
+.page-more.is-entry:focus-visible {
+  color: var(--ink);
 }
 
 /* The reveal itself: a grid-template-rows tween (0fr → 1fr), not max-height —
@@ -1186,6 +1339,12 @@ svg {
 }
 .page-reveal-inner {
   overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--quick) var(--ease);
+}
+.page-reveal[data-open="true"] .page-reveal-inner {
+  opacity: 1;
+  transition-delay: 0.1s;
 }
 .page-reveal .page-body {
   padding-top: 1.125rem;
@@ -1200,6 +1359,177 @@ svg {
   color: var(--muted);
   margin-top: 0.875rem;
   font-variation-settings: "opsz" 20;
+}
+
+/* ── Levels 2b–5 — the cascade past the body ─────────────────────────────
+   Each `.page-more` above already carries the "closed by default, one quiet
+   affordance" rule; what follows are the shapes those deeper reveals take.
+   Nothing here indents with depth — a reader should never see a staircase,
+   only whitespace between one level and the next (§1's hard rule against a
+   nested outline shown all at once). */
+
+/* Level 2's closing aside — an accent rule, not a hover state, so it can sit
+   at rest (schema.ts: accent shows at rest as structure, same license the
+   chapter numeral already uses). */
+.pull-quote {
+  font-family: var(--serif);
+  font-size: 0.90625rem;
+  line-height: 1.5;
+  color: var(--ink);
+  border-left: 2px solid var(--mark-ink);
+  padding-left: 1rem;
+  margin: 1.25rem 0 0;
+  max-width: 42ch;
+}
+
+/* Level 3 — named, credited rows. Same gutter-divider idiom as .meta-row: the
+   rule is drawn by the row's own top edge, never a border-right on a cell. */
+.breakdown {
+  margin-top: 0.25rem;
+}
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 9.75rem 1fr auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.6875rem 0;
+  border-top: 1px solid var(--line);
+}
+.breakdown-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.breakdown-name {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+.breakdown-desc {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.breakdown-credit {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+/* Same license as .pull-quote: a credited word sitting in the record's own
+   accent, at rest, is structure — not the interaction-only pink §5 bans. */
+.breakdown-credit.is-solo {
+  color: var(--mark-ink);
+}
+
+/* Level 4 — named decisions, prose already rendered from markdown. */
+.decisions {
+  margin-top: 0.25rem;
+}
+.decision {
+  margin-top: 1.5rem;
+}
+.decision:first-child {
+  margin-top: 0;
+}
+.decision-heading {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.decision-body {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+.decision-body > :first-child {
+  margin-top: 0;
+}
+.decision-body > :last-child {
+  margin-bottom: 0;
+}
+
+/* Level 4b — the reconstructed diagram. A box that says plainly what isn't
+   built yet, rather than a fake illustration standing in for one (§8: an
+   original abstraction, drawn in code, still has to actually be drawn). */
+.diagram-box {
+  margin-top: 0.25rem;
+  min-height: 9.5rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--paper-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+.diagram-note {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* The gated real screens (§8), surfaced right after the diagram now rather
+   than five clicks deep. Dashed, not solid: a boundary that is deliberately
+   provisional, not a wall — and `position: relative` so the placeholder tag
+   can anchor to this box specifically rather than the page. */
+.gate-box {
+  position: relative;
+  margin-top: 1.25rem;
+  padding: 1.375rem 1.5rem;
+  border: 1px dashed var(--taupe-2);
+  border-radius: 3px;
+  background: var(--paper-2);
+}
+.gate-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.gate-desc {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 52ch;
+  margin-bottom: 0.9375rem;
+}
+/* What's behind the password hasn't been decided yet — same quiet stub
+   register as an unwritten lede or fact, not a finished feature. */
+.gate-desc.is-stub {
+  font-family: var(--serif);
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 0;
+}
+.gate-link {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  padding: 0.4375rem 0.875rem;
+  transition: color var(--quick) var(--ease), border-color var(--quick) var(--ease);
+}
+.gate-link:hover,
+.gate-link:focus-visible {
+  color: var(--mark-ink);
+  border-color: var(--mark-ink);
 }
 
 .pager {
@@ -1220,7 +1550,8 @@ svg {
   transition:
     color var(--quick) var(--ease),
     border-color var(--quick) var(--ease),
-    background var(--quick) var(--ease);
+    background var(--quick) var(--ease),
+    opacity var(--quick) var(--ease);
 }
 .pager button:hover:not(:disabled) {
   color: var(--ink);
@@ -1325,11 +1656,15 @@ svg {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: gap 0.25s var(--ease);
 }
-.shelf:hover .shelf-cta,
-.shelf:focus-visible .shelf-cta {
-  gap: 0.875rem;
+/* transform, not the flex gap: the same nudge without forcing layout on the
+   row every frame. */
+.shelf-cta-arrow {
+  transition: transform var(--quick) var(--ease);
+}
+.shelf:hover .shelf-cta-arrow,
+.shelf:focus-visible .shelf-cta-arrow {
+  transform: translateX(4px);
 }
 
 /* Labelled, dimmed, clearly coming. Quiet to near-invisible until filled —
@@ -1467,6 +1802,13 @@ svg {
     border-bottom: 1px solid var(--line);
     overflow-x: auto;
     overscroll-behavior-x: contain;
+    /* The bar starts scrolled to its left edge, so only the trailing edge
+       ever hides content at rest — a fade there reads as "more this way"
+       without the dishonesty of also fading a left edge with nothing behind
+       it. Masks to transparent, and the bar's own background matches the
+       page's (both `var(--ground, var(--paper))`), so there's no seam. */
+    mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
   }
   .rail-mark,
   .rail-up,
@@ -1488,12 +1830,44 @@ svg {
   }
   .rail-nums {
     flex-direction: row;
+    align-self: auto;
     margin: 0;
+  }
+  /* The cut-tab treatment (§ desktop) assumes a vertical rail with a
+     border-right to cut into; lying the rail down for a horizontal bar
+     removes that edge, so the tabs revert to the plain pill they were
+     before rather than dragging a now-meaningless cut shape into a row. */
+  .rail-num {
+    width: auto;
+    margin-left: 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+    border: none;
+  }
+  .rail-num[aria-current="step"] {
+    width: auto;
+    background: var(--paper-2);
+    color: var(--mark-ink);
+  }
+  .rail-num[aria-current="step"]::after {
+    content: none;
+  }
+  .rail-pos {
+    display: none;
+  }
+  /* Only Workspace's index rail renders `.rail-foot` — the Spine's own
+     `.spine-foot` is untouched by this block. With the counter hidden above,
+     it holds just the toggle, so pushing IT to the row's trailing edge (the
+     job `.theme-toggle`'s own margin-left:auto did before it gained this
+     wrapper) has to happen one level up. */
+  .rail-foot {
+    margin-top: 0;
+    margin-left: auto;
+    flex: 0 0 auto;
   }
   .theme-toggle {
     flex: 0 0 auto;
     margin-top: 0;
-    margin-left: auto;
     padding-left: 0.75rem;
   }
 
@@ -1580,6 +1954,7 @@ svg {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
   }
   .comp[aria-selected="true"],
   .tab[aria-selected="true"] {
@@ -1858,8 +2233,21 @@ svg {
 .cat[open] {
   animation: cat-in var(--settle) var(--ease) both;
 }
+/* The exit half of the same gesture — quicker than the entrance on purpose
+   (Sonner's asymmetric timing: a deliberate open, a snappy dismissal), and
+   held off by a matching JS delay in Catalogue.tsx so the panel is actually
+   gone by the time `close()` fires rather than popping out mid-animation. */
+.cat[data-closing="true"] {
+  animation: cat-out 0.22s var(--ease) both;
+}
 @keyframes cat-in {
   from {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+}
+@keyframes cat-out {
+  to {
     transform: translateX(-24px);
     opacity: 0;
   }
@@ -2178,17 +2566,76 @@ svg {
   text-align: right;
 }
 
+/* ── The mini masthead ───────────────────────────────────────────────── */
+/* A folder page's own header — not the full masthead. A reader can land here
+   directly (a shared link, back button, browser history) without ever
+   passing through the record overview, so this can't be nothing; but
+   repeating the full role/timeline/team/outcome panel on every chapter would
+   reintroduce the very "too much per page" problem splitting into routes was
+   meant to fix. The accent tick uses the record's own accent — structure,
+   not the interaction-only pink (§5's Last-2% Rule). */
+.mini-mast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  border-bottom: 1px solid var(--line);
+}
+.mm-back {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  transition: color var(--quick) var(--ease);
+}
+.mm-back:hover,
+.mm-back:focus-visible {
+  color: var(--ink);
+}
+.mm-id {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.mm-tick {
+  width: 8px;
+  height: 8px;
+  background: var(--mark);
+  flex: none;
+}
+.mm-key {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--mark-ink);
+}
+.mm-name {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+.mm-pos {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+
 /* ── A chapter ───────────────────────────────────────────────────────── */
-/* A spread in a catalogue, not a card. What carries the structure is the
-   numeral in the margin — and the numerals are load-bearing rather than
-   decorative: chapter order IS build order (§1.1), so the sequence is
-   information. Chapters separate by whitespace scale alone. */
+/* The whole of a folder's own route now, not a spread stacked among others.
+   What carries the structure is the numeral in the margin — and the numerals
+   are load-bearing rather than decorative: chapter order IS build order
+   (§1.1), so the sequence is information. With one chapter per page rather
+   than four run together, the numeral column doesn't need the width it used
+   to need for legibility in that run — narrower here on purpose. */
 .chapters {
-  margin-top: clamp(3rem, 8vw, 5.5rem);
+  margin-top: 0;
 }
 .ch {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr);
+  grid-template-columns: 4rem minmax(0, 1fr);
   gap: 0 clamp(1rem, 2.6vw, 2.25rem);
   align-items: start;
 }
@@ -2245,6 +2692,30 @@ svg {
 .ch-lede.is-stub {
   color: var(--muted);
   font-style: italic;
+}
+
+/* The way to the next chapter, or back to the overview at either end of the
+   sequence — a folder page's own pager, distinct from `.onward`'s
+   record-to-record one below it. */
+.folder-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: clamp(3rem, 7vw, 5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.folder-nav a {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+  transition: color var(--quick) var(--ease);
+}
+.folder-nav a:hover,
+.folder-nav a:focus-visible {
+  color: var(--mark-ink);
 }
 
 /* ── The end of a record ─────────────────────────────────────────────── */
@@ -2401,6 +2872,24 @@ svg {
   font-variation-settings: "opsz" 40;
 }
 
+/* Switching which folder is previewed remounts this block (React key), so
+   it replays on every tab click. Opacity and a few px only — the compartment
+   level already owns the lateral slide (§1a); this one level down has to
+   read as a different, quieter gesture or the two blur together. */
+@keyframes cover-folder-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.cover-folder {
+  animation: cover-folder-in var(--settle) var(--ease) both;
+}
+
 /* The previewed folder — a one-line-below-Headline step, the same
    "compartment name" token used for a shelf name and a catalogue heading:
    an entry a reader is looking AT, not yet the subject of its own page. */
@@ -2438,9 +2927,16 @@ svg {
   font-size: 0.875rem;
   letter-spacing: 0.1em;
   color: var(--mark-ink);
-  transition:
-    gap 0.25s var(--ease),
-    transform var(--quick) var(--ease);
+  transition: transform var(--quick) var(--ease);
+}
+/* transform, not the flex gap: the same nudge without forcing layout on the
+   row every frame. */
+.cover-open-arrow {
+  transition: transform var(--quick) var(--ease);
+}
+.cover-open:hover .cover-open-arrow,
+.cover-open:focus-visible .cover-open-arrow {
+  transform: translateX(4px);
 }
 .cover-open::after {
   content: "";
@@ -2456,7 +2952,6 @@ svg {
 }
 .cover-open:hover,
 .cover-open:focus-visible {
-  gap: 1rem;
   transform: translateY(-3px);
 }
 .cover-open:hover::after,
@@ -2654,6 +3149,12 @@ a.slot:focus-visible .slot-cta {
     border-bottom: 1px solid var(--line);
     overflow-x: auto;
     overscroll-behavior-x: contain;
+    /* Same reasoning as `.rail`'s mask in the sibling media query: the bar
+       opens scrolled to its left edge, so a trailing-edge fade alone signals
+       the hidden controls honestly. Shares the page's background var, so the
+       fade meets no seam. */
+    mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
   }
   /* Read progress moves to the bar's own bottom edge — the one place a
      horizontal measure belongs, and it reads at a glance on a phone. */
@@ -2800,6 +3301,7 @@ a.slot:focus-visible .slot-cta {
   }
   .spine-fill,
   .spine-num::before,
+  .spine-num::after,
   .cat-item::before,
   .onward-card::before {
     forced-color-adjust: none;

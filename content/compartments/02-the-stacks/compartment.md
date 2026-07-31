@@ -5,28 +5,23 @@
 
 key: STACKS
 name: The stacks
-desc: A personal project. Track what you're reading and watching, locally.
-spine: Personal project, one line confirmed.
+desc: A self-hosted media tracker — twelve types of media, one SQLite file, no account.
+spine: One write-up, built in a day.
 
 accent: navy
 
-problem: Media tracking that keeps the library on your own machine.
+problem: Cataloguing your own media without handing the list to someone else's server.
 problemPlaceholder: true
 
 facts:
   - key: Role
-    value: not written yet
-    placeholder: true
+    value: Design + full build, solo
   - key: Timeline
-    value: not written yet
-    placeholder: true
+    value: One day, nine commits
   - key: Team
-    value: not written yet
-    placeholder: true
+    value: Solo
   - key: Owned
-    value: not written yet
-    placeholder: true
+    value: Design, frontend, backend, deploy
   - key: Outcome
-    value: not written yet
-    placeholder: true
+    value: Shipped — live demo, self-hostable
 ---

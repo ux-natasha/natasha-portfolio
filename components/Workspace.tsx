@@ -93,7 +93,12 @@ export function Workspace({ site }: { site: Site }) {
           ))}
         </ol>
 
-        <ThemeToggle />
+        <div className="rail-foot">
+          <p className="rail-pos" aria-hidden="true">
+            {record.record} / {String(compartments.length).padStart(2, "0")}
+          </p>
+          <ThemeToggle />
+        </div>
       </nav>
 
       <main className="sheet" id="content" tabIndex={-1}>
@@ -176,7 +181,7 @@ export function Workspace({ site }: { site: Site }) {
                     {rest}
                   </span>
                   <span className="shelf-cta">
-                    open <span aria-hidden="true">→</span>
+                    open <span className="shelf-cta-arrow" aria-hidden="true">→</span>
                   </span>
                 </span>
               </GoLink>

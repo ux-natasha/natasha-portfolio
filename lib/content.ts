@@ -7,6 +7,7 @@ import { marked } from "marked";
 import type {
   CatalogueEntry,
   Compartment,
+  Decision,
   Drawer,
   Folder,
   Opening,
@@ -207,7 +208,42 @@ function readFolder(file: string): Folder {
     anchor: `ch-${front.number}`,
     lede: flatten(lede),
     bodyHtml: block(sections.get("body") ?? ""),
+    /* Level 4. Structured data (breakdown, pullQuote, diagramNote) lives in
+       frontmatter and passes through `front` untouched; decisions are prose,
+       so they're authored as `### ` subheadings under `## Decisions` instead
+       — the same reasoning that put Lede/Body in markdown in the first
+       place (§7: prose belongs in markdown, not YAML). */
+    decisions: parseDecisions(sections.get("decisions")),
   };
+}
+
+/** Split a `## Decisions` block on its `### ` subheadings into named,
+    already-rendered decisions. Undefined if the chapter has none — a
+    folder with no sourced decisions skips level 4 rather than faking one. */
+function parseDecisions(md: string | undefined): Decision[] | undefined {
+  if (!md) return undefined;
+  const out: Decision[] = [];
+  let heading: string | null = null;
+  let buffer: string[] = [];
+
+  const flush = () => {
+    if (heading !== null) {
+      out.push({ heading: heading.trim(), bodyHtml: block(buffer.join("\n").trim()) });
+    }
+    buffer = [];
+  };
+
+  for (const line of md.split("\n")) {
+    const sub = /^###\s+(?!#)(.*)$/.exec(line);
+    if (sub) {
+      flush();
+      heading = sub[1].trim();
+    } else if (heading !== null) {
+      buffer.push(line);
+    }
+  }
+  flush();
+  return out.length > 0 ? out : undefined;
 }
 
 /* Content is authored on Windows and lands as CRLF. `splitSections` matches

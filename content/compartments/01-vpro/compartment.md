@@ -17,6 +17,12 @@ spine: Four chapters, three years.
 # spine edge, the chapter numerals, one hairline, the paper's own tint.
 accent: olive
 
+# Which folder the INDEX COVER previews by default (§1e's teaser, not the
+# record route — that stays build order). Configuration is SOLO and carries
+# the site's strongest single fact; defaulting the teaser to the team-credited
+# prologue buried it behind a tab click. The tab row still starts at 00.
+lead: "01"
+
 # ── The masthead ──────────────────────────────────────────────────────
 # The problem, in one line, above the fold. Not a summary of the project —
 # the thing that was wrong. Assembled from the approved chapter copy (§3)
@@ -41,6 +47,6 @@ facts:
   - key: Owned
     value: Configuration · Planning · Modify Subtasks
   - key: Outcome
-    value: one line — not written yet
+    value: Two gatekept days became a self-service screen; Planning shipped and was adopted client-wide.
     placeholder: true
 ---

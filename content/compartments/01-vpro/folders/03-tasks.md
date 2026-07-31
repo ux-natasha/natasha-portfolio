@@ -19,28 +19,85 @@ meta:
   - key: Users
     value: Split by who clicks
 
-depth: 3
+pullQuote: Someone else turned the key. The corner behind the door was mine.
 
-# LEVEL 1 IS NOT WRITTEN YET. CLAUDE.md §3 forbids drafting a headline
-# before the deeper levels exist. This renders as a marked TODO in the
-# same quiet placeholder register as every other stub — never as drafted
-# prose pretending to be finished.
+breakdownLabel: What's mine
+breakdown:
+  - name: Modify Subtasks
+    desc: Multiple user journeys, its own screens — my undertaking
+    credit: SOLO
+  - name: The landing
+    desc: Row height + divider — the move that made it work
+    credit: COLLEAGUE
+  - name: Actual vs planned
+    desc: The simple-looking chart that took the longest
+    credit: TEAM
+
+diagramNote: e.g. who clicks a task → what they see
+
+depth: 0
+
+# Levels 2-5 are real now, so CLAUDE.md §3's block on drafting a headline
+# before they exist no longer applies — but this is still a DRAFT pending
+# Natasha's sign-off, not approved copy (only the opening + 00-02's ledes are
+# final per §3). `ledePlaceholder` stays true on purpose: it keeps this
+# rendering in the same bracketed, quiet stub register as every other
+# unapproved line, so a reader (and Natasha) can tell it hasn't been signed
+# off. Drawn from the Body/Decisions material below — the row-height fix, the
+# role split, Modify Subtasks as the owned piece — nothing invented.
 ledePlaceholder: true
 ---
 
 ## Lede
 
-level-1 line not yet written — to be drawn from the Tasks material, not forced
+Everyone knew Tasks, and nobody wanted it touched. A senior colleague broke it open with a taller row height. I owned what came after: whoever clicks a task decides what they see.
 
 ## Body
 
-Tasks was hard in a way the gantt was not. The gantt was new and nobody had
-expectations. Tasks was known, well used, and most people did not want it
-changed — while the team believed it could be better. I tried converting the
-old design across, adding colour, splitting pages, cutting columns. None of it
-clicked. It clicked when a then-senior colleague designed the landing: a taller
-row height, plus the divider we had already built in admin. What survived from
-the discussions was about people, not pixels — what you see depends on who you
-are. Someone updating a task gets Task Updates. A project manager gets Task
-Reviews, because they are not making progress, they are judging it. Modify
-Subtasks, with its own screens and journeys, was mine.
+Tasks was hard in a way the gantt was not. The gantt was new; nobody had
+expectations of it. Tasks was known, heavily used, and most people didn't want
+it touched, even though the team thought it could be better — a different bar
+than Planning's blank slate: here, a change had to earn its place, not just
+improve on the old one. I tried converting the old design across, adding
+colour, splitting pages, cutting columns. None of it clicked. It clicked when
+a then-senior colleague redesigned the landing: a taller row height, plus the
+divider we'd already built in Admin. What survived from talking to consultants
+was about people, not pixels — someone updating a task and someone reviewing
+it want different things from the same screen. So the module split in two:
+updaters get Task Updates, an editing surface. Reviewers get Task Reviews, a
+surface built on charts, because a reviewer isn't making progress, they're
+judging it — including an actual-vs-planned completion chart that looked
+simple and wasn't. Each side got its own three-tier structure, parent tasks
+down to subtasks, which doubled the surface area to design. Modify Subtasks —
+its own screens and journeys — was mine: subtasks have no dependencies of
+their own, but they're the smallest, most-touched unit in the system, and the
+thing people most often need to change is who's assigned and what workflow is
+attached.
+
+## Decisions
+
+### Why the page splits by role
+
+Task and subtask managers update; project and parent-task managers review —
+and the old system gave both the same screen. The people doing the updating
+need an editing surface. The people reviewing aren't making progress, they're
+judging it, so they need charts and infographics instead of edit tools. That
+distinction is why Tasks splits into Task Updates and Task Reviews rather
+than staying one page with more filters.
+
+### Parent tasks, tasks, subtasks — twice over
+
+Splitting by role doesn't remove the task hierarchy, it duplicates it: Task
+Updates and Task Reviews each got their own parent-task / task / subtask
+structure, built and maintained separately. That's twice the surface area for
+the same information, traded for neither an updater nor a reviewer wading
+through tools meant for the other.
+
+### Modify Subtasks, on its own
+
+Subtasks don't carry dependencies of their own, but they're the smallest and
+most-touched unit in the system, and the two things people change most —
+who's assigned, what workflow is attached — both live here. I built Modify
+Subtasks as its own set of journeys and screens rather than folding it into
+the general task-edit flow, because friction at the level that gets touched
+the most is the friction that costs the most.

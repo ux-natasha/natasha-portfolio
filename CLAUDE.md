@@ -420,6 +420,15 @@ subject and must not happen.
 - Prefer spring-like/eased motion over generic ease. No bounce/overshoot on scroll.
 - Motion serves the concept (depth, sequence). No decorative animation. Scattered
   effects read as AI-generated; one orchestrated moment beats many.
+- **Record-to-record slide carries a scale step (settled, 2026-07-31):** the
+  outgoing folder recedes to `scale(0.96)` as it exits, the incoming one
+  arrives from `scale(0.96)` — transform-only, same `--settle`/`--ease`, no
+  new shadow or blur (§1d's rule holds). Reads as the folder being pulled
+  from and filed back into the drawer rather than a flat push-past.
+- **The opening plate settles back-to-front (settled, 2026-07-31):** the three
+  gray-value planes arrive one after another (~100ms apart) rather than as one
+  block, so "an argument about the brightness of gray, settled" plays out
+  rather than just being illustrated. See `Plate.tsx`.
 
 ---
 

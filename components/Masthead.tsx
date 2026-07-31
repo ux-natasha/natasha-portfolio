@@ -1,3 +1,4 @@
+import { GoLink } from "@/components/PageTransition";
 import { PlateStub } from "@/components/Plate";
 import { unitNoun, type Compartment } from "@/lib/schema";
 
@@ -10,6 +11,10 @@ import { unitNoun, type Compartment } from "@/lib/schema";
  * behind a disclosure: depth defaults closed (§1), but depth is the levels
  * *below* a chapter's own opening line, never the facts that decide whether to
  * start reading at all.
+ *
+ * The contents list is also the only way into a chapter now that each one is
+ * its own route: picking one is a real navigation (`GoLink`, direction "in" —
+ * a chapter is a step deeper), not a scroll to an anchor on this same page.
  *
  * The name "Natasha M." is not repeated here — it belongs once, at the top of
  * the index (§1b). A record's own title is the project.
@@ -69,11 +74,14 @@ export function Masthead({ record }: { record: Compartment }) {
         <ol className="contents-list">
           {record.folders.map((folder) => (
             <li key={folder.number}>
-              <a className="contents-item" href={`#${folder.anchor}`}>
+              <GoLink
+                className="contents-item"
+                href={`/${record.slug}/${folder.number}`}
+              >
                 <span className="contents-num">{folder.number}</span>
                 <span className="contents-name">{folder.name}</span>
                 <span className="contents-credit">{folder.credit}</span>
-              </a>
+              </GoLink>
             </li>
           ))}
         </ol>
