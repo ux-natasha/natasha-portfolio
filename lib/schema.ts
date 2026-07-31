@@ -102,6 +102,15 @@ export type Compartment = {
   facts: MetaField[];
   /** Set when any fact is still unwritten: tags the block once, in the corner. */
   factsPlaceholder?: boolean;
+  /**
+   * What a `folders` entry IS, in this compartment. Not every record is a
+   * sequence of chapters in build order — VPro is, but a compartment can just
+   * as easily hold a set of independent pieces with no build-order relation
+   * to each other. Same `Folder` shape either way (a folder is still a folder
+   * to jump to, credit, and read), only the noun and the "built in order"
+   * framing change. Defaults to "chapter" so existing content needs no edit.
+   */
+  unit?: "chapter" | "piece";
   folders: Folder[];
 };
 
