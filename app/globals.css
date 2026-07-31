@@ -397,9 +397,14 @@ svg {
 
 /* ── Shell ───────────────────────────────────────────────────────────── */
 
+/* Flush left, not centered: the rail has to land on the real edge of the
+   viewport (Natasha's own ask — a centered shell was leaving equal air on
+   both sides above 1160px, which insets the rail from the edge it's meant
+   to read as owning). Capping max-width without auto margins means any
+   slack above 1160px collects on the right only. */
 .shell {
   max-width: var(--maxw);
-  margin: 0 auto;
+  margin: 0;
   display: grid;
   grid-template-columns: var(--rail-w) minmax(0, 1fr);
   min-height: 100vh;
@@ -425,6 +430,18 @@ svg {
 
 /* ── The rail ────────────────────────────────────────────────────────── */
 
+/* Board, not paper (Natasha's own ask — the rail read as flush with the
+   page instead of a distinct structural piece, since it shared --ground
+   with .sheet exactly). --taupe is the tone-step-darker surface the rest
+   of the file already uses for anything closed/receded (the compartment
+   tabs, the shelf board); the rail is always-open chrome rather than a
+   closed tab, but it's still the CASE around the sheet, not the sheet
+   itself — same physicality logic as the folder's own darker back cover
+   (§1d), extended to the page's outer frame. Because it's a step darker
+   than --ground/--paper, the resting text below switches from --muted to
+   --muted-strong (the pairing the board surfaces already use) to hold its
+   4.5:1 floor; the arrow glyph and the active tab's own lighter fill are
+   unaffected. */
 .rail {
   position: sticky;
   top: 0;
@@ -437,7 +454,7 @@ svg {
   gap: 1rem;
   padding: 2.125rem 0 1.875rem;
   border-right: 1px solid var(--line);
-  background: var(--ground, var(--paper));
+  background: var(--taupe);
   z-index: 20;
   animation: assemble-rail var(--settle) var(--ease) both;
 }
@@ -458,7 +475,7 @@ svg {
   font-family: var(--mono);
   font-size: 0.5625rem;
   letter-spacing: 0.18em;
-  color: var(--muted);
+  color: var(--muted-strong);
   text-align: center;
   line-height: 1.5;
   padding: 0.5rem 0.25rem;
@@ -493,16 +510,24 @@ svg {
   font-size: 0.6875rem;
 }
 
+/* Shared by the rail (a compartment key) and the spine (a record key, now
+   the same class rather than a near-duplicate) — a record key can run
+   longer than a compartment's, so the wrap allowance travels with it.
+   --muted-strong, not --mark-ink: on the rail's own board tone mark-ink
+   measures under 4:1 at 9px, and this is resting text, not an interaction
+   state, so it shouldn't be carrying the site's pink at all (§5's pink
+   rule) — the same tone .comp-key already uses for a closed tab's key. */
 .rail-key {
   font-family: var(--mono);
   font-size: 0.5625rem;
   letter-spacing: 0.14em;
-  color: var(--mark-ink);
+  color: var(--muted-strong);
   text-align: center;
   padding-top: 0.75rem;
   border-top: 1px solid var(--line);
   width: 52px;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .rail-nums,
@@ -536,7 +561,7 @@ svg {
   width: calc(100% - 14px);
   font-family: var(--mono);
   font-size: 0.75rem;
-  color: var(--muted);
+  color: var(--muted-strong);
   padding: 0.5rem 0.75rem;
   margin-left: 14px;
   border: 1px solid transparent;
@@ -599,7 +624,7 @@ svg {
   font-family: var(--mono);
   font-size: 0.5625rem;
   letter-spacing: 0.12em;
-  color: var(--muted);
+  color: var(--muted-strong);
   writing-mode: vertical-rl;
   text-align: center;
   margin: 0;
@@ -1805,8 +1830,9 @@ svg {
     /* The bar starts scrolled to its left edge, so only the trailing edge
        ever hides content at rest — a fade there reads as "more this way"
        without the dishonesty of also fading a left edge with nothing behind
-       it. Masks to transparent, and the bar's own background matches the
-       page's (both `var(--ground, var(--paper))`), so there's no seam. */
+       it. Masks to transparent rather than clipping, so the fade dissolves
+       the bar's own (now board-toned) background gradually into the
+       page's rather than cutting a hard edge between the two tones. */
     mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
     -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
   }
@@ -2047,10 +2073,10 @@ svg {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9375rem;
+  gap: 1rem;
   padding: 2.125rem 0 1.875rem;
   border-right: 1px solid var(--line);
-  background: var(--ground, var(--paper));
+  background: var(--taupe);
   z-index: 20;
   animation: assemble-rail var(--settle) var(--ease) both;
 }
@@ -2090,97 +2116,12 @@ svg {
   transform: scaleX(1);
 }
 
-.spine-key {
-  font-family: var(--mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.14em;
-  color: var(--mark-ink);
-  text-align: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--line);
-  width: 60px;
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-/* The chapter list and the read measure, as one object. */
-.spine-track {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  padding: 0.25rem 0;
-}
-.spine-track::before {
-  content: "";
-  position: absolute;
-  left: 17px;
-  top: 0.75rem;
-  bottom: 0.75rem;
-  width: 1px;
-  background: var(--taupe-3);
-}
-/* Drawn at full length and scaled down, rather than given a computed height:
-   a scroll handler updates --read every frame, and scaleY stays on the
-   compositor where height would relayout and repaint on each one. The bar is
-   1px WIDE and scaled on the other axis, so nothing it draws softens. */
-.spine-fill {
-  position: absolute;
-  left: 17px;
-  top: 0.75rem;
-  width: 1px;
-  height: calc(100% - 1.5rem);
-  background: var(--mark);
-  transform: scaleY(var(--read, 0));
-  transform-origin: top;
-}
-
-.spine-nums {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 0 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.spine-num {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0.5rem 0.625rem;
-  border-radius: 5px;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--muted);
-  transition:
-    color var(--quick) var(--ease),
-    background var(--quick) var(--ease);
-}
-.spine-num:hover {
-  color: var(--ink);
-  background: var(--paper-2);
-}
-/* The travelling marker: a short dash on the measure, at the chapter being
-   read. The one moving part, and it moves because the reader scrolled. */
-.spine-num::before {
-  content: "";
-  position: absolute;
-  left: -0.4375rem;
-  width: 9px;
-  height: 2px;
-  background: var(--mark);
-  opacity: 0;
-  transition: opacity var(--quick) var(--ease);
-}
-.spine-num[aria-current="location"] {
-  color: var(--mark-ink);
-}
-.spine-num[aria-current="location"]::before {
-  opacity: 1;
-}
+/* The chapter list is `.rail-nums`/`.rail-num` now, not a near-duplicate —
+   the same cut-tab boxes and the same pink cut-in bar the index rail uses
+   for its records mark a record's own chapters, so there is one tab
+   idiom in the system rather than two (Natasha's own ask). `.rail-key`
+   (above) carries the record key the same way; only `.spine-mark`'s extra
+   link behaviour and `.spine-foot`'s extra controls stay record-specific. */
 
 .spine-foot {
   margin-top: auto;
@@ -2190,9 +2131,10 @@ svg {
   gap: 2px;
   width: 100%;
 }
-/* On a record these four ARE the navigation — catalogue, drawer, contact,
-   theme — so they carry the 44px minimum the rail's numbers and the foot's
-   links already do, rather than the index rail's single 25px text link. */
+/* Catalogue and contact are the two controls a record needs that the index
+   doesn't (drawer moved up top, by the mark, to match the rail) — they carry
+   the 44px minimum the rail's numbers already do, rather than the index
+   rail's single 25px text link. */
 .spine-mark,
 .spine-foot .rail-up {
   display: flex;
@@ -2574,6 +2516,19 @@ svg {
    reintroduce the very "too much per page" problem splitting into routes was
    meant to fix. The accent tick uses the record's own accent — structure,
    not the interaction-only pink (§5's Last-2% Rule). */
+/* The same staggered assembly every other route arrives with (§1b) — this
+   route is new, but the workspace booting in is not a second vocabulary. */
+.mini-mast,
+.chapters {
+  animation: assemble var(--settle) var(--ease) both;
+}
+.mini-mast {
+  animation-delay: 0.08s;
+}
+.chapters {
+  animation-delay: 0.22s;
+}
+
 .mini-mast {
   display: flex;
   align-items: center;
@@ -3151,56 +3106,20 @@ a.slot:focus-visible .slot-cta {
     overscroll-behavior-x: contain;
     /* Same reasoning as `.rail`'s mask in the sibling media query: the bar
        opens scrolled to its left edge, so a trailing-edge fade alone signals
-       the hidden controls honestly. Shares the page's background var, so the
-       fade meets no seam. */
+       the hidden controls honestly. */
     mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
     -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
   }
-  /* Read progress moves to the bar's own bottom edge — the one place a
-     horizontal measure belongs, and it reads at a glance on a phone. */
-  .spine::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    height: 2px;
-    width: 100%;
-    background: var(--mark);
-    transform: scaleX(var(--read, 0));
-    transform-origin: left;
-  }
-  .spine-mark,
-  .spine-key,
-  .spine-track {
-    flex: 0 0 auto;
-  }
-  /* Lying down, the mark is a control in a row rather than the top of a
-     column — it does not need display scale to read as the way home, and
-     at 22px it made the bar 73px tall on a phone. */
+  /* `.rail-key`, `.rail-nums` and `.rail-num` already lie flat via the
+     rail's own mobile rules above (bare class selectors, not scoped to
+     `.rail`) — nothing spine-specific left to say for them. Lying down,
+     the mark is a control in a row rather than the top of a column — it
+     does not need display scale to read as the way home, and at 22px it
+     made the bar 73px tall on a phone. */
   .spine-mark {
+    flex: 0 0 auto;
     font-size: 1.1875rem;
     padding: 0.25rem 0.4375rem;
-  }
-  .spine-key {
-    border-top: 0;
-    border-left: 1px solid var(--line);
-    padding: 0 0 0 0.75rem;
-    width: auto;
-    text-align: left;
-  }
-  /* The vertical hairline and the travelling dash are a column's grammar;
-     in a row the active numeral carries the state on its own. */
-  .spine-track::before,
-  .spine-fill,
-  .spine-num::before {
-    display: none;
-  }
-  .spine-nums {
-    flex-direction: row;
-    padding: 0;
-  }
-  .spine-num[aria-current="location"] {
-    background: var(--paper-2);
   }
   .spine-foot {
     flex-direction: row;
@@ -3299,9 +3218,6 @@ a.slot:focus-visible .slot-cta {
   .cat {
     border: 1px solid CanvasText;
   }
-  .spine-fill,
-  .spine-num::before,
-  .spine-num::after,
   .cat-item::before,
   .onward-card::before {
     forced-color-adjust: none;

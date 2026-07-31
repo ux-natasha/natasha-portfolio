@@ -211,14 +211,17 @@ anything not yet open) and one accent held almost entirely in reserve.
   — a light-to-dark run, not a flat tint.
 
 ### Neutral
-- **Paper** (`#e7e5db`): the page ground, and the rail's own background.
+- **Paper** (`#e7e5db`): the page ground.
 - **Paper 2** (`#edebe2`) / **Paper 3** (`#f3f1ea`): two steps lighter than
   Paper. Paper 2 is the open panel/tab/compartment tone; Paper 3 is the
   lightest — the open folder sheet and the plate frame — so the reading
   surface itself is the brightest thing on the page.
 - **Taupe** (`#d4d1c4`) / **Taupe 2** (`#cac6b7`) / **Taupe 3** (`#beb9a8`):
   the board — unopened tabs and compartments, the fold's exposed corner, the
-  dashed borders on placeholder surfaces (`.plate`, `.slot`).
+  dashed borders on placeholder surfaces (`.plate`, `.slot`), and (settled
+  2026-07-31, Natasha's own ask) the rail's/spine's own background — the
+  persistent column reads as the case around the sheet, a tone-step darker
+  than the page it sits beside, rather than flush with it.
 - **Ink** (`#1c1b18`): primary text, active-state borders, the skip link.
 - **Ink 2** (`#413e35`): a second text step for supporting prose — hero
   role line, meta values, compartment names — one notch lighter than Ink
@@ -248,9 +251,13 @@ active tab's tick, the current rail step, a link underline on hover.
 **The Two-Jobs-One-Hue Rule.** Rose is split by *function*, not by taste:
 `rose` (`#d4537e`, 3.1:1) marks things — ticks, dots, spines, the shelf's
 current-state gradient — where the WCAG bar is 3:1 for non-text. `rose-ink`
-(`#a93a63`, 4.5:1+) sets anything that is *type* — credit tags, the rail key,
-focus outlines — where the bar is 4.5:1. `#d4537e` cannot legally carry 9px
-mono text; conflating the two was a real, fixed contrast bug.
+(`#a93a63`, 4.5:1+) sets anything that is *type* — credit tags, focus
+outlines — where the bar is 4.5:1. `#d4537e` cannot legally carry 9px mono
+text; conflating the two was a real, fixed contrast bug. The rail/spine key
+moved off rose-ink entirely once the rail's own background became Taupe
+(above) — rose-ink measures under 4:1 there, and resting key text sitting
+in rose at all cut against the Last-2%-Rule below anyway, so it now takes
+`muted-strong` under the Board-Text Exception like any other closed key.
 
 **The Board-Text Exception.** Any text sitting on `taupe`/`taupe-2` uses
 `muted-strong`, never `muted` — the same gray measures differently on a
@@ -545,13 +552,16 @@ square exactly where it joins the tab row above it.
 
 ### The Rail
 A real, persistent, typographic column (`.rail`), never a floating avatar.
-Sticky at `top: 0`, full viewport height at desktop widths, 96px wide.
+Sticky at `top: 0`, full viewport height at desktop widths, 96px wide, on
+Taupe rather than Paper (settled 2026-07-31) — a tone-step darker than the
+sheet beside it, the case around the page rather than flush with it.
 Contains, top to bottom: an "N" mark (Display-face, `opsz 40`), an "↑
-drawer" link, the current compartment's key (Rose Ink on a hairline-topped
-strip), and a vertical list of folder-number buttons (`.rail-num`, 44×44px
-minimum, Muted at rest, Rose Ink when `aria-current="step"`). Below 880px it
-lies down: `position: sticky` still, but a horizontal 46px strip with the
-same content read left-to-right and its own `overflow-x: auto`.
+drawer" link, the current compartment's key (Muted Strong on a
+hairline-topped strip — the Board-Text Exception, since the strip sits on
+Taupe), and a vertical list of folder-number buttons (`.rail-num`, 44×44px
+minimum, Muted Strong at rest, Rose Ink when `aria-current="step"`). Below
+880px it lies down: `position: sticky` still, but a horizontal 46px strip
+with the same content read left-to-right and its own `overflow-x: auto`.
 
 ### Compartment strip & folder tab row
 Two `role="tablist"` rows (`.comp-strip`, `.tablist`) built from the same
@@ -660,13 +670,21 @@ Three components answer "how do I move through 7 pages, 10 sections, and
 not lose my place" — the long-form-reading question a folder-sized cover
 never had to solve:
 
-- **Spine** (`.spine`) — the rail's record-route counterpart. Sticky,
-  same column/strip behaviour as the Rail. Tracks the active chapter via
-  `IntersectionObserver` (`rootMargin: "-45% 0px -50% 0px"`) and marks it
-  `aria-current="location"` among the chapter numerals; a `--read` custom
-  property (`scrollY / (scrollHeight - innerHeight)`) drives a progress
-  fill (`.spine-fill`) so position and how much remains are both visible
-  at every scroll depth, not just at the chapter boundary.
+- **Spine** (`.spine`) — the rail's record-route counterpart, and (settled
+  2026-07-31, Natasha's own review) no longer a visually separate nav
+  system: same column, same mark/up-drawer/key/foot order, and the chapter
+  numerals now render as the exact same `.rail-num` cut-tab boxes the index
+  uses for its records, with the same pink cut-in bar marking the current
+  one. Each chapter is its own route, so "where am I" is a route match —
+  `aria-current="step"`, the same value the rail uses for its own sequence
+  — rather than a scroll position; the foot carries a plain "NN / NN"
+  position counter (`.rail-pos`, the rail's own class) alongside catalogue
+  and contact, the two controls a record needs that the index doesn't. An
+  earlier build tracked the active chapter with `IntersectionObserver` and
+  drew a separate progress line beside the numerals (`.spine-fill`) — a
+  real, distinct visual language living only here, which was exactly the
+  "two navigation systems" complaint; removed in favor of the rail's own
+  idiom rather than kept alongside it.
 - **Catalogue** (`.cat`) — a native `<dialog>` jump-anywhere panel, opened
   from the Spine's foot. Lists every record and shelf in one place (each
   record entry carries its own accent on its edge — legitimate here,

@@ -262,11 +262,14 @@ trailer for it, never a substitute.
 and gets its own answer** — this is what a case study needs once it can grow to
 several pages, many sections, images, video: the folder-cover/tab-row model
 was never meant to solve it, and doesn't try to.
-- **The Spine** — the rail's record-route successor. Same persistent
-  typographic column, but tracks the chapter actually in view (not the last one
-  clicked) and shows a continuous read-progress fill, so "where am I" and "how
-  much is left" are both answered at any scroll depth, not just at a chapter
-  boundary.
+- **The Spine** — the rail's record-route successor, and (settled 2026-07-31,
+  reversing this section's earlier description) visually the SAME nav, not a
+  variant: same column, same mark/up-drawer/key/foot order, chapter numerals
+  rendered as the rail's own cut-tab boxes with the same pink cut-in bar on
+  the current one, "where am I" answered by the same "NN / NN" counter the
+  rail uses. Flagged as two navigation systems in review; unified rather than
+  kept divergent. What it still adds, because a record needs it and the index
+  doesn't, is `catalogue` and a contact link in the foot.
 - **The Catalogue** — a jump-anywhere panel, opened from the Spine, listing
   every compartment and future-work slot in one place. Answers "how do I jump
   to another compartment" without backing out to the drawer first.
