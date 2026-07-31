@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { getSite } from "@/lib/content";
 import "./globals.css";
 
 /**
@@ -83,6 +84,21 @@ const THEME_INIT = `try{var t=localStorage.getItem("theme");if(t==="light"||t===
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  /**
+   * The one place this site assumes its reader might open devtools rather
+   * than just scroll — a fair bet for the audience (§0: hiring managers and
+   * design leads, the people who check how a thing is actually built). Reads
+   * the address from the same markdown the foot's contact link uses, so it's
+   * one fact kept in one place rather than a second copy baked into code.
+   * `JSON.stringify` turns each line into a safe JS string literal rather
+   * than interpolating it into the template directly, the same caution
+   * `THEME_INIT` above already takes with untrusted-looking strings.
+   */
+  const { drawer } = getSite();
+  const CONSOLE_INIT = `console.log(${JSON.stringify(
+    "Curious enough to open devtools on someone's portfolio — that's basically the job.",
+  )});console.log(${JSON.stringify(`${drawer.contact.value}, if you want to talk about it.`)});`;
+
   return (
     <html
       lang="en"
@@ -91,6 +107,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        <script dangerouslySetInnerHTML={{ __html: CONSOLE_INIT }} />
       </head>
       <body>
         {/* `#content` is the one target that exists on every route — the index,
