@@ -10,11 +10,11 @@ import type { Opening as OpeningContent } from "@/lib/schema";
  */
 export function Opening({ content }: { content: OpeningContent }) {
   const { card, plate } = content;
+  const stubRows = card.rows.filter((row) => row.placeholder);
 
   return (
     <header className="hero">
       <div>
-        <p className="eyebrow">{content.eyebrow}</p>
         <h1 className="hero-name">{content.name}</h1>
         <p className="hero-role">{content.role}</p>
         {/* The line carries one italic word, set in the markdown. */}
@@ -26,10 +26,16 @@ export function Opening({ content }: { content: OpeningContent }) {
 
       <div className="hero-side">
         {/* A PANEL, never a ruled table (§1). Label over value, no rule
-            between rows, one corner tag for the whole block. */}
+            between rows, one corner tag for the whole block — scoped to
+            how many rows are actually unwritten, so three confirmed facts
+            don't inherit one stub row's "placeholder" framing. */}
         <aside className="card" aria-labelledby="card-label">
-          {card.placeholder ? (
-            <span className="card-tag">placeholder</span>
+          {stubRows.length > 0 ? (
+            <span className="card-tag">
+              {stubRows.length === card.rows.length
+                ? "placeholder"
+                : `${stubRows.length} of ${card.rows.length} pending`}
+            </span>
           ) : null}
           <h2 className="vh" id="card-label">
             {card.label}

@@ -4,7 +4,6 @@
 # screen is editable from GitHub's web editor — no toolchain, no build
 # step you have to understand.
 
-eyebrow: Vector Digital Labs
 name: Natasha M.
 role: Designer, Vector Digital Labs.
 
@@ -14,11 +13,11 @@ line: Three years, five modules, and one long _argument_ about the brightness of
 
 # ── The at-a-glance panel ─────────────────────────────────────────────
 # FOUR rows. Renders as a bordered panel, never a ruled table (§1).
-# `placeholder: true` styles the row as unwritten and adds it to the
-# panel's single corner tag. Mark once per block, never per field.
+# `placeholder: true` on a row styles it as unwritten; the panel's single
+# corner tag is derived from the rows themselves (how many are unwritten),
+# not set separately here, so it can't drift out of sync with them.
 card:
   label: At a glance
-  placeholder: true
   rows:
     - key: Role
       value: Junior → Senior, three years
@@ -27,7 +26,7 @@ card:
     - key: Owned
       value: Configuration · Planning · Modify Subtasks
     - key: Outcome
-      value: The planning screen that survived shipped, and was adopted client-wide.
+      value: Not written yet — a real outcome, not a guess, belongs here.
       placeholder: true
 
 # ── The pictorial ─────────────────────────────────────────────────────

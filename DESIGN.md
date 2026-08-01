@@ -16,6 +16,9 @@ colors:
   rose: "#d4537e"
   rose-ink: "#a93a63"
   rose-deep: "#9c2f5b"
+  plate-1: "#b9b4a5"
+  plate-2: "#cfcabb"
+  plate-3: "#e6e3d8"
   shadow: "rgba(40, 37, 28, 0.16)"
   selection: "rgba(190, 58, 110, 0.14)"
   sheen: "rgba(255, 255, 255, 0.5)"
@@ -41,9 +44,9 @@ typography:
     fontVariation: "opsz 90"
   opening-line:
     fontFamily: "var(--font-fraunces), Georgia, \"Times New Roman\", serif"
-    fontSize: "clamp(1.1875rem, 2.1vw, 1.3125rem)"
+    fontSize: "clamp(1.3125rem, 2.4vw, 1.5625rem)"
     fontWeight: 400
-    lineHeight: 1.42
+    lineHeight: 1.4
     fontVariation: "opsz 40"
   chapter-lede:
     fontFamily: "var(--font-fraunces), Georgia, \"Times New Roman\", serif"
@@ -104,7 +107,7 @@ spacing:
   gutter: "clamp(1.25rem, 4.4vw, 4rem)"
   section: "clamp(2.5rem, 6vw, 4.125rem)"
   tail: "clamp(3rem, 7vw, 4.625rem)"
-  maxw: "1160px"
+  maxw: "clamp(1160px, 90vw, 1900px)"
   rail-w: "96px"
 components:
   tab:
@@ -135,6 +138,14 @@ components:
   control-button-hover:
     backgroundColor: "{colors.paper-2}"
     textColor: "{colors.ink}"
+  folder-credit:
+    textColor: "{colors.ink-2}"
+    padding: "0.25rem 0.5rem"
+  folder-credit-solo:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper-3}"
+  tablist-cue:
+    textColor: "{colors.muted}"
 ---
 
 # Design System: Natasha M. — Portfolio
@@ -242,6 +253,27 @@ anything not yet open) and one accent held almost entirely in reserve.
   single bright pixel along its top edge, standing in for the well catching
   light where it meets the compartment tab above it. The one white-based
   color in a system otherwise built entirely from paper/taupe tones.
+- **Taupe Hover** (`color-mix(in oklab, var(--taupe) 82%, var(--paper-3))`):
+  a closed tab or compartment previewing its own open state on hover — one
+  step toward Paper 3 before it commits there on selection. Added
+  2026-08-01 to replace a flat, hand-picked `#dad7ca` that didn't
+  re-resolve under the dark palette; derived from Taupe instead, so it
+  re-derives correctly in both themes without its own dark-block override.
+- **Scrim** (`rgba(28, 27, 24, 0.42)`): the Catalogue dialog's backdrop.
+  Deliberately not theme-bound — a scrim dims whatever is behind it rather
+  than matching the page, so it keeps one fixed value (Ink's own rgb
+  triplet at 42% alpha) in both themes instead of living in the palette
+  blocks below.
+- **Plate 1 / 2 / 3** (`#b9b4a5` / `#cfcabb` / `#e6e3d8`; dark `#3a3d41` /
+  `#4d5157` / `#62666d`): the three gray steps the Plate's own SVG argument
+  is made of (see **The Plate**, under Components). Moved out of the JSX as
+  `fill` attributes and into CSS custom properties on 2026-08-01 so the ramp
+  re-derives per theme the same way every other surface does — a class
+  selector's `fill` outranks the SVG presentation attribute regardless of
+  source order. Deliberately its own ramp, not a reuse of Paper/Taupe: the
+  Plate is a separate demonstration of "the brightness of gray" (the
+  opening copy's own line), so it stays legible as its own argument rather
+  than folding into the site's structural tones.
 
 ### Named Rules
 **The Last-2% Rule.** Rose is absent at rest on every surface. It exists
@@ -335,13 +367,16 @@ rendered in a warmer display face than a pure utility system would choose.
   page uses this step.
 - **Headline** (600, `clamp(2rem, 5.2vw, 3.625rem)`, line-height 0.99,
   `opsz 90`): a folder's own chapter title.
-- **Opening line** (400, `clamp(1.1875rem, 2.1vw, 1.3125rem)`, line-height
-  1.42, `opsz 40`, max 34ch): the hero's one line of approved copy — the
-  ten-second read that stands in for an "about me."
+- **Opening line** (400, `clamp(1.3125rem, 2.4vw, 1.5625rem)`, line-height
+  1.4, `opsz 40`, max 34ch): the hero's one line of approved copy — the
+  ten-second read that stands in for an "about me." Sized a step above
+  Chapter Lede as of 2026-08-01 (the two tokens used to match exactly) so
+  the one line standing in for the whole "about me" reads as the second
+  most dominant thing on the page, not level with a folder's own lede three
+  scroll-lengths down.
 - **Chapter lede** (400, `clamp(1.1875rem, 2.2vw, 1.375rem)`, line-height
   1.42, `opsz 40`, max 38ch): a folder's own ten-second opening line — level
-  1 of the depth model. Same voice as Opening Line, a hair larger, a
-  slightly wider measure.
+  1 of the depth model. Same voice as Opening Line, now one step quieter.
 - **Stub voice** (400 italic, `~0.9375rem`, `opsz 20`, color Muted): the
   register for copy that doesn't exist yet — a placeholder card row, an
   unwritten well description. Two call sites (`0.9375rem`, `0.96875rem`)
@@ -356,7 +391,13 @@ rendered in a warmer display face than a pure utility system would choose.
   compartment's key line. Tied with Label and Tag as one of the system's
   most-reused sizes (5 call sites each).
 - **Kicker** (400, `0.6875rem`, 0.2em tracking, uppercase): the loudest
-  standalone mono label — eyebrows, the drawer heading, the descend cue.
+  standalone mono label — eyebrows, the drawer heading.
+- **Descend cue** (500, `0.75rem`, 0.2em tracking, uppercase, color Ink 2):
+  `.open-line` — "work, in the order it was built." Split from Kicker on
+  2026-08-01 (until then it shared Kicker's exact register): this line
+  says the site's whole organizing idea out loud (CLAUDE.md §1), so it now
+  reads a step louder and darker than a section-opening eyebrow rather
+  than sharing Kicker's register with one.
 - **Label** (400, `0.625rem`, 0.15em tracking, uppercase): field keys in the
   meta panel and the at-a-glance card — the most common of the mono-label
   sizes, used here as the representative token.
@@ -412,9 +453,16 @@ under Known Gaps, not silently assumed done.
 ## Layout
 
 One shell grid drives the whole page: a fixed `--rail-w` (96px) column
-against `minmax(0, 1fr)`, capped at `--maxw` (1160px) and centered. Below
-880px the grid drops to a single column and the rail lies down (see
-Components → Rail).
+against `minmax(0, 1fr)`, capped at `--maxw` and centered. Below 880px the
+grid drops to a single column and the rail lies down (see Components →
+Rail).
+
+`--maxw` was a flat `1160px` regardless of viewport, so anything wider than
+~1256px (rail + cap) just grew a dead gap on the right forever; as of
+2026-08-01 it's `clamp(1160px, 90vw, 1900px)` — `1160px` stays the floor
+(nothing below it changes), and the shell now grows with the viewport above
+that, capped at `1900px` so an ultrawide monitor doesn't stretch the layout
+into unreadably long lines.
 
 The hero splits `minmax(0, 1fr)` against a fixed 296px facts column (the
 at-a-glance card + the plate); at 1024px that narrows to 260px, and at 880px
@@ -439,7 +487,19 @@ sideways (`overflow-x: hidden` on `body`).
 
 **Verified breakpoints:** 1024px (hero facts column narrows), 880px (shell
 single-column, rail collapses to a horizontal strip, meta grid to 2 cols),
-520px (meta grid to 1 col, fold shrinks to 24px, tab/shelf padding tightens).
+520px (meta grid to 1 col, fold shrinks to 24px, tab/shelf padding tightens,
+`.breakdown-row` drops to one column for the first time — it had no
+sub-520px rule before, so a 3-column grid was surviving down to phone
+widths).
+
+Two grid columns that used to be fixed now track their own content instead:
+`.ch`'s numeral column was a flat `4rem`, sized for the numeral's smallest
+clamp step, so a two-digit Fraunces numeral at the top of its own
+`2.25rem→3.5rem` clamp landed with almost no headroom; it now tracks the
+same clamp (`clamp(3.5rem, 7vw, 4.75rem)`). `.breakdown-row`'s name column
+was `9.75rem`, which clipped 02's longest real name ("Execution ·
+Replanning") into a wrap none of the other rows take; widened to `11rem`,
+which clears every name in `content/` at one line.
 
 ### Named Rules
 **The One-Rule-Per-Gutter Rule.** Every divider in a data grid (the meta
@@ -456,13 +516,30 @@ Three moments, all built on `--settle` (0.5s) and `--ease`, nothing else:
   and `inert`, just long enough to play its exit (`page-slide-exit-left`/
   `-right`), then unmounts; the incoming sheet enters from the opposite
   side. Direction follows `ci * 1000 + fi` — compartment dominates folder,
-  so it orders correctly across compartments and within one.
+  so it orders correctly across compartments and within one. Sibling
+  routes that share a component (`/vpro/00` → `/vpro/01`, both
+  `FolderPage`) don't remount it — React reuses the instance — so
+  `PageTransition`'s exit-state (`leaving`, its timer) is cleared on every
+  pathname change (2026-08-01 fix) rather than only on unmount; left unset,
+  the re-entrancy guard on `go()` stayed tripped after the first slide and
+  every later tab click silently no-op'd.
 - **The load-in assembly** (§1b). No JS: `assemble`/`assemble-rail`
   keyframes on the rail and the hero column, staggered by
-  `animation-delay` in reading order — rail, then eyebrow → name → role →
-  line, then the at-a-glance card, then the plate last, then the "work, in
-  the order it was built" line. Scoped to `.hero .eyebrow` rather than the
-  bare `.eyebrow` class so it never replays on a folder's own eyebrow row.
+  `animation-delay` in reading order — rail, then name → role → line, then
+  the at-a-glance card, then the plate last, then the "work, in the order
+  it was built" line. The hero no longer opens on its own eyebrow (dropped
+  2026-08-01: it duplicated "Vector Digital Labs" from the role line
+  directly beneath it, see Known Gaps) — the stagger now starts at the
+  name.
+  **Gated to a real page load, as of 2026-08-01** (`useIsFirstBoot` in
+  `PageTransition.tsx`, `data-boot` on `.rail`/`.spine`): no route in this
+  app shares a layout, so a client-side navigation unmounts the old rail
+  and mounts a fresh one — without the gate, `assemble-rail` replayed on
+  every single navigation, which read as the one element that's supposed
+  to "hold still across the transition" (§1a) blinking off and sliding
+  back in. `useIsFirstBoot` is a module-scope boolean, not React state, so
+  it resets on a real reload (a new JS session) but survives a client-side
+  route push — the one distinction that matters here.
 - **The depth reveal** (§6, see Components → Depth cue). A
   `grid-template-rows` tween rather than `max-height`, so it doesn't have
   to guess at a target height for unknown content length.
@@ -471,6 +548,14 @@ All three inherit the sitewide `prefers-reduced-motion` rule (near-zero
 animation/transition duration on `*`) with no extra reduced-motion-specific
 code of their own — the global rule already covers any `animation`-based
 rule in the file, including ones added after it was written.
+
+One small state transition sits alongside the three named moments rather
+than beside them as a fourth: `body`'s `background` now carries `transition:
+background var(--quick) var(--ease)`, added 2026-08-01. `useAccentGround`
+sets `data-accent` on `<html>` in a post-mount effect — one paint after a
+record's first render — so `--ground` always resolves a frame late; without
+the transition that read as a hard flash right as the page settled in,
+where the transition just closes the gap instead of hiding it.
 
 ## Elevation & Depth
 
@@ -559,16 +644,22 @@ Contains, top to bottom: an "N" mark (Display-face, `opsz 40`), an "↑
 drawer" link, the current compartment's key (Muted Strong on a
 hairline-topped strip — the Board-Text Exception, since the strip sits on
 Taupe), and a vertical list of folder-number buttons (`.rail-num`, 44×44px
-minimum, Muted Strong at rest, Rose Ink when `aria-current="step"`). Below
+minimum, Muted Strong at rest, Ink at 600 weight and Rose Ink when
+`aria-current="step"` — the current step's edge mark is 4px, up from 3px,
+settled 2026-08-01, so "where you are" reads with more authority on the
+one element whose whole job is answering that question). Below
 880px it lies down: `position: sticky` still, but a horizontal 46px strip
 with the same content read left-to-right and its own `overflow-x: auto`.
 
 ### Compartment strip & folder tab row
 Two `role="tablist"` rows (`.comp-strip`, `.tablist`) built from the same
 cut-tab idiom at two scales — Taupe at rest, Paper-2 when selected, a
-1px translateY "settle" on the active tab, and (compartments only) a 2px
+1px translateY "settle" on the active tab, and (compartments only) a 3px
 Rose spine along the selected tab's bottom edge joining it to the panel
-below. A folder tab's name is present in the accessible name at all times
+below (amplified from 2px, settled 2026-08-01 — a picked record reads as a
+real decision, not a tint shift; the folder tab's own tick grew to match,
+3px). The selected compartment's name also steps up in weight and size
+(500→600, 0.875rem→0.9375rem) for the same reason. A folder tab's name is present in the accessible name at all times
 (`aria-controls`/`aria-labelledby` wired) but visually clipped to just its
 number until selected — `clip-path`, never `display:none`, so a screen
 reader always has the full label.
@@ -586,6 +677,15 @@ Compartment → Folder → "Read more" hierarchy: a reader previews before
 committing to leave, and the dedicated record route (see **Records**,
 below) is always the destination, never the index itself.
 
+**The tab-row cue (`.tablist-cue`, added 2026-08-01).** A small status
+note ("preview, not navigation" in effect) sitting at the end of the tab
+row, in the same quiet Kicker-adjacent mono register as `.eyebrow` but one
+step dimmer (`--track-label`, 0.75 opacity). It exists because the
+select-vs-navigate distinction above isn't visible from the tab row
+itself — clicking a tab and clicking "Read more" look like the same kind
+of action until one of them leaves the page. Hidden below 520px
+(`display: none`), where the tab row itself is already tight.
+
 Not every compartment is a build-order sequence. A compartment's `unit`
 (`"chapter"` or `"piece"`, default `"chapter"` when absent) swaps the
 noun everywhere a folder count prints — the well count, the cover's
@@ -596,6 +696,18 @@ Motion Studies is pieces. The same `Folder` shape and the same tab row
 serve both — nothing about the tab row, the pager, or the record route
 assumes one shape over the other.
 
+**The credit tag (`.folder-credit`, added 2026-08-01).** The previewed
+folder's credit register (Solo / Survivor / Shared) used to render as one
+more `.eyebrow` line, the same weight as the folder number beside it. It
+is now a small bordered mono tag — flat, not radiused, since it isn't
+clickable (Radius-Is-For-Tabs Rule) — and `Solo` fills solid in `--ink`/
+`--paper-3`, the way a rubber stamp uses one ink rather than a second
+accent colour. Rose stays out of it entirely: the index is one register,
+and the Last-2% Rule still holds there. This is deliberately the loudest
+single move in the cover — the credit register is the fact a generic
+portfolio can't fake (CLAUDE.md §4), so it now reads with the weight of a
+claim rather than a footnote.
+
 ### The Panel (`.card`, at-a-glance)
 A bordered rectangle (Paper-2, 1px Line border, no radius) with a single
 corner tag (`.card-tag`, Rose Ink, positioned outside the top edge) marking
@@ -605,7 +717,10 @@ Rows stack label-over-value with a top margin between them, no rule.
 ### The Plate
 An original SVG abstraction (three overlapping gray rectangles), never a
 product screenshot. Sits in a dashed Taupe-2 border on Paper-3, with a mono
-caption beneath.
+caption beneath. Each rectangle's fill is the Plate 1/2/3 ramp (see
+Colors → Neutral) set by CSS class rather than an SVG `fill` attribute, so
+the ramp re-derives correctly under the dark palette instead of staying
+fixed to its light-mode values.
 
 ### The Folder page (`.page-frame`)
 See Elevation & Depth for its construction. Interior order: an eyebrow row
@@ -637,6 +752,16 @@ handler). A shelf is a flat Paper-2 face over a Taupe "board" strip
 (`.shelf::after`) that turns Rose-to-`#9c2f5b` gradient on hover/focus only
 — never at rest, even for the currently-open compartment (the Last-2%
 Rule applies to the drawer too).
+
+**The shelf key's rest state (fixed 2026-08-01).** `.shelf-key` set
+`--mark-ink` (Rose Ink) as its resting color — pink sitting in resting text,
+which is exactly what the Last-2% Rule (above) forbids. It now rests at
+`--muted-strong` (the Board-Text Exception applies: the key sits on the
+shelf's Taupe board) and only takes Rose Ink on `:hover`, `:focus-visible`,
+or `[aria-current]` — the same three states that earn pink everywhere else
+in the system. Same class of fix as the "coming" label's 2.06:1 contrast
+failure noted in Do's and Don'ts: a real, shipped violation of a stated
+rule, caught and corrected rather than designed around.
 
 A shelf carries no `data-accent` — a compartment's own hue is not read
 anywhere on the index, so there's nothing local for `--mark`/`--mark-ink`
@@ -719,6 +844,10 @@ never had to solve:
 - **Do** load Fraunces with its `opsz` axis active, no fixed weight list.
 - **Do** keep a folder tab's full name in the accessible name at all times,
   even when visually clipped to a number.
+- **Do** gate a one-time load-in animation (`assemble`, `assemble-rail`) to
+  a real first paint (`data-boot` / `useIsFirstBoot`), never to a
+  component's own mount — in a route-per-page app, a client-side
+  navigation mounts a "fresh" rail on every click.
 
 ### Don't:
 - **Don't** use a full-width horizontal rule as a section or chapter
@@ -738,6 +867,9 @@ never had to solve:
 - **Don't** assume `Page` keeps its `open` state across a folder switch —
   it's remounted (keyed to compartment + folder) specifically so depth
   reverts to closed every time, per §1's "defaults CLOSED, always."
+- **Don't** let a resting text color resolve to Rose Ink outside the states
+  the Last-2% Rule allows (hover, focus, active/current) — the shelf key
+  shipped this exact violation and was corrected 2026-08-01.
 
 ---
 
@@ -749,11 +881,35 @@ is here so that doesn't happen silently again. It is not part of the
 canonical DESIGN.md section set; treat it as a running punch list, safe to
 edit as content and motion evolve.
 
-1. **Mono label letter-spacing is not collapsed to a small token set.**
-   Size collapses cleanly to four steps (see Typography → "The Unfinished
-   Twelve Rule"), but tracking doesn't — the same `0.5625rem` size alone
-   spans three different `letter-spacing` values across five call sites,
-   with no shared tracking custom property behind any of them.
+1. **Mono label letter-spacing is not fully collapsed to a token set.**
+   Narrowed 2026-08-01 (see below) to the tier it was originally reported
+   on: the `0.5625rem` size alone still spans three different
+   `letter-spacing` values across five call sites (`rail-up`, `rail-key`,
+   `card-tag`, `plate` figcaption, `comp-key`), with no shared tracking
+   custom property behind any of them. Those five sit outside the folder
+   and record-route surfaces touched in the 2026-08-01 pass; collapsing
+   them is still open.
+
+**Resolved (2026-08-01):** two gaps closed during a typography pass scoped
+to the folder object (`Cover.tsx`) and the case-study reading path
+(`Masthead.tsx`/`Record.tsx`/`Chapter.tsx`/`FolderPage.tsx`/`NextRecord.tsx`/
+`MiniMasthead.tsx`). First, `.section-label` — the "breakdown" / "the
+decisions" seam inside a chapter's depth reveal — had no CSS rule at all and
+was rendering as plain inherited body text; it now carries the Kicker
+register (`--track-kicker`). Second, three named tracking tokens
+(`--track-kicker: 0.2em`, `--track-label: 0.15em`, `--track-credit: 0.14em`)
+now back the `0.625rem`/`0.6875rem` tier's recurring roles — a section-
+opening kicker (`.eyebrow`, `.section-label`), a caps field label
+(`.card-label`, `.meta-label`, `.tablist-cue`, `.contents-key`,
+`.onward-dir`), and the credit stamp (`.folder-credit`, `.breakdown-credit`,
+previously 0.14em/0.08em respectively — the same SOLO/SURVIVOR/SHARED fact
+tracked two different amounts depending which surface showed it). Also
+collapsed: `.mast-problem` and `.ch-lede` are the same "level 1, ten-second"
+role at record- and chapter-scope and had drifted to two different clamp
+maxima (`1.4375rem`/`lh 1.4` vs `1.375rem`/`lh 1.44`); `.mast-problem` now
+matches `.ch-lede` exactly. The `0.5625rem` tier (item 1 above) and
+`.contents-credit` (same credit role, but at the `0.5625rem` tier so left
+alongside it rather than force-fit to `--track-credit`) remain open.
 
 **Resolved (2026-07-30):** the four items this list used to carry —
 the depth reveal being a static label rather than a control, the
@@ -768,9 +924,59 @@ Kept here as a dated note rather than deleted outright, on the theory that
 a list that only ever grows is more honest than one that quietly loses its
 history.
 
+**Resolved (2026-08-01, motion/token pass):** six further gaps between this
+file and the shipped code, found while documenting the typography pass
+above. The rail/spine's `assemble-rail` load-in was replaying on every
+client-side navigation instead of only a real page load — no route in this
+app shares a layout, so each navigation mounted a "fresh" rail — fixed with
+`useIsFirstBoot`/`data-boot` (see Layout → Motion). `.shelf-key` was
+resting in Rose Ink, a live Last-2% Rule violation; now rests at Muted
+Strong (see Components → The Drawer / Shelf). Three ad hoc values —
+`#dad7ca` (tab/compartment hover), `rgba(28, 27, 24, 0.42)` (Catalogue
+backdrop), and the Plate's three SVG `fill` attributes — became named
+custom properties (`--taupe-hover`, `--scrim`, `--plate-1/2/3`; see
+Colors → Neutral), the last of which also gained a dark-mode re-cut it
+didn't have before. `--maxw` was a flat `1160px` with no upper response to
+viewport width; now `clamp(1160px, 90vw, 1900px)` (see Layout). `.open-line`
+(the "work, in the order it was built" cue) had drifted off Kicker's
+register without a documented reason; captured as its own Descend Cue role
+(see Typography). `.tablist-cue` — a status note distinguishing a tab
+click (preview) from "Read more" (navigate) — existed in code and was
+already implied by the 2026-08-01 tracking-token note above, but had never
+been introduced in Components; added (see Components → Compartment strip
+& folder tab row).
+
 **Confirmed, not a gap (2026-07-30):** three compartments rendering as open,
 fully clickable shelves — rather than two dimmed placeholder slots — was
 flagged here as a possible drift from `PRODUCT.md`'s "N≥2 gate" and
 `CLAUDE.md` §1c. Natasha confirmed this is the intended interim state, not
 an error to fix; leaving `02-the-stacks`/`03-motion-studies` openable with
 their "Material coming" placeholder folder is a deliberate choice.
+**Re-confirmed 2026-08-01** (`/impeccable critique the landing`): a review
+flagged the same shelf-weight question again from a cold-reader angle —
+CCPM's shelf carries no more visual weight than The Stacks or DS2's, which
+risks diluting "one real folder, confidently central." Natasha's call:
+leave the shelves as-is; making CCPM's shelf heavier would look off
+against the rest of the drawer, and the shelf isn't the mechanism this
+site should lean on to make CCPM read as central — that's the folder's own
+interior density (§1d) and the record route's depth, not the drawer.
+
+**Resolved (2026-08-01, critique pass):** two small gaps surfaced by the
+same review, both fixed. The hero opened on an `.eyebrow` reading "Vector
+Digital Labs," directly above `.hero-role`'s "Designer, Vector Digital
+Labs." — pure duplication on the one screen CLAUDE.md §1b calls "lightest
+touch." Removed; the `assemble` load-in stagger (see Layout → Motion) now
+starts at the name instead. Separately, the at-a-glance card's single
+corner tag (`.card-tag`) was driven by a manually-set `card.placeholder`
+flag in `content/opening.md`, independent of which rows actually carried
+`placeholder: true` — so all four rows visually inherited "unfinished"
+framing when only Outcome was a stub. The tag is now derived from the rows
+themselves (`Opening.tsx`) and reads "N of 4 pending" when the stub count
+is partial, "placeholder" only when every row is; `card.placeholder` was
+dropped from the schema and the content file since it no longer drives
+anything. The Outcome row's own copy was also softened: it previously read
+as a specific, finished claim ("shipped, and was adopted client-wide")
+despite being tagged `placeholder: true`; Natasha confirmed it's still a
+draft, so the copy now says plainly that it isn't written yet rather than
+implying an unconfirmed result (CLAUDE.md §1b: don't invent a real
+achievement for this slot).

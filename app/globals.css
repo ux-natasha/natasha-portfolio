@@ -46,6 +46,26 @@
   --sheen: rgba(255, 255, 255, 0.5);
   --selection: rgba(190, 58, 110, 0.14);
 
+  /* A closed tab/compartment previewing its own open state on hover — one
+     step toward --paper-3 before it commits to it on selection. Derived from
+     --taupe rather than a fourth flat swatch so it re-resolves correctly
+     under the dark blocks below without needing its own overrides there. */
+  --taupe-hover: color-mix(in oklab, var(--taupe) 82%, var(--paper-3));
+
+  /* The catalogue dialog's backdrop. Deliberately not theme-bound: a scrim
+     dims whatever is behind it rather than matching the page, so it keeps
+     one fixed value in both themes rather than living in the palette
+     blocks below. */
+  --scrim: rgba(28, 27, 24, 0.42);
+
+  /* The plate's own gray steps (Plate.tsx) — a separate demonstration of
+     "the brightness of gray," not a reuse of --paper/--taupe, so the ramp
+     stays legible as its own argument rather than folding into the site's
+     structural tones. Re-cut, not reused, in the dark blocks below. */
+  --plate-1: #b9b4a5;
+  --plate-2: #cfcabb;
+  --plate-3: #e6e3d8;
+
   color-scheme: light;
 
   /* ── The mark, and the ground ───────────────────────────────────────
@@ -73,7 +93,21 @@
   --mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
   --sans: var(--font-inter), system-ui, -apple-system, sans-serif;
 
-  --maxw: 1160px;
+  /* Three of the mono-label tracking values the "Unfinished Twelve Rule"
+     (DESIGN.md) flagged as ungrouped — not the whole gap (the 0.5625rem
+     rail/plate/comp-key tier stays outside this), just the roles that
+     actually repeat across the folder and the case-study page: a caps
+     kicker announcing a section, a caps field label, and a credit stamp. */
+  --track-kicker: 0.2em;
+  --track-label: 0.15em;
+  --track-credit: 0.14em;
+
+  /* 1160px was a flat cap regardless of viewport, so any screen wider than
+     ~1256px (rail + shell) just grew a dead gap on the right forever. Kept
+     as the floor — nothing below it changes — but now scales with the
+     viewport above that, capped at 1900px so an ultrawide monitor doesn't
+     stretch the layout into unreadably long lines. */
+  --maxw: clamp(1160px, 90vw, 1900px);
   --rail-w: 96px;
   --gutter: clamp(1.25rem, 4.4vw, 4rem);
 
@@ -130,6 +164,14 @@
     --sheen: rgba(235, 238, 240, 0.05);
     --selection: rgba(224, 100, 140, 0.25);
 
+    /* Re-cut, not reused: the same ramp logic as light mode (three steps,
+       each lighter than the one behind), scaled down to sit as a quiet
+       cool-gray plane on a near-black canvas instead of a blown-out light
+       card. */
+    --plate-1: #3a3d41;
+    --plate-2: #4d5157;
+    --plate-3: #62666d;
+
     color-scheme: dark;
   }
 }
@@ -158,6 +200,10 @@
   --shadow: rgba(0, 0, 0, 0.55);
   --sheen: rgba(235, 238, 240, 0.05);
   --selection: rgba(224, 100, 140, 0.25);
+
+  --plate-1: #3a3d41;
+  --plate-2: #4d5157;
+  --plate-3: #62666d;
 
   color-scheme: dark;
 }
@@ -189,6 +235,10 @@
   --shadow: rgba(40, 37, 28, 0.16);
   --sheen: rgba(255, 255, 255, 0.5);
   --selection: rgba(190, 58, 110, 0.14);
+
+  --plate-1: #b9b4a5;
+  --plate-2: #cfcabb;
+  --plate-3: #e6e3d8;
 
   color-scheme: light;
 }
@@ -316,6 +366,11 @@ html {
 body {
   margin: 0;
   background: var(--ground, var(--paper));
+  /* `useAccentGround` sets `data-accent` on <html> in a post-mount effect, one
+     paint after a record's first render — so this background always resolves
+     a frame late. Without a transition that read as a hard flash right as the
+     page settles in; fading it closes the gap instead of hiding it. */
+  transition: background var(--quick) var(--ease);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 1rem;
@@ -456,6 +511,14 @@ svg {
   border-right: 1px solid var(--line);
   background: var(--taupe);
   z-index: 20;
+}
+/* Plays only on a real page load (`data-boot`, set by `useIsFirstBoot`), not
+   on every client-side navigation — the rail/spine has no shared layout to
+   persist its DOM across routes, so without this gate it replayed its own
+   entrance on every single navigation: the one element that's meant to "hold
+   still across the transition" (§1a) blinking off and sliding back in. */
+.rail[data-boot],
+.spine[data-boot] {
   animation: assemble-rail var(--settle) var(--ease) both;
 }
 
@@ -472,6 +535,12 @@ svg {
    in from the left, ~0.5s. */
 .rail-up {
   position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  box-sizing: border-box;
   font-family: var(--mono);
   font-size: 0.5625rem;
   letter-spacing: 0.18em;
@@ -592,7 +661,7 @@ svg {
 .rail-num[aria-current="step"] {
   width: calc(100% - 13px);
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
   background: var(--paper-2);
   border-color: var(--line);
   border-right: none;
@@ -612,7 +681,7 @@ svg {
   left: -14px;
   top: 0;
   bottom: 0;
-  width: 3px;
+  width: 4px;
   border-radius: 0;
   background: var(--mark-deep);
 }
@@ -682,29 +751,25 @@ svg {
   align-items: start;
 }
 
-.hero .eyebrow,
 .hero-name,
 .hero-role,
 .hero-line {
   animation: assemble var(--settle) var(--ease) both;
 }
-.hero .eyebrow {
+.hero-name {
   animation-delay: 0.08s;
 }
-.hero-name {
-  animation-delay: 0.15s;
-}
 .hero-role {
-  animation-delay: 0.24s;
+  animation-delay: 0.17s;
 }
 .hero-line {
-  animation-delay: 0.3s;
+  animation-delay: 0.25s;
 }
 
 .eyebrow {
   font-family: var(--mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.2em;
+  letter-spacing: var(--track-kicker);
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -730,11 +795,16 @@ svg {
   margin: 1.125rem 0 1.625rem;
 }
 
+/* Sized a step above the folder-lede token it used to share exactly (both
+   were "opening-line"/"chapter-lede" at the same clamp in DESIGN.md) — this
+   is the one line standing in for an "about me" (§1b), so it reads as the
+   second-most dominant thing on the page, not level with a folder's own
+   ten-second lede three scroll-lengths down. */
 .hero-line {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.1875rem, 2.1vw, 1.3125rem);
-  line-height: 1.42;
+  font-size: clamp(1.3125rem, 2.4vw, 1.5625rem);
+  line-height: 1.4;
   color: var(--ink-2);
   max-width: 34ch;
   margin: 0;
@@ -783,7 +853,7 @@ svg {
 .card-label {
   font-family: var(--mono);
   font-size: 0.625rem;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   display: block;
@@ -844,14 +914,21 @@ svg {
 .plate-step {
   animation: plate-settle var(--quick) var(--ease) both;
 }
+/* Fill lives here, not as a JSX attribute, so the ramp re-derives per theme
+   the same way every other surface in the file does — a class selector's
+   `fill` outranks the SVG presentation attribute regardless of source order. */
 .plate-step-1 {
   animation-delay: 0.52s;
+  fill: var(--plate-1);
 }
 .plate-step-2 {
   animation-delay: 0.62s;
+  fill: var(--plate-2);
 }
 .plate-step-3 {
   animation-delay: 0.72s;
+  fill: var(--plate-3);
+  stroke: var(--plate-2);
 }
 
 /* The theme toggle reopens the same argument (Plate.tsx) — same stagger
@@ -871,6 +948,10 @@ svg {
 
 /* Not a divider — a heading with a short lead-in mark. Sections separate by
    whitespace scale alone; a full-width rule is what made this read as a CV. */
+/* The one line that says the site's organizing idea out loud (§1: chapter
+   order IS build order) — a half-step past the Kicker token drawer-heading
+   shares this role with, since this is the hinge the whole page turns on,
+   not just a section label. */
 .open-line {
   animation: assemble var(--settle) var(--ease) both;
   animation-delay: 0.62s;
@@ -879,11 +960,11 @@ svg {
   gap: 1.125rem;
   margin: clamp(2.5rem, 6vw, 4.125rem) 0 1.25rem;
   font-family: var(--mono);
-  font-size: 0.6875rem;
-  font-weight: 400;
+  font-size: 0.75rem;
+  font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .open-line .dash {
   flex: none;
@@ -903,6 +984,16 @@ svg {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
+  /* Same "more this way" trailing fade as `.rail`'s mobile bar (§ Rail) —
+     without it this is one of three stacked horizontal scrollers on a
+     narrow screen (rail strip, this, the tab row) with no shared signal
+     that any of them scroll. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black calc(100% - 28px),
+    transparent
+  );
+  mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
 }
 
 .comp {
@@ -936,7 +1027,7 @@ svg {
   white-space: nowrap;
 }
 .comp:hover {
-  background: #dad7ca;
+  background: var(--taupe-hover);
 }
 .comp:active {
   transform: scale(0.97);
@@ -951,14 +1042,17 @@ svg {
 }
 .comp[aria-selected="true"] .comp-name {
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.9375rem;
 }
-/* The spine: the open compartment is joined to the well below it. */
+/* The spine: the open compartment is joined to the well below it. Picking a
+   record is a real decision — the join reads a step firmer than a hairline
+   would, so the choice looks committed to rather than merely noted. */
 .comp[aria-selected="true"]::after {
   content: "";
   position: absolute;
   inset: auto 0 -1px;
-  height: 2px;
+  height: 3px;
   background: var(--mark);
 }
 
@@ -1002,6 +1096,13 @@ svg {
 
 /* ── Folder tabs: the cut tabs on file dividers ──────────────────────── */
 
+.tablist-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .tablist {
   display: flex;
   align-items: flex-end;
@@ -1011,6 +1112,30 @@ svg {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
+  min-width: 0;
+  /* Same trailing fade as `.comp-strip` and `.rail`'s mobile bar — one
+     shared "more this way" signal across all three stacked scrollers. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black calc(100% - 24px),
+    transparent
+  );
+  mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+}
+
+/* Names the difference between a tab click (previews here) and "read more"
+   (the only link that leaves the index) — see the note in Cover.tsx. Sits
+   in the same quiet mono register as .eyebrow, one step dimmer, so it reads
+   as a status note rather than a label competing with the tabs. */
+.tablist-cue {
+  flex: 0 0 auto;
+  align-self: center;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 2px;
 }
 
 .tab {
@@ -1036,7 +1161,7 @@ svg {
 }
 .tab:hover {
   color: var(--ink);
-  background: #dad7ca;
+  background: var(--taupe-hover);
 }
 .tab:active {
   transform: scale(0.97);
@@ -1068,6 +1193,7 @@ svg {
   overflow: visible;
   clip-path: none;
   margin-left: 0.5rem;
+  font-weight: 500;
 }
 
 /* The marker on the active cut. Pink is the reward for interacting. */
@@ -1076,7 +1202,7 @@ svg {
   top: 5px;
   left: 0.875rem;
   width: 18px;
-  height: 2px;
+  height: 3px;
   background: var(--mark);
   opacity: 0;
   transition: opacity var(--quick) var(--ease);
@@ -1290,7 +1416,7 @@ svg {
 .meta-label {
   font-family: var(--mono);
   font-size: 0.625rem;
-  letter-spacing: 0.15em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   display: block;
@@ -1407,6 +1533,20 @@ svg {
   max-width: 42ch;
 }
 
+/* Announces "breakdown" / "the decisions" — the seam where a reader who
+   opened the reveal decides whether to keep going. Was falling through to
+   plain inherited body text (no rule existed at all), so the one moment
+   depth is supposed to reward a reader read as unstyled prose. Kicker
+   register, not label: it opens a section rather than naming a field. */
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--track-kicker);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.75rem 0 0.625rem;
+}
+
 /* Level 3 — named, credited rows. Same gutter-divider idiom as .meta-row: the
    rule is drawn by the row's own top edge, never a border-right on a cell. */
 .breakdown {
@@ -1414,7 +1554,10 @@ svg {
 }
 .breakdown-row {
   display: grid;
-  grid-template-columns: 9.75rem 1fr auto;
+  /* 9.75rem clipped the longest real name (Execution · Replanning, 02) into a
+     wrap the other rows never take — 11rem clears every name in content/ with
+     the same one-line-per-row shape as the rest of the list. */
+  grid-template-columns: 11rem 1fr auto;
   gap: 1rem;
   align-items: baseline;
   padding: 0.6875rem 0;
@@ -1438,7 +1581,7 @@ svg {
 .breakdown-credit {
   font-family: var(--mono);
   font-size: 0.625rem;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-credit);
   text-transform: uppercase;
   color: var(--muted);
   text-align: right;
@@ -1511,7 +1654,10 @@ svg {
    can anchor to this box specifically rather than the page. */
 .gate-box {
   position: relative;
-  margin-top: 1.25rem;
+  /* Same paper-2 fill as .diagram-box directly above it — they're one
+     "not built yet" cluster, not two independent blocks, so the gap between
+     them should read as tight grouping rather than section spacing. */
+  margin-top: 0.75rem;
   padding: 1.375rem 1.5rem;
   border: 1px dashed var(--taupe-2);
   border-radius: 3px;
@@ -1652,8 +1798,14 @@ svg {
   font-family: var(--mono);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
-  color: var(--mark-ink);
+  color: var(--muted-strong);
   min-width: 62px;
+  transition: color var(--quick) var(--ease);
+}
+.shelf:hover .shelf-key,
+.shelf:focus-visible .shelf-key,
+.shelf[aria-current] .shelf-key {
+  color: var(--mark-ink);
 }
 .shelf-name {
   font-family: var(--display);
@@ -1735,7 +1887,10 @@ svg {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-top: 4rem;
+  /* Every other section-boundary gap on a record/chapter route scales with
+     the viewport (.ch + .ch, .folder-nav, .onward) — this was the one bare
+     value, so the page ended on a tightening instead of a settling. */
+  margin-top: clamp(2.5rem, 6vw, 4rem);
   padding-top: 1.375rem;
   border-top: 1px solid var(--line);
   font-family: var(--mono);
@@ -1943,9 +2098,31 @@ svg {
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
   }
+  /* Never collapsed below 520px before — the fixed 11rem name column left
+     under half the sheet for desc + credit. Stacks to one column, same order
+     the DOM already has (name, desc, credit). */
+  .breakdown-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+    align-items: start;
+  }
+  .breakdown-credit {
+    text-align: left;
+  }
   .tab {
     padding: 0.625rem 0.6875rem;
     font-size: 0.6875rem;
+  }
+  /* Too narrow for the cue to sit inline with the tabs and stay legible —
+     drops to its own line under the row instead of disappearing, so the
+     tab-vs-"read more" distinction it names (§1e) still reads on a phone. */
+  .tablist-row {
+    flex-wrap: wrap;
+  }
+  .tablist-cue {
+    flex: 1 1 100%;
+    text-align: right;
+    padding-bottom: 0;
   }
   .shelf-face {
     padding: 1rem 1.125rem;
@@ -2078,7 +2255,6 @@ svg {
   border-right: 1px solid var(--line);
   background: var(--taupe);
   z-index: 20;
-  animation: assemble-rail var(--settle) var(--ease) both;
 }
 
 /* The mark is the way home — typographic, never an icon, and a real link
@@ -2195,7 +2371,7 @@ svg {
   }
 }
 .cat::backdrop {
-  background: rgba(28, 27, 24, 0.42);
+  background: var(--scrim);
 }
 .cat-inner {
   padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.25rem) 2.5rem;
@@ -2409,12 +2585,15 @@ svg {
   overflow-wrap: break-word;
 }
 
-/* The problem, in one line — the ten-second read, in the record's voice. */
+/* The problem, in one line — the ten-second read, in the record's voice.
+   Same role as a chapter's own .ch-lede (both are "level 1"), so it now
+   shares that exact clamp/line-height instead of a fourth near-duplicate
+   size — was clamp(…, 1.4375rem)/1.4 here vs clamp(…, 1.375rem)/1.44 there. */
 .mast-problem {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.1875rem, 2.2vw, 1.4375rem);
-  line-height: 1.4;
+  font-size: clamp(1.1875rem, 2.2vw, 1.375rem);
+  line-height: 1.44;
   color: var(--ink);
   max-width: 34ch;
   margin: 1.375rem 0 0;
@@ -2440,12 +2619,17 @@ svg {
    pattern this whole design exists to avoid (§1). */
 .contents {
   grid-column: 1 / -1;
-  margin-top: clamp(1rem, 3vw, 2rem);
+  /* This is "the only way into a chapter now" (Masthead.tsx) — the record's
+     primary nav, not a continuation of the facts panel above it. It was
+     sitting closer to .mast than .onward sits below it, for a pager to a
+     different project entirely; raised to the same beat .mini-mast opens a
+     folder page with, so it reads as its own section. */
+  margin-top: clamp(2.5rem, 6vw, 4rem);
 }
 .contents-key {
   font-family: var(--mono);
   font-size: 0.625rem;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin: 0 0 0.75rem;
@@ -2590,7 +2774,10 @@ svg {
 }
 .ch {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr);
+  /* Tracks .ch-num's own font-size clamp (2.25rem -> 3.5rem) rather than a
+     fixed 4rem — at the top of that clamp a two-digit Fraunces numeral was
+     landing with almost no headroom in a column sized for its smallest step. */
+  grid-template-columns: clamp(3.5rem, 7vw, 4.75rem) minmax(0, 1fr);
   gap: 0 clamp(1rem, 2.6vw, 2.25rem);
   align-items: start;
 }
@@ -2685,7 +2872,7 @@ svg {
   font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--muted-strong);
   margin: 0 0 1.25rem;
 }
 .onward-pair {
@@ -2727,7 +2914,7 @@ svg {
 .onward-dir {
   font-family: var(--mono);
   font-size: 0.625rem;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--mark-ink);
 }
@@ -2756,7 +2943,7 @@ svg {
   font-family: var(--mono);
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
-  color: var(--muted);
+  color: var(--muted-strong);
   transition:
     color var(--quick) var(--ease),
     transform var(--quick) var(--ease);
@@ -2855,6 +3042,39 @@ svg {
   letter-spacing: -0.01em;
   margin: 0 0 0.625rem;
   font-variation-settings: "opsz" 40;
+}
+
+/* Scoped to the cover only (Chapter.tsx's own .ch-top keeps its baseline
+   alignment) — a bordered/filled tag doesn't sit on the same text baseline
+   as the plain eyebrow beside it, so this row centers instead. */
+.cover-credit-row {
+  align-items: center;
+}
+
+/* The credit register, stamped rather than read as one more eyebrow line.
+   This is the fact a generic portfolio can't fake (CLAUDE.md §4), so it
+   gets a tag with real form — still flat (Radius-Is-For-Tabs: this isn't
+   clickable), still built from tokens already in the system. */
+.folder-credit {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: var(--track-credit);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  border: 1px solid var(--muted-strong);
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+}
+
+/* Solo carries the loudest single fact on the site (§4) — the one credit
+   tag that fills, using --ink/--paper the way a rubber stamp uses one ink,
+   not a second accent colour. Rose stays absent: the Last-2% Rule still
+   applies on the index. */
+.folder-credit.is-solo {
+  color: var(--paper-3);
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 /* Density 8 inside a folder (§5): the pager steps between folders, "read

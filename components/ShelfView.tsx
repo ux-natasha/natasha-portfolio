@@ -1,5 +1,3 @@
-"use client";
-
 import { Foot } from "@/components/Foot";
 import { GoLink, PageTransition } from "@/components/PageTransition";
 import { Spine } from "@/components/Spine";

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCatalogue, getSite } from "@/lib/content";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 /**
  * An empty slot.
@@ -25,6 +26,10 @@ export default function NotFound() {
           </span>
           drawer
         </Link>
+
+        <div className="rail-foot">
+          <ThemeToggle />
+        </div>
       </nav>
 
       <main className="sheet" id="content" tabIndex={-1}>

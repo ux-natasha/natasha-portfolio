@@ -42,30 +42,39 @@ export function Cover({ record }: { record: Compartment }) {
 
   return (
     <div className="cover-wrap">
-      <div
-        className="tablist"
-        role="tablist"
-        aria-label={`${unitNoun(record.unit, 2)} in ${record.name}`}
-        ref={tabs}
-        onKeyDown={(e) => roving(e, tabs.current, fi, record.folders.length, setFi)}
-      >
-        {record.folders.map((f, i) => (
-          <button
-            key={f.number}
-            type="button"
-            role="tab"
-            id={tabId(i)}
-            className="tab"
-            aria-selected={i === fi}
-            aria-controls={panelId}
-            tabIndex={i === fi ? 0 : -1}
-            onClick={() => setFi(i)}
-          >
-            <span className="tick" aria-hidden="true" />
-            {f.number}
-            <span className="tab-name">{f.name}</span>
-          </button>
-        ))}
+      <div className="tablist-row">
+        <div
+          className="tablist"
+          role="tablist"
+          aria-label={`${unitNoun(record.unit, 2)} in ${record.name}`}
+          ref={tabs}
+          onKeyDown={(e) => roving(e, tabs.current, fi, record.folders.length, setFi)}
+        >
+          {record.folders.map((f, i) => (
+            <button
+              key={f.number}
+              type="button"
+              role="tab"
+              id={tabId(i)}
+              className="tab"
+              aria-selected={i === fi}
+              aria-controls={panelId}
+              tabIndex={i === fi ? 0 : -1}
+              onClick={() => setFi(i)}
+            >
+              <span className="tick" aria-hidden="true" />
+              {f.number}
+              <span className="tab-name">{f.name}</span>
+            </button>
+          ))}
+        </div>
+        {/* §1e / heuristic #6 (recognition over recall): a tab click previews
+            in place, "read more" is the only thing that actually navigates —
+            two visually similar actions with different consequences. This
+            names the difference right where the ambiguous click happens,
+            instead of leaving a first-time visitor to assume a tab already
+            opened the chapter. */}
+        <span className="tablist-cue">previewing</span>
       </div>
 
       <article
@@ -92,11 +101,22 @@ export function Cover({ record }: { record: Compartment }) {
             and replays the fade — a quiet cross-fade, not the compartment-
             level slide, so the two motions stay legible as different things. */}
         <div className="cover-folder" key={folder.number}>
-          <div className="ch-top">
+          <div className="ch-top cover-credit-row">
             <p className="eyebrow">
               {folder.number} · {folder.name}
             </p>
-            <p className="eyebrow">{folder.credit}</p>
+            {/* The credit register — SOLO / SURVIVOR / SHARED — is the one
+                fact a generic portfolio can't fake. Solo gets a stamped,
+                filled tag (ink, not pink: rose stays interaction-only on the
+                index per the Last-2% Rule); the rest get the same tag
+                unfilled, so "who built it" reads as evidence, not a footnote. */}
+            <p
+              className={`folder-credit${
+                folder.credit.toLowerCase().startsWith("solo") ? " is-solo" : ""
+              }`}
+            >
+              {folder.credit}
+            </p>
           </div>
           <h4 className="cover-folder-title">{folder.title}</h4>
           <p className={`ch-lede${folder.ledePlaceholder ? " is-stub" : ""}`}>

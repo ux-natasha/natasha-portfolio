@@ -4,7 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Cover } from "@/components/Cover";
 import { Foot } from "@/components/Foot";
 import { Opening } from "@/components/Opening";
-import { GoLink, PageTransition } from "@/components/PageTransition";
+import { GoLink, PageTransition, useIsFirstBoot } from "@/components/PageTransition";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { roving } from "@/lib/a11y";
 import { splitSpine, unitNoun, type Site } from "@/lib/schema";
@@ -50,10 +50,11 @@ export function Workspace({ site }: { site: Site }) {
   }, []);
 
   useReturnedFrom(compartments.map((c) => c.slug), setCi);
+  const firstBoot = useIsFirstBoot();
 
   return (
     <PageTransition className="shell">
-      <nav className="rail" aria-label="Progress rail">
+      <nav className="rail" aria-label="Progress rail" data-boot={firstBoot || undefined}>
         <span className="rail-mark" aria-hidden="true">
           N
         </span>

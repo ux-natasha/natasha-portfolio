@@ -26,14 +26,12 @@ export type AccentName = "olive" | "navy" | "burgundy";
 
 /** The TOP of the frame. Name, the line, the panel, the drawing. */
 export type Opening = {
-  eyebrow: string;
   name: string;
   role: string;
   /** Already rendered: the line carries exactly one italic word. */
   lineHtml: string;
   card: {
     label: string;
-    placeholder?: boolean;
     rows: MetaField[];
   };
   plate: { alt: string; caption: string };

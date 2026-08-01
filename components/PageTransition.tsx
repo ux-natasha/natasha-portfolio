@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -53,6 +53,7 @@ export function PageTransition({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [leaving, setLeaving] = useState<Direction | null>(null);
   const timer = useRef<number | undefined>(undefined);
 
@@ -77,6 +78,19 @@ export function PageTransition({
   // mid-exit) unmounts this — the timer has to go with it.
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // Sibling routes that share a component (e.g. /vpro/00 -> /vpro/01, both
+  // FolderPage) don't remount it — React reuses the instance and only
+  // updates props, so `leaving`/`timer` from the outgoing click would
+  // otherwise survive into the arriving page. Left unset, `go()`'s re-entrancy
+  // guard stays tripped forever (every later click silently no-ops) and the
+  // arriving `.sheet` inherits the exit animation's `opacity: 0` end state.
+  // A real navigation landing is exactly a pathname change, so that's the
+  // signal to clear both.
+  useEffect(() => {
+    timer.current = undefined;
+    setLeaving(null);
+  }, [pathname]);
+
   return (
     <GoContext.Provider value={go}>
       {/* `id="top"` lives here rather than in each page: this wrapper IS the page
@@ -99,6 +113,26 @@ export function useGo(): Go {
     throw new Error("useGo must be used inside a PageTransition");
   }
   return go;
+}
+
+/* Module scope, not React state: it has to survive the rail/spine's own
+ * remount. Every route is its own page component (no shared layout wraps
+ * them), so a client-side navigation unmounts the old rail and mounts a
+ * fresh one — which replayed `assemble-rail` from opacity 0 on every single
+ * navigation, not just a real page load. That reads as the one element
+ * that's supposed to "hold still across the transition" (§1a) blinking off
+ * and sliding back in. A plain module boolean resets on a real reload (new
+ * JS session) but survives a client-side route push, so it can tell the two
+ * apart without needing a server flag or sessionStorage. */
+let booted = false;
+
+/** True only for the very first paint of a browser session. */
+export function useIsFirstBoot(): boolean {
+  const [first] = useState(() => !booted);
+  useEffect(() => {
+    booted = true;
+  }, []);
+  return first;
 }
 
 /**

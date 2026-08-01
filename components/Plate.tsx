@@ -35,17 +35,9 @@ export function Plate({ alt, caption }: { alt: string; caption: string }) {
             front — the argument being settled, not just illustrated. Keyed on
             `replay` so a theme switch remounts this group and reopens it. */}
         <g key={replay} className={replay > 0 ? "plate-replay" : undefined}>
-          <rect className="plate-step plate-step-1" x="8" y="14" width="150" height="46" fill="#B9B4A5" />
-          <rect className="plate-step plate-step-2" x="34" y="22" width="150" height="46" fill="#CFCABB" />
-          <rect
-            className="plate-step plate-step-3"
-            x="60"
-            y="30"
-            width="150"
-            height="46"
-            fill="#E6E3D8"
-            stroke="#CFCABB"
-          />
+          <rect className="plate-step plate-step-1" x="8" y="14" width="150" height="46" />
+          <rect className="plate-step plate-step-2" x="34" y="22" width="150" height="46" />
+          <rect className="plate-step plate-step-3" x="60" y="30" width="150" height="46" />
         </g>
       </svg>
       <figcaption>{caption}</figcaption>

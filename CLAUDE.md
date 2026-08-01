@@ -123,10 +123,11 @@ never what the plan *is*.
 - **Rail nav = folder tabs.** The rail reads as the cut tabs on file dividers —
   chapter numbers 00–03 as tabbed edges. Active tab carries the pink. It's a real
   persistent structural column (NOT a floating bubble), showing position + remaining.
-  Selecting a chapter (via tab or scroll) triggers a lateral **SLIDE** transition:
-  the current record pushes off to the side as the next slides in — thumbing forward
-  through a set of records. Slide, NOT a page-flip/rotate (quieter, cleaner). The
-  folder is implied by MOTION and the tab cuts, never drawn in skeuomorphic detail
+  Selecting a chapter tab is a real navigation to that chapter's own route
+  (`/<slug>/<NN>`) and triggers a lateral **SLIDE**: the current record plays a
+  short exit as the next one's route pushes in — thumbing forward through a set
+  of records. Slide, NOT a page-flip/rotate (quieter, cleaner). The folder is
+  implied by MOTION and the tab cuts, never drawn in skeuomorphic detail
   (no hinges, no drawer chrome, no manila texture). Grainy paper + ink; pink only on
   the active tab + interaction.
 - Opening a chapter reads as selecting a record: selection handles / a bounding box
@@ -135,16 +136,34 @@ never what the plan *is*.
 - Rendered entirely in ink/paper/2%-pink. Selection handles are pink (they're
   interaction).
 
-**Scroll ↔ tab sync + the scroll-jack boundary (important engineering rule).**
-Rail tabs and scroll position stay synced — scrolling advances chapters, clicking a
-tab jumps scroll, they always agree. BUT "scroll drives the flip" must NOT become a
-pinned horizontal scroll-hijack inside chapters (the kill list / Kimi ref forbids
-scroll-jacking + scroll traps). Resolution: WITHIN a chapter, scroll is normal
-vertical scroll driving the depth levels. Only the HAND-OFF between chapters does
-the lateral slide, triggered at the chapter boundary. This gives the folder-flip
-feeling at the seams without trapping the scroll. Under prefers-reduced-motion the
-slide degrades to a plain anchor jump. (If Natasha later requests the fuller pinned-
-horizontal treatment, revisit — but default to the boundary-slide version.)
+**Chapters are routed, not scroll-linked (revised 2026-08-01 — this section
+originally specified a scroll-driven mechanism; the build moved past it before
+the doc caught up, see build log).** Each chapter is its own route
+(`/<slug>/<NN>`), generated from the same folder listing as the record route.
+"Where am I" is a route match, not a scroll position — the Spine's
+`activeFolder` prop, set from the URL, not a scroll listener. There is no
+scroll-driven chapter advance, so there is nothing to keep off a pinned
+horizontal scroll-hijack: the risk class the original "boundary-slide, not
+scroll-jack" rule was managing is gone by construction, not contained. Within
+a chapter, scroll is plain vertical scroll; the one remaining reveal (body +
+breakdown + decisions, opened together) is a click toggle, not a scroll
+trigger (`Chapter.tsx`).
+
+The lateral SLIDE survives as a route transition, not a scroll effect. Records
+are separate documents, so nothing keeps the outgoing page mounted across a
+navigation — the hand-off is split into two halves that meet in the middle:
+`PageTransition`/`GoLink` play a short exit (~240ms, shorter than `--settle`
+on purpose — a departure, not a performance) on the leaving page before the
+route push; the arriving page plays its own load-in assembly on mount (CSS
+keyframes, no JS), same easing and direction of travel, so a reader sees one
+gesture. Only the sheet moves — the rail/Spine column holds still across the
+transition. Under prefers-reduced-motion, `PageTransition` skips the exit
+delay and pushes immediately, and the arrival keyframes are gated by the same
+media query — no pinning, no zoom, all content intact.
+
+(On the index, a tab click is a different thing — an in-place cover preview
+swap, not a navigation; see §1e. Only "Read more →" and the Spine's chapter
+tabs navigate.)
 
 Hard discipline — the workspace is BEHAVIOR, never DECORATION. A toolbar that
 navigates = concept made tactile (keep). A cloud/sparkle/sticker = costume (cut).
@@ -554,6 +573,22 @@ value-stepped laminations and crisp edges; make the folder strong through CRAFT;
 push the interior to density 8 with real structural content. Result approved as
 "very chic." Reference implementation: `folder_craft.html`. A follow-up alignment
 fix replaced border-right cells with a gutter-divider grid (see 1d divider rule).
+
+**Attempt 3 (chapters: one scroll → separate routes):** §1a originally specified
+chapters as sections in one continuous scroll, synced to the rail via
+`ScrollTrigger`, with a boundary-slide hand-off between them to avoid a pinned
+scroll-hijack. Built, then moved past: a reviewer paid for all four chapters'
+weight even to read one, and depth inside a chapter had cascaded one click-gate
+per level (2→3→4→4b→5), which was its own kind of exhausting. Each chapter is
+now its own route (`/<slug>/<NN>`); the record overview is a masthead + chapter
+list + next-record pager, not a stack. `PageTransition`/`GoLink` reproduce the
+slide as a route transition (short exit, then push; the arriving route plays its
+own load-in on mount) instead of a scroll effect, and depth collapsed from a
+multi-gate cascade to one "read the rest" toggle per chapter. Net effect: the
+scroll-jack risk the original rule was managing is gone by construction rather
+than contained by a boundary. §1a was updated 2026-08-01 to describe this as the
+settled model; nothing here reopens the depth-defaults-closed or whitespace-only-
+divider hard rules, which still hold.
 
 ## 12. Open items (ask Natasha, don't assume)
 

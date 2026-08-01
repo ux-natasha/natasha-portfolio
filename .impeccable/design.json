@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-30T10:40:00Z",
+  "generatedAt": "2026-08-01T00:00:00Z",
   "title": "Design System: Natasha M. — Portfolio",
   "extensions": {
     "colorMeta": {
@@ -133,6 +133,32 @@
         "role": "neutral",
         "displayName": "Sheen",
         "canonical": "rgba(255, 255, 255, 0.5)"
+      },
+      "plate-1": {
+        "role": "neutral",
+        "displayName": "Plate 1",
+        "canonical": "#b9b4a5",
+        "tonalRamp": ["#3a3d41", "#4d5157", "#62666d", "#b9b4a5", "#cfcabb", "#e6e3d8"]
+      },
+      "plate-2": {
+        "role": "neutral",
+        "displayName": "Plate 2",
+        "canonical": "#cfcabb"
+      },
+      "plate-3": {
+        "role": "neutral",
+        "displayName": "Plate 3",
+        "canonical": "#e6e3d8"
+      },
+      "taupe-hover": {
+        "role": "state",
+        "displayName": "Taupe Hover",
+        "canonical": "color-mix(in oklab, var(--taupe) 82%, var(--paper-3))"
+      },
+      "scrim": {
+        "role": "state",
+        "displayName": "Scrim",
+        "canonical": "rgba(28, 27, 24, 0.42)"
       }
     },
     "typographyMeta": {
@@ -145,7 +171,7 @@
       "stub-voice": { "displayName": "Stub Voice", "purpose": "Italic register for copy that doesn't exist yet." },
       "body": { "displayName": "Body", "purpose": "A chapter's running prose, rendered from markdown." },
       "body-small": { "displayName": "Body Small", "purpose": "Meta-panel values, compartment names, non-stub descriptions." },
-      "kicker": { "displayName": "Kicker", "purpose": "Loudest standalone mono label — eyebrows, drawer heading, descend cue." },
+      "kicker": { "displayName": "Kicker", "purpose": "Loudest standalone mono label — eyebrows, drawer heading. The descend cue (.open-line) split off this role on 2026-08-01 to read a step louder; see DESIGN.md Typography." },
       "label": { "displayName": "Label", "purpose": "Field keys in the meta panel and at-a-glance card." },
       "tag": { "displayName": "Tag", "purpose": "Closed folder tabs, rail-number buttons, the shelf key." },
       "compartment-name": { "displayName": "Compartment Name", "purpose": "A compartment's own name as printed on its shelf face." }
@@ -156,8 +182,8 @@
     ],
     "motion": [
       { "name": "ease", "value": "cubic-bezier(0.2, 0.8, 0.2, 1)", "purpose": "The one easing curve in the system. Restrained, no bounce or overshoot." },
-      { "name": "quick", "value": "0.2s", "purpose": "Hover/focus color and background transitions — the only duration actually in use." },
-      { "name": "settle", "value": "0.5s", "purpose": "Declared, currently unused. Reserved for a depth-reveal transition that has not been built yet." }
+      { "name": "quick", "value": "0.2s", "purpose": "Hover/focus color and background transitions, and the body background crossfade that closes the one-frame-late data-accent flash." },
+      { "name": "settle", "value": "0.5s", "purpose": "Drives all three named motion moments: the chapter-to-chapter slide, the load-in assembly (assemble/assemble-rail), and the depth reveal's grid-template-rows tween." }
     ],
     "breakpoints": [
       { "name": "narrow-facts", "value": "1024px" },
@@ -202,17 +228,25 @@
       "name": "Depth cue",
       "kind": "custom",
       "refersTo": null,
-      "description": "The signature '+N more levels' marker. Currently a static label — no expand behavior is wired up yet (see DESIGN.md Known Gaps).",
-      "html": "<p class=\"ds-depth-cue\"><span class=\"ds-depth-cue__dot\" aria-hidden=\"true\"></span>+ 3 more levels <span aria-hidden=\"true\">↓</span></p>",
-      "css": ".ds-depth-cue { display: flex; align-items: center; gap: 0.5625rem; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.06em; color: #6a6555; } .ds-depth-cue__dot { width: 5px; height: 5px; border-radius: 50%; background: #d4537e; flex: none; }"
+      "description": "A real aria-expanded button that grows a folder's body open (~0.55s grid-template-rows tween). The dot goes gray to pink on open. Defaults closed on every folder, every time — the folder remounts on switch rather than carrying `open` over.",
+      "html": "<button class=\"ds-depth-cue\" aria-expanded=\"false\"><span class=\"ds-depth-cue__dot\" aria-hidden=\"true\"></span>more <span aria-hidden=\"true\">↓</span></button>",
+      "css": ".ds-depth-cue { display: flex; align-items: center; gap: 0.5625rem; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.06em; color: #6a6555; background: none; border: none; cursor: pointer; } .ds-depth-cue__dot { width: 5px; height: 5px; border-radius: 50%; background: #6a6555; flex: none; transition: background 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-depth-cue[aria-expanded='true'] .ds-depth-cue__dot { background: #d4537e; }"
     },
     {
       "name": "Shelf (drawer)",
       "kind": "custom",
       "refersTo": null,
-      "description": "A compartment's entry in the drawer/tail. The current one carries a rose board-strip gradient.",
+      "description": "A compartment's entry in the drawer/tail. The current one carries a rose board-strip gradient. The key rests at Muted Strong and only takes Rose Ink on hover/focus/aria-current (fixed 2026-08-01 — it previously rested in Rose Ink, a live Last-2% Rule violation).",
       "html": "<button class=\"ds-shelf\" aria-current=\"true\">\n  <span class=\"ds-shelf__face\">\n    <span class=\"ds-shelf__key\">VPRO</span>\n    <span class=\"ds-shelf__name\">VPro redesign</span>\n    <span class=\"ds-shelf__sub\">Four chapters, three years.</span>\n    <span class=\"ds-shelf__cta\">open →</span>\n  </span>\n</button>",
-      "css": ".ds-shelf { position: relative; display: block; width: 100%; margin-bottom: 1.5rem; } .ds-shelf__face { display: flex; align-items: center; gap: 1.375rem; flex-wrap: wrap; background: #edebe2; border: 1px solid #d6d3c6; padding: 1.1875rem 1.625rem; position: relative; z-index: 2; transition: background 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-shelf:hover .ds-shelf__face { background: #f3f1ea; } .ds-shelf::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: -9px; height: 11px; background: linear-gradient(180deg, #d4d1c4 0%, #cac6b7 100%); border: 1px solid #cac6b7; border-top: 0; z-index: 1; } .ds-shelf[aria-current='true']::after { background: linear-gradient(180deg, #d4537e 0%, #9c2f5b 100%); border-color: #9c2f5b; } .ds-shelf__key { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.75rem; letter-spacing: 0.1em; color: #a93a63; min-width: 62px; } .ds-shelf__name { font-family: var(--font-fraunces, Georgia, serif); font-weight: 600; font-size: 1.4375rem; letter-spacing: -0.01em; } .ds-shelf__sub { font-family: var(--font-inter, system-ui, sans-serif); color: #6a6555; font-size: 0.84375rem; } .ds-shelf__cta { margin-left: auto; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: #a93a63; }"
+      "css": ".ds-shelf { position: relative; display: block; width: 100%; margin-bottom: 1.5rem; } .ds-shelf__face { display: flex; align-items: center; gap: 1.375rem; flex-wrap: wrap; background: #edebe2; border: 1px solid #d6d3c6; padding: 1.1875rem 1.625rem; position: relative; z-index: 2; transition: background 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-shelf:hover .ds-shelf__face { background: #f3f1ea; } .ds-shelf::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: -9px; height: 11px; background: linear-gradient(180deg, #d4d1c4 0%, #cac6b7 100%); border: 1px solid #cac6b7; border-top: 0; z-index: 1; } .ds-shelf[aria-current='true']::after { background: linear-gradient(180deg, #d4537e 0%, #9c2f5b 100%); border-color: #9c2f5b; } .ds-shelf__key { font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.75rem; letter-spacing: 0.1em; color: #4e4a3e; min-width: 62px; transition: color 0.2s cubic-bezier(0.2,0.8,0.2,1); } .ds-shelf:hover .ds-shelf__key, .ds-shelf:focus-visible .ds-shelf__key, .ds-shelf[aria-current] .ds-shelf__key { color: #a93a63; } .ds-shelf__name { font-family: var(--font-fraunces, Georgia, serif); font-weight: 600; font-size: 1.4375rem; letter-spacing: -0.01em; } .ds-shelf__sub { font-family: var(--font-inter, system-ui, sans-serif); color: #6a6555; font-size: 0.84375rem; } .ds-shelf__cta { margin-left: auto; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: #a93a63; }"
+    },
+    {
+      "name": "Credit tag",
+      "kind": "custom",
+      "refersTo": "folder-credit",
+      "description": "The Solo/Survivor/Shared credit register, stamped rather than read as one more eyebrow line. Added 2026-08-01 — deliberately the loudest single move in the cover, since the credit register is a fact a generic portfolio can't fake.",
+      "html": "<span class=\"ds-credit ds-credit--solo\">Solo</span>",
+      "css": ".ds-credit { display: inline-block; font-family: var(--font-jetbrains-mono, ui-monospace, monospace); font-size: 0.625rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #413e35; border: 1px solid #4e4a3e; padding: 0.25rem 0.5rem; white-space: nowrap; } .ds-credit--solo { color: #f3f1ea; background: #1c1b18; border-color: #1c1b18; }"
     },
     {
       "name": "Coming slot (inert)",
@@ -251,7 +285,8 @@
       "Do build any future depth from stacked, opaque, near-zero-blur box-shadows before reaching for extra DOM layers or a soft drop-shadow.",
       "Do use rose for marks and rose-ink for type — never the reverse.",
       "Do load Fraunces with its opsz axis active, no fixed weight list.",
-      "Do keep a folder tab's full name in the accessible name at all times, even when visually clipped to a number."
+      "Do keep a folder tab's full name in the accessible name at all times, even when visually clipped to a number.",
+      "Do gate a one-time load-in animation (assemble, assemble-rail) to a real first paint (data-boot / useIsFirstBoot), never to a component's own mount — in a route-per-page app, a client-side navigation mounts a 'fresh' rail on every click."
     ],
     "donts": [
       "Don't use a full-width horizontal rule as a section or chapter divider.",
@@ -260,7 +295,8 @@
       "Don't render the folder in photoreal manila texture or add literal cabinet chrome.",
       "Don't let rose appear anywhere at rest.",
       "Don't dim a 'coming' label with text-opacity alone — a prior opacity-only attempt measured 2.06:1 and failed AA.",
-      "Don't assume the depth cue ('+N more levels') is wired to anything — confirm before treating it as an interactive spec."
+      "Don't assume Page keeps its open state across a folder switch — it's remounted specifically so depth reverts to closed every time.",
+      "Don't let a resting text color resolve to Rose Ink outside hover/focus/active-current — the shelf key shipped this exact violation and was corrected 2026-08-01."
     ]
   }
 }

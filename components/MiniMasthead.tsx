@@ -26,6 +26,10 @@ export function MiniMasthead({
 }) {
   return (
     <div className="mini-mast">
+      <h1 className="vh">
+        {record.name}, chapter {position} of {total}
+      </h1>
+
       <GoLink className="mm-back" href={`/${record.slug}`} direction="out">
         <span aria-hidden="true">←</span> {record.name} overview
       </GoLink>

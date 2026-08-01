@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Catalogue } from "@/components/Catalogue";
-import { GoLink } from "@/components/PageTransition";
+import { GoLink, useIsFirstBoot } from "@/components/PageTransition";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import type { CatalogueEntry } from "@/lib/schema";
 
@@ -44,9 +44,10 @@ export function Spine({
 }) {
   const [open, setOpen] = useState(false);
   const activeIndex = chapters.findIndex((c) => c.number === activeFolder);
+  const firstBoot = useIsFirstBoot();
 
   return (
-    <nav className="spine" aria-label={`${recordKey} navigation`}>
+    <nav className="spine" aria-label={`${recordKey} navigation`} data-boot={firstBoot || undefined}>
       {/* `?from=` is how the index knows which record to have selected when a
           reader steps back up a level — you land where you left, not at the top
           of a list you already chose from. */}
